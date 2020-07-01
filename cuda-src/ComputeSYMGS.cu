@@ -13,7 +13,7 @@
 //@HEADER
 
 /*!
- @file ComputeSYMGS_ref.cpp
+ @file ComputeSYMGS_0.cu
 
  HPCG routine
  */
@@ -23,6 +23,8 @@
  #endif
  #include "ComputeSYMGS_ref.hpp"
  #include <cassert>
+ #include "cuDProd.h"
+
  
  /*!
    Computes one step of symmetric Gauss-Seidel:
@@ -43,15 +45,12 @@
    @param[in] A the known system matrix
    @param[in] r the input vector
    @param[inout] x On entry, x should contain relevant values, on exit x contains the result of one symmetric GS sweep with r as the RHS.
+  @return returns 0 upon success and non-zero otherwise
  
- 
-   @warning Early versions of this kernel (Version 1.1 and earlier) had the r and x arguments in reverse order, and out of sync with other kernels.
- 
-   @return returns 0 upon success and non-zero otherwise
- 
-   @see ComputeSYMGS
- */
- int ComputeSYMGS_ref( const SparseMatrix & A, const Vector & r, Vector & x) {
+   */
+
+
+ int ComputeSYMGS_cuda_0( const SparseMatrix & A, const Vector & r, Vector & x) {
  
    assert(x.localLength==A.localNumberOfColumns); // Make sure x contain space for halo values
  
