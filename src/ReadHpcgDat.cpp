@@ -71,3 +71,32 @@ ReadHpcgDat(int *localDimensions, int *secondsPerRun, int *localProcDimensions) 
 
   return 0;
 }
+
+int
+ReadHpcgDatWOLocalProc(int *localDimensions, int *secondsPerRun) {
+  FILE * hpcgStream = fopen("hpcg.dat", "r");
+
+  if (! hpcgStream)
+    return -1;
+
+  SkipUntilEol(hpcgStream); // skip the first line
+
+  SkipUntilEol(hpcgStream); // skip the second line
+
+  for (int i = 0; i < 3; ++i)
+    if (fscanf(hpcgStream, "%d", localDimensions+i) != 1 || localDimensions[i] < 16)
+      localDimensions[i] = 16;
+
+  SkipUntilEol( hpcgStream ); // skip the rest of the second line
+
+  if (secondsPerRun!=0) { // Only read number of seconds if the pointer is non-zero
+    if (fscanf(hpcgStream, "%d", secondsPerRun) != 1 || secondsPerRun[0] < 0)
+      secondsPerRun[0] = 30 * 60; // 30 minutes
+  }
+
+  SkipUntilEol( hpcgStream ); // skip the rest of the third line
+
+  fclose(hpcgStream);
+
+  return 0;
+}

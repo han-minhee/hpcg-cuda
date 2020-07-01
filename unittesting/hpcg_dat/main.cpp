@@ -36,7 +36,7 @@ TestCase1(void) {
   WriteHpcgDat(s, strlen(s));
   int localDims[3] = {-23, -29, -31}, seconds = -7;
 
-  ReadHpcgDat(localDims, &seconds);
+  ReadHpcgDatWOLocalProc(localDims, &seconds);
   printf( "%d %d %d %d\n", localDims[0], localDims[1], localDims[2], seconds ); fflush(stdout);
 
   int retVal = 0, idx = 0;
@@ -58,7 +58,7 @@ TestCase2(void) {
   int localDims[3] = {23, 29, 31}, seconds = 7;
   int retVal = 0, idx = 0;
 
-  ReadHpcgDat(localDims, &seconds);
+  ReadHpcgDatWOLocalProc(localDims, &seconds);
   printf( "%d %d %d %d\n", localDims[0], localDims[1], localDims[2], seconds ); fflush(stdout);
 
   if (localDims[0] != 13) retVal |= 1 << (idx++);
@@ -83,7 +83,7 @@ TestCase3(void) {
   int localDims[3] = {23, 29, 31}, seconds = 7;
   int retVal = 0, idx = 0;
 
-  ReadHpcgDat(localDims, &seconds);
+  ReadHpcgDatWOLocalProc(localDims, &seconds);
   printf( "%d %d %d %d\n", localDims[0], localDims[1], localDims[2], seconds ); fflush(stdout);
 
   if (localDims[0] != 13) retVal |= 1 << (idx++);
@@ -108,7 +108,7 @@ TestCase4(void) {
   int localDims[3] = {23, 29, 31}, seconds = 7;
   int retVal = 0, idx = 0;
 
-  ReadHpcgDat(localDims, &seconds);
+  ReadHpcgDatWOLocalProc(localDims, &seconds);
   printf( "%d %d %d %d\n", localDims[0], localDims[1], localDims[2], seconds ); fflush(stdout);
 
   if (localDims[0] != 13) retVal |= 1 << (idx++);
