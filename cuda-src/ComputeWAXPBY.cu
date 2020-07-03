@@ -2,6 +2,7 @@
  #include "ComputeWAXPBY_cuda.hpp"
 
  #include <cassert>
+ #include <cudart>
  /*!
    Routine to compute the update of a vector with the sum of two
    scaled vectors where: w = alpha*x + beta*y
@@ -39,7 +40,9 @@ cublasStatus_t cublasDaxpy(cublasHandle_t handle, int n,
 */
 // cublasDaxpy
 
-__global__ void kernelWAXPBY(int n
+__global__ void kernelWAXPBY(
+      int n,
+      int itemsPerThreads,
 		  double alpha,
 		  double beta,
 		  double *  xv,
@@ -47,15 +50,20 @@ __global__ void kernelWAXPBY(int n
 		  double *  wv
 		)               
 {
-    int global_index;
-    int local_index;
-	for(local_index = global_index; local_index < /* FIXME : limits*/; local_index++){
+    int globalIndex = blockDim.x * blockIdx.x + threadIdx.x;
+    globalIndex *= elemsPerThreads;
+
+    if(globalIndex > n) return;
+
+    int localIndex;
+
+	for(localIndex = globalIndex; localIndex < globalIndex + elemsPerThreads; localIndex++){
 			if (alpha==1.0) {
-			    wv[x] = xv[local_index] + beta * yv[local_index];
+			    wv[x] = xv[localIndex] + beta * yv[localIndex];
 			} else if (beta==1.0) {
-			    wv[x] = alpha * xv[local_index] + yv[local_index];
+			    wv[x] = alpha * xv[localIndex] + yv[localIndex];
 			} else  {
-			    wv[x] = alpha * xv[local_index] + beta * yv[local_index];
+			    wv[x] = alpha * xv[localIndex] + beta * yv[localIndex];
 			}
 			
 	}
@@ -73,9 +81,12 @@ __global__ void kernelWAXPBY(int n
    const double * const yv = y.values;
    double * const wv = w.values;
 
-   //global dim : n
-   //local dim : for now, just 1?
+   int elemsPerThreads = 0;
+   dim3 globalDim();
+   dim3 blockDim();
 
+   kernelWAXPBY<<<globalDim, blockDim>>>(n, itemsPerThreads, alpha, beta, xv, yv, wv);
+   
    /*
    if (alpha==1.0) {
      for (local_int_t i=0; i<n; i++) wv[i] = xv[i] + beta * yv[i];
