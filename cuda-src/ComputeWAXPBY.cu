@@ -69,7 +69,7 @@ __global__ void kernelWAXPBY(
 	}
 }
 
- int ComputeWAXPBY_cuda_0(const local_int_t n, const double alpha, const Vector & x,
+ int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector & x,
      const double beta, const Vector & y, Vector & w) {
  
         // Test vector lengths
@@ -81,7 +81,10 @@ __global__ void kernelWAXPBY(
    const double * const yv = y.values;
    double * const wv = w.values;
 
+   //cudaOccupancyMaxPotentialBlockSize
    int elemsPerThreads = 0;
+
+   // FIXME: dimension
    dim3 globalDim();
    dim3 blockDim();
 
