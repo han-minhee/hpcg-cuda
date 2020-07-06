@@ -1,6 +1,5 @@
 
- #include "ComputeWAXPBY_cuda.hpp"
-
+ #include "ComputeWAXPBY_cuda.cuh"
  #include <cassert>
  #include <cudart>
  /*!
@@ -20,29 +19,8 @@
    @see ComputeWAXPBY
  */
 
-
-// cublasDcopy
-/*
-
-cublasStatus_t cublasDcopy(cublasHandle_t handle, int n,
-                           const double          *x, int incx,
-                           double                *y, int incy)
-
-cublasStatus_t  cublasDscal(cublasHandle_t handle, int n,
-                            const double          *alpha,
-                            double          *x, int incx)
-                            
-cublasStatus_t cublasDaxpy(cublasHandle_t handle, int n,
-                           const double          *alpha,
-                           const double          *x, int incx,
-                           double                *y, int incy)
-
-*/
-// cublasDaxpy
-
 __global__ void kernelWAXPBY(
       int n,
-      int itemsPerThreads,
 		  double alpha,
 		  double beta,
 		  double *  xv,
@@ -50,12 +28,12 @@ __global__ void kernelWAXPBY(
 		  double *  wv
 		)               
 {
+    int localIndex;
+    int elemsPerThreads = warpSize;
+
     int globalIndex = blockDim.x * blockIdx.x + threadIdx.x;
     globalIndex *= elemsPerThreads;
-
-    if(globalIndex > n) return;
-
-    int localIndex;
+    if(globalIndex + elemsPerThreads >= n) return;
 
 	for(localIndex = globalIndex; localIndex < globalIndex + elemsPerThreads; localIndex++){
 			if (alpha==1.0) {
@@ -71,9 +49,7 @@ __global__ void kernelWAXPBY(
 
  int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector & x,
      const double beta, const Vector & y, Vector & w) {
- 
-        // Test vector lengths
-        // should also be in the kernel?
+
    assert(x.localLength>=n); 
    assert(y.localLength>=n);
  
@@ -81,24 +57,16 @@ __global__ void kernelWAXPBY(
    const double * const yv = y.values;
    double * const wv = w.values;
 
-   //cudaOccupancyMaxPotentialBlockSize
-   int elemsPerThreads = 0;
+   int numBlocks = ( n + warpSize -1 ) / warpSize;
+   kernelWAXPBY<<<numBlocks, warpSize>>>(n, alpha, beta, xv, yv, wv);
 
-   // FIXME: dimension
-   dim3 globalDim();
-   dim3 blockDim();
-
-   kernelWAXPBY<<<globalDim, blockDim>>>(n, itemsPerThreads, alpha, beta, xv, yv, wv);
-   
-   /*
-   if (alpha==1.0) {
-     for (local_int_t i=0; i<n; i++) wv[i] = xv[i] + beta * yv[i];
-   } else if (beta==1.0) {
-     for (local_int_t i=0; i<n; i++) wv[i] = alpha * xv[i] + yv[i];
-   } else  {
-     for (local_int_t i=0; i<n; i++) wv[i] = alpha * xv[i] + beta * yv[i];
+   if(gpuAssert( cudaPeekAtLastError()) == -1  ){
+    return -1; 
    }
-*/ 
+   if (gpuAssert( cudaDeviceSynchronize()) == -1){
+     return -1;
+   }
+
    return 0;
  }
  
