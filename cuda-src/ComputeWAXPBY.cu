@@ -53,11 +53,24 @@ __global__ void kernelWAXPBY(
    assert(x.localLength>=n); 
    assert(y.localLength>=n);
  
-   const double * const xv = x.values;
-   const double * const yv = y.values;
+   double * const xv = x.values;
+   double * const yv = y.values;
    double * const wv = w.values;
 
+   double * xv_d;
+   double * yv_d;
+   double * wv_d;
+
    //cudaMalloc
+   size_t n_size = n * sizeof(double);
+   cudaMalloc(xv_d, n_size);
+   cudaMalloc(yv_d, n_size);
+   cudaMalloc(wv_d, n_size);
+
+   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
+   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
+
+   //cudaMemcpyFromSymbol() cudaMemcpyHostToDevice
 
    int numBlocks = ( n + warpSize -1 ) / warpSize;
    kernelWAXPBY<<<numBlocks, warpSize>>>(n, alpha, beta, xv, yv, wv);
