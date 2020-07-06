@@ -57,6 +57,8 @@ __global__ void kernelWAXPBY(
    const double * const yv = y.values;
    double * const wv = w.values;
 
+   //cudaMalloc
+
    int numBlocks = ( n + warpSize -1 ) / warpSize;
    kernelWAXPBY<<<numBlocks, warpSize>>>(n, alpha, beta, xv, yv, wv);
 

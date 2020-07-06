@@ -1,13 +1,5 @@
-
- #ifndef HPCG_NO_MPI
- #include <mpi.h>
- #include "mytimer.hpp"
- #endif
- #ifndef HPCG_NO_OPENMP
- #include <omp.h>
- #endif
  #include <cassert>
- #include "ComputeDotProduct_ref.hpp"
+ #include "ComputeDotProduct.cuh"
  
  // notice: originally, for the use of MPI, there should be result, time_allreduce variable,
  // but currently omitted.
@@ -16,7 +8,8 @@
   int n,
   int itemsPerThreads,
   double *  xv,
-  double *  yv
+  double *  yv,
+  double * result;
 )               
 {
   int globalIndex = blockDim.x * blockIdx.x + threadIdx.x;
@@ -30,10 +23,10 @@
 for(localIndex = globalIndex; localIndex < globalIndex + elemsPerThreads; localIndex++){
       localResult = xv[localIndex] * yv[localIndex];
 }
-  return localResult;
+  result += localResult;
 }
 
- int ComputeDotProduct_cuda_0(const local_int_t n, const Vector & x, const Vector & y,
+ int ComputeDotProduct_cuda(const local_int_t n, const Vector & x, const Vector & y,
      double & result, double & time_allreduce) {
    assert(x.localLength>=n); // Test vector lengths
    assert(y.localLength>=n);
