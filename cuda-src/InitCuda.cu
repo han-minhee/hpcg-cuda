@@ -14,7 +14,7 @@ extern int multiProcessorCount;
 
 // macro ref: https://stackoverflow.com/questions/14038589/what-is-the-canonical-way-to-check-for-errors-using-the-cuda-runtime-api
 #define cudaErrorCheck(ans) { gpuAssert((ans), __FILE__, __LINE__); }
-inline int gpuAssert(cudaError_t code, const char *file, int line, bool abort=true)
+inline int gpuAssert(cudaError_t code)
 {
    if (code != cudaSuccess) 
    {

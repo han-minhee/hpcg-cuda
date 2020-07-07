@@ -70,11 +70,10 @@ __global__ void kernelWAXPBY(
    cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
    cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
 
-   //cudaMemcpyFromSymbol() cudaMemcpyHostToDevice
-
    int numBlocks = ( n + warpSize -1 ) / warpSize;
-   kernelWAXPBY<<<numBlocks, warpSize>>>(n, alpha, beta, xv, yv, wv);
-
+   kernelWAXPBY<<<numBlocks, warpSize>>>(n, alpha, beta, xv_d, yv_d, wv_d);
+   cudaMemcpy(wv_d, wv, n_size, cudaMemcpyDeviceToHost);
+   
    if(gpuAssert( cudaPeekAtLastError()) == -1  ){
     return -1; 
    }

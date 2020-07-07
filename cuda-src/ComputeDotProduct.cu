@@ -6,24 +6,24 @@
  // instead of changing a value, it returns a double var.
  __global__ double kernelDotProduct(
   int n,
-  int itemsPerThreads,
   double *  xv,
   double *  yv,
   double * result;
 )               
 {
+  int localIndex;
+  int elemsPerThreads = warpSize;
+
   int globalIndex = blockDim.x * blockIdx.x + threadIdx.x;
   globalIndex *= elemsPerThreads;
-
   if(globalIndex > n) return;
 
-  int localIndex;
   double localResult = 0.0;
 
 for(localIndex = globalIndex; localIndex < globalIndex + elemsPerThreads; localIndex++){
-      localResult = xv[localIndex] * yv[localIndex];
+      localResult += xv[localIndex] * yv[localIndex];
 }
-  result += localResult;
+  result = localResult;
 }
 
  int ComputeDotProduct_cuda(const local_int_t n, const Vector & x, const Vector & y,
@@ -35,15 +35,20 @@ for(localIndex = globalIndex; localIndex < globalIndex + elemsPerThreads; localI
    double * xv = x.values;
    double * yv = y.values;
 
-   int elemsPerThreads = 0;
+   cudaMalloc(xv_d, n_size);
+   cudaMalloc(yv_d, n_size);
 
-   // cudaOccupancyMaxPotentialBlockSize
-   // FIXME: dimension
-   dim3 globalDim();
-   dim3 blockDim();
+   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
+   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
 
-   result = kernelDotProduct<<<globalDim, blockDim>>>(n, itemsPerThreads, xv, yv);
- 
-   return 0;
+   int numBlocks = ( n + warpSize -1 ) / warpSize;
+   kernelWAXPBY<<<numBlocks, warpSize>>>(n, xv_d, yv_d, wv_d);
+   
+   if(gpuAssert( cudaPeekAtLastError()) == -1  ){
+    return -1; 
+   }
+   if (gpuAssert( cudaDeviceSynchronize()) == -1){
+     return -1;
+   }
  }
  
