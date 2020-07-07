@@ -20,7 +20,7 @@
 
 #include "ComputeWAXPBY.hpp"
 #include "ComputeWAXPBY_ref.hpp"
-#include "../CUDA_src/ComputeWAXPBY.cuh"
+#include "../cuda-src/WAXPBY.cuh"
 
 /*!
   Routine to compute the update of a vector with the sum of two

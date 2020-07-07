@@ -46,7 +46,7 @@ HPCG_DEPS = src/CG.o \
 	    src/init.o \
 	    src/finalize.o
 
-CUDA_DEPS = CUDA_src/ComputeWAXPBY.o
+CUDA_DEPS = cuda-src/WAXPBY.o
 
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
 PRIMARY_HEADERS = HPCG_SRC_PATH/src/Geometry.hpp HPCG_SRC_PATH/src/SparseMatrix.hpp HPCG_SRC_PATH/src/Vector.hpp HPCG_SRC_PATH/src/CGData.hpp \
@@ -183,5 +183,6 @@ src/OutputFile.o: HPCG_SRC_PATH/src/OutputFile.cpp HPCG_SRC_PATH/src/OutputFile.
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 ## added for CUDA implementation
-CUDA_src/ComputeWAXPBY.o: HPCG_SRC_PATH/CUDA_src/ComputeWAXPBY.cpp $(PRIMARY_HEADERS)
-	$(NVCC) -c $(NVCCFLAGS) -IHPCG_SRC_PATH/CUDA_src $< -o $@
+
+cuda-src/WAXPBY.o: HPCG_SRC_PATH/cuda-src/WAXPBY.cuda $(PRIMARY_HEADERS)
+	$(NVCC) -c $(NVCCFLAGS) -IHPCG_SRC_PATH/cuda-src $< -o $@

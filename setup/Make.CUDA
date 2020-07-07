@@ -37,7 +37,7 @@ MPlib        =
 # - HPCG includes / libraries / specifics -------------------------------
 # ----------------------------------------------------------------------
 #
-HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(arch) $(MPinc)
+HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/cuda-src $(MPinc)
 HPCG_LIBS     =
 #
 # - Compile time options -----------------------------------------------
@@ -68,7 +68,7 @@ CXX          = /usr/bin/g++
 NVCC         = nvcc
 NVCCFLAGS    = 
 NVLINKFLAGS  = 
-NVCC_LIBS    =
+NVCC_LIBS    = -lcuda -lcudart
 
 CXXFLAGS     = $(HPCG_DEFS) -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp -mavx
 #

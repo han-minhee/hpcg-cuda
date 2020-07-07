@@ -17,11 +17,13 @@ HPCG_DEPS = src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o \
          src/ComputeMG_ref.o src/ComputeMG.o src/ComputeProlongation_ref.o src/ComputeRestriction_ref.o src/GenerateCoarseProblem.o \
 	 src/ComputeOptimalShapeXYZ.o src/MixedBaseCounter.o src/CheckAspectRatio.o src/OutputFile.o
 
+CUDA_DEPS = cuda-src/WAXPBY.o
+
 bin/xhpcg: src/main.o $(HPCG_DEPS)
-	$(LINKER) $(LINKFLAGS) src/main.o $(HPCG_DEPS) -o bin/xhpcg $(HPCG_LIBS)
+	$(LINKER) $(LINKFLAGS) src/main.o $(HPCG_DEPS) $(CUDA_DEPS) $(HPCG_LIBS) $(NVCC_LIBS) -o bin/xhpcg
 
 clean:
-	rm -f $(HPCG_DEPS) bin/xhpcg src/main.o
+	rm -f $(HPCG_DEPS) $(CUDA_DEPS) bin/xhpcg src/main.o
 
 .PHONY: clean
 

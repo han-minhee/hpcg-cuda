@@ -16,10 +16,11 @@
   @see ComputeWAXPBY
 */
 #include "../src/Vector.hpp"
+#include "InitCuda.cuh"
 #include "cuda.h"
 #include "cuda_runtime.h"
 #include <cassert>
+#include <cstdio>
 
 int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector &x,
-                       const double beta, const Vector &y, Vector &w,
-                       bool &isOptimized);
+                       const double beta, const Vector &y, Vector &w);

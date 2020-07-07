@@ -1,16 +1,17 @@
-#include "InitCuda.cuh"
+#include "cuda.h"
+#include "cuda_runtime.h"
 #include <cassert>
-#include <cudart>
+#include <cstdio>
 
 // SMs contain SPs
 extern int numSM;
 extern int numSP;
 
 extern int threadsPerBlock;
-extern int warpSize;
 extern int regsPerBlock;
 extern int multiProcessorCount;
+extern int deviceWarpSize;
 
-inline int gpuAssert(cudaError_t code);
+int gpuAssert(cudaError_t code);
 int initDevice(void);
 int getDeviceProp(cudaDeviceProp deviceProp);

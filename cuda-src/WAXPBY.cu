@@ -1,9 +1,9 @@
-#include "ComputeWAXPBY_cuda.cuh"
+#include "WAXPBY.cuh"
 
 __global__ void kernelWAXPBY(int n, double alpha, double beta, double *xv,
-                             double *yv, double *wv) {
+                             double *yv, double *wv, int deviceWarpSize) {
   int localIndex;
-  int elemsPerThreads = warpSize;
+  int elemsPerThreads = deviceWarpSize;
 
   int globalIndex = blockDim.x * blockIdx.x + threadIdx.x;
   globalIndex *= elemsPerThreads;
@@ -13,14 +13,15 @@ __global__ void kernelWAXPBY(int n, double alpha, double beta, double *xv,
   for (localIndex = globalIndex; localIndex < globalIndex + elemsPerThreads;
        localIndex++) {
     if (alpha == 1.0) {
-      wv[x] = xv[localIndex] + beta * yv[localIndex];
+      wv[localIndex] = xv[localIndex] + beta * yv[localIndex];
     } else if (beta == 1.0) {
-      wv[x] = alpha * xv[localIndex] + yv[localIndex];
+      wv[localIndex] = alpha * xv[localIndex] + yv[localIndex];
     } else {
-      wv[x] = alpha * xv[localIndex] + beta * yv[localIndex];
+      wv[localIndex] = alpha * xv[localIndex] + beta * yv[localIndex];
     }
   }
 }
+
 
 int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector &x,
                        const double beta, const Vector &y, Vector &w) {
@@ -38,15 +39,15 @@ int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector &x,
 
   // cudaMalloc
   size_t n_size = n * sizeof(double);
-  cudaMalloc(xv_d, n_size);
-  cudaMalloc(yv_d, n_size);
-  cudaMalloc(wv_d, n_size);
+  cudaMalloc(&xv_d, n_size);
+  cudaMalloc(&yv_d, n_size);
+  cudaMalloc(&wv_d, n_size);
 
   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
-  cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
+  cudaMemcpy(yv_d, yv, n_size, cudaMemcpyHostToDevice);
 
-  int numBlocks = (n + warpSize - 1) / warpSize;
-  kernelWAXPBY<<<numBlocks, warpSize>>>(n, alpha, beta, xv_d, yv_d, wv_d);
+  int numBlocks = (n + deviceWarpSize - 1) / deviceWarpSize;
+  kernelWAXPBY<<<numBlocks, deviceWarpSize>>>(n, alpha, beta, xv_d, yv_d, wv_d, deviceWarpSize);
   cudaMemcpy(wv_d, wv, n_size, cudaMemcpyDeviceToHost);
 
   if (gpuAssert(cudaPeekAtLastError()) == -1) {

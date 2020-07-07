@@ -15,8 +15,12 @@
   @see ComputeSPMV
 */
 
+#include "../src/SparseMatrix.hpp"
+#include "../src/Vector.hpp"
+
 #include "cuda.h"
 #include "cuda_runtime.h"
+
 #include <cassert>
 
 int ComputeSPMV_cuda(const SparseMatrix &A, Vector &x, Vector &y);
