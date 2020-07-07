@@ -44,9 +44,10 @@ HPCG_DEPS = src/CG.o \
 	    src/OutputFile.o \
 	    src/GenerateCoarseProblem.o \
 	    src/init.o \
-	    src/finalize.o
+	    src/finalize.o \
+		cuda-src/WAXPBY.o
 
-CUDA_DEPS = cuda-src/WAXPBY.o
+CUDA_DEPS = 
 
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
 PRIMARY_HEADERS = HPCG_SRC_PATH/src/Geometry.hpp HPCG_SRC_PATH/src/SparseMatrix.hpp HPCG_SRC_PATH/src/Vector.hpp HPCG_SRC_PATH/src/CGData.hpp \
@@ -54,7 +55,7 @@ PRIMARY_HEADERS = HPCG_SRC_PATH/src/Geometry.hpp HPCG_SRC_PATH/src/SparseMatrix.
 
 all: bin/xhpcg
 
-bin/xhpcg: src/main.o $(HPCG_DEPS)
+bin/xhpcg: src/main.o $(HPCG_DEPS) $(CUDA_DEPS)
 	$(LINKER) $(LINKFLAGS) src/main.o $(HPCG_DEPS) $(CUDA_DEPS) $(HPCG_LIBS) $(NVCC_LIBS) -o bin/xhpcg
 
 clean:
@@ -182,7 +183,5 @@ src/CheckAspectRatio.o: HPCG_SRC_PATH/src/CheckAspectRatio.cpp HPCG_SRC_PATH/src
 src/OutputFile.o: HPCG_SRC_PATH/src/OutputFile.cpp HPCG_SRC_PATH/src/OutputFile.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-## added for CUDA implementation
-
-cuda-src/WAXPBY.o: HPCG_SRC_PATH/cuda-src/WAXPBY.cu $(PRIMARY_HEADERS)
-	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/cuda-src $< -o $@
+cuda-src/WAXPBY.o: HPCG_SRC_PATH/cuda-src/WAXPBY.cu HPCG_SRC_PATH/cuda-src/WAXPBY.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@

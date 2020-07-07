@@ -1,3 +1,0 @@
-CC=nvcc
-LIBS=
-LIB_DIRS=
