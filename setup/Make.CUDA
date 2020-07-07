@@ -63,14 +63,22 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 # - Compilers / linkers - Optimization flags ---------------------------
 # ----------------------------------------------------------------------
 #
-CXX          = /usr/bin/g++
+CXX          = nvcc
+#/usr/bin/g++
 
 NVCC         = nvcc
 NVCCFLAGS    = 
 NVLINKFLAGS  = 
-NVCC_LIBS    = -lcuda -lcudart
+NVCC_LIBS    = -lcuda -lcudart 
 
-CXXFLAGS     = $(HPCG_DEFS) -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp -mavx
+
+COMPILER_OPTIONS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp
+CUDA_COMPILER_OPTIONS := $(foreach option, $(COMPILER_OPTIONS), --compiler-option $(option))
+
+
+CXXFLAGS     = $(HPCG_DEFS) --compiler-options="$(COMPILER_OPTIONS)"
+# $(CUDA_COMPILER_OPTIONS)
+
 #
 LINKER       = $(CXX)
 LINKFLAGS    = $(CXXFLAGS)

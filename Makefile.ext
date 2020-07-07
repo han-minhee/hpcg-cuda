@@ -184,5 +184,5 @@ src/OutputFile.o: HPCG_SRC_PATH/src/OutputFile.cpp HPCG_SRC_PATH/src/OutputFile.
 
 ## added for CUDA implementation
 
-cuda-src/WAXPBY.o: HPCG_SRC_PATH/cuda-src/WAXPBY.cuda $(PRIMARY_HEADERS)
-	$(NVCC) -c $(NVCCFLAGS) -IHPCG_SRC_PATH/cuda-src $< -o $@
+cuda-src/WAXPBY.o: HPCG_SRC_PATH/cuda-src/WAXPBY.cu $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/cuda-src $< -o $@
