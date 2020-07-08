@@ -4,13 +4,13 @@
 #include <cstdio>
 
 // SMs contain SPs
-extern int numSM;
-extern int numSP;
+int numSM;
+int numSP;
 
-extern int threadsPerBlock;
-extern int regsPerBlock;
-extern int multiProcessorCount;
-extern int deviceWarpSize;
+int threadsPerBlock;
+int regsPerBlock;
+int multiProcessorCount;
+int deviceWarpSize;
 
 int gpuAssert(cudaError_t code);
 int initDevice(void);

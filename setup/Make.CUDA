@@ -15,18 +15,18 @@ HPCG_LIBS     =
 HPCG_OPTS     = -DHPCG_NO_MPI
 HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 
-CXX          = nvcc
+CXX          = g++
 NVCC         = nvcc
 NVCC_LIBS    = -lcuda -lcudart
 
 COMPILER_OPTIONS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp
 
-CXXFLAGS     = $(HPCG_DEFS) --compiler-options="$(COMPILER_OPTIONS)"
+NVCCFLAGS     = $(HPCG_DEFS) --compiler-options="$(COMPILER_OPTIONS)"
 # $(CUDA_COMPILER_OPTIONS)
 
 #
-LINKER       = $(CXX)
-LINKFLAGS    = $(CXXFLAGS)
+LINKER       = $(NVCC)
+LINKFLAGS    = $(NVCCFLAGS)
 
 ARCHIVER     = ar
 ARFLAGS      = r

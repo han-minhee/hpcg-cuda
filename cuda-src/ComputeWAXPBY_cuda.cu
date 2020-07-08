@@ -1,4 +1,4 @@
-#include "WAXPBY.cuh"
+#include "ComputeWAXPBY_cuda.cuh"
 
 __global__ void kernelWAXPBY(int n, double alpha, double beta, double *xv,
                              double *yv, double *wv, int deviceWarpSize) {
