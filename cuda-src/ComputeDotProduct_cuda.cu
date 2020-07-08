@@ -1,12 +1,12 @@
-#include "ComputeDotProduct.cuh"
+#include "ComputeDotProduct_cuda.cuh"
 
 // notice: originally, for the use of MPI, there should be result,
 // time_allreduce variable, but currently omitted. instead of changing a value,
 // it returns a double var.
-__global__ double kernelDotProduct(int n, double *xv, double *yv,
-                                   double *result;) {
+__global__ void kernelDotProduct(int n, double *xv, double *yv,
+                                   double& result, int deviceWarpSize) {
   int localIndex;
-  int elemsPerThreads = warpSize;
+  int elemsPerThreads = deviceWarpSize;
 
   int globalIndex = blockDim.x * blockIdx.x + threadIdx.x;
   globalIndex *= elemsPerThreads;
@@ -31,15 +31,20 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
 
   double *xv = x.values;
   double *yv = y.values;
+  double *xv_d;
+  double *yv_d;
 
-  cudaMalloc(xv_d, n_size);
-  cudaMalloc(yv_d, n_size);
+  size_t n_size = n * sizeof(double);
+  cudaMalloc(&xv_d, n_size);
+  cudaMalloc(&yv_d, n_size);
 
   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
-  cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
+  cudaMemcpy(yv_d, yv, n_size, cudaMemcpyHostToDevice);
+  size_t deviceWarpSize = 32;
 
-  int numBlocks = (n + warpSize - 1) / warpSize;
-  kernelDotProduct<<<numBlocks, warpSize>>>(n, xv_d, yv_d, result);
+
+  int numBlocks = (n + deviceWarpSize - 1) / deviceWarpSize;
+  kernelDotProduct<<<numBlocks, deviceWarpSize>>>(n, xv_d, yv_d, result, deviceWarpSize);
 
   if (gpuAssert(cudaPeekAtLastError()) == -1) {
     return -1;

@@ -16,6 +16,7 @@
 */
 
 #include "../src/Vector.hpp"
+#include "InitCuda.cuh"
 #include "cuda.h"
 #include "cuda_runtime.h"
 #include <cassert>

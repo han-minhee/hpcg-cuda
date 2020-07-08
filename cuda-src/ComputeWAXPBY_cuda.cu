@@ -39,6 +39,7 @@ int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector &x,
 
   // cudaMalloc
   size_t n_size = n * sizeof(double);
+  size_t deviceWarpSize = 32;
   cudaMalloc(&xv_d, n_size);
   cudaMalloc(&yv_d, n_size);
   cudaMalloc(&wv_d, n_size);
