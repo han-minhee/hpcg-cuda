@@ -2,6 +2,27 @@
 // macro ref:
 // https://stackoverflow.com/questions/14038589/what-is-the-canonical-way-to-check-for-errors-using-the-cuda-runtime-api
 
+int numSM;
+int numSP;
+
+int threadsPerBlock;
+int regsPerBlock;
+int multiProcessorCount;
+int deviceWarpSize;
+
+int getWarpSize(void){
+  return deviceWarpSize;
+}
+int getThreadsPerBlock(void){
+  return threadsPerBlock;
+}
+int getRegsPerBlock(void){
+  return regsPerBlock;
+}
+int getMultiProcessorCount(void){
+  return multiProcessorCount;
+}
+
 int gpuAssert(cudaError_t code) {
     if (code != cudaSuccess) {
       printf("GPUassert: %s\n", cudaGetErrorString(code));

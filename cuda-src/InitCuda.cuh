@@ -3,14 +3,10 @@
 #include <cassert>
 #include <cstdio>
 
-// SMs contain SPs
-int numSM;
-int numSP;
-
-int threadsPerBlock;
-int regsPerBlock;
-int multiProcessorCount;
-int deviceWarpSize;
+int getWarpSize(void);
+int getThreadsPerBlock(void);
+int getRegsPerBlock(void);
+int getMultiProcessorCount(void);
 
 int gpuAssert(cudaError_t code);
 int initDevice(void);

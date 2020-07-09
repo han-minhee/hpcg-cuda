@@ -40,7 +40,7 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
 
   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
   cudaMemcpy(yv_d, yv, n_size, cudaMemcpyHostToDevice);
-  size_t deviceWarpSize = 32;
+  size_t deviceWarpSize = getWarpSize();
 
 
   int numBlocks = (n + deviceWarpSize - 1) / deviceWarpSize;
@@ -52,4 +52,6 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
   if (gpuAssert(cudaDeviceSynchronize()) == -1) {
     return -1;
   }
+
+  return 0;
 }
