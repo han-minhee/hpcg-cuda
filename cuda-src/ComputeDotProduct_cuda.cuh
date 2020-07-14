@@ -24,3 +24,8 @@
 int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
                            const Vector &y, double &result,
                            double &time_allreduce);
+
+                           
+int ComputeDotProduct_ref_cuda(const local_int_t n, const Vector &x,
+  const Vector &y, double &result,
+  double &time_allreduce);

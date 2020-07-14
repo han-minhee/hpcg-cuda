@@ -26,6 +26,7 @@ int getMultiProcessorCount(void){
 int gpuAssert(cudaError_t code) {
     if (code != cudaSuccess) {
       printf("GPUassert: %s\n", cudaGetErrorString(code));
+      printf("Error Code: %d\n", code);
       return -1;
     } else {
       return 0;
@@ -39,6 +40,10 @@ int getDeviceProp(cudaDeviceProp deviceProp) {
     return 1;
   }
 }
+int gpuCheckError(void){
+  gpuAssert(cudaPeekAtLastError());
+}
+
 
 int initDevice(void) {
   cudaDeviceProp deviceProp;

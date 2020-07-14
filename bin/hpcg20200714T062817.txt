@@ -1,0 +1,6 @@
+WARNING: PERFORMING UNPRECONDITIONED ITERATIONS
+Call [0] Number of Iterations [50] Scaled Residual [-nan]
+ Expected 12 iterations.  Performed 50.
+WARNING: PERFORMING UNPRECONDITIONED ITERATIONS
+Call [1] Number of Iterations [50] Scaled Residual [-nan]
+ Expected 12 iterations.  Performed 50.
