@@ -67,11 +67,10 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
   printf("memcpy\n");
   cudaDeviceSynchronize();
 
-
   size_t deviceWarpSize = 32;
   int numBlocks = (n + deviceWarpSize - 1) / deviceWarpSize;
-  kernelDotProduct<<<numBlocks, deviceWarpSize>>>(n, xv_d, yv_d, local_results,
-                                                  deviceWarpSize);
+  kernelDotProduct<<<numBlocks, deviceWarpSize>>>(
+      n, xv_d, yv_d, local_results_d, deviceWarpSize);
 
   printf("kernel run\n");
 
@@ -86,6 +85,7 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
   }
   printf("kernel cpy\n");
 
+  cudaDeviceSynchronize();
 
   for (int i = 0; i < n; i++) {
     result += local_results[i];
