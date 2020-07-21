@@ -3,6 +3,7 @@
 // notice: originally, for the use of MPI, there should be result,
 // time_allreduce variable, but currently omitted. instead of changing a value,
 // it returns a double var.
+
 __global__ void kernelDotProduct(int n, double *xv, double *yv,
                                  double *local_results, int deviceWarpSize) {
   int localIndex;
@@ -27,64 +28,92 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
 
   double *xv = x.values;
   double *yv = y.values;
-  double *local_results = new double[n];
+  double *local_results = new double[n]();
 
   double *xv_d;
   double *yv_d;
   double *local_results_d;
 
   size_t n_size = n * sizeof(double);
-  cudaMalloc((void **)&xv_d, n_size);
 
+  result = 0.0;
+
+  printf("entering DotProd\n");
+  cudaMalloc((void **)&xv_d, n_size);
   if (gpuCheckError() == -1) {
     return -1;
   }
+  printf("malloc 1 finished\n");
 
   cudaMalloc((void **)&yv_d, n_size);
 
   if (gpuCheckError() == -1) {
     return -1;
   }
+  printf("malloc 2 finished\n");
 
   cudaMalloc((void **)&local_results_d, n_size);
 
   if (gpuCheckError() == -1) {
     return -1;
   }
+  printf("malloc 3 finished\n");
 
-  printf("malloc\n");
 
   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
   if (gpuCheckError() == -1) {
     return -1;
   }
+  printf("memcpy 1 finished\n");
+
 
   cudaMemcpy(yv_d, yv, n_size, cudaMemcpyHostToDevice);
   if (gpuCheckError() == -1) {
     return -1;
   }
+  printf("memcpy 2 finished\n");
 
-  printf("memcpy\n");
+
+  cudaMemcpy(local_results_d, local_results, n_size, cudaMemcpyHostToDevice);
+  if (gpuCheckError() == -1) {
+    return -1;
+  }
+  printf("memcpy 3 finished\n");
+
+
   cudaDeviceSynchronize();
 
   size_t deviceWarpSize = 32;
   int numBlocks = (n + deviceWarpSize - 1) / deviceWarpSize;
-  kernelDotProduct<<<numBlocks, deviceWarpSize>>>(
-      n, xv_d, yv_d, local_results_d, deviceWarpSize);
+  // kernelDotProduct<<<numBlocks, deviceWarpSize>>>(
+  //    n, xv_d, yv_d, local_results_d, deviceWarpSize);
 
-  printf("kernel run\n");
+  cublasHandle_t h;
+  cublasCreate(&h);
+  cublasSetPointerMode(h, CUBLAS_POINTER_MODE_HOST);
+
+  
+  if (gpuCheckError() == -1) {
+    return -1;
+  }
+
+  printf("cublas set\n");
+  cublasDdot(h, n, xv_d, 1, yv_d, 1, local_results_d);
+
+  printf("ddot run finished\n");
+
+  cudaDeviceSynchronize();
 
   if (gpuCheckError() == -1) {
     return -1;
   }
-  cudaDeviceSynchronize();
+
+  printf("ddot check passed \n");
 
   cudaMemcpy(local_results, local_results_d, n_size, cudaMemcpyDeviceToHost);
-  if (gpuAssert(cudaPeekAtLastError()) == -1) {
+  if (gpuCheckError() == -1) {
     return -1;
   }
-  printf("kernel cpy\n");
-
   cudaDeviceSynchronize();
 
   for (int i = 0; i < n; i++) {
@@ -94,8 +123,6 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
   cudaFree(xv_d);
   cudaFree(yv_d);
   cudaFree(local_results_d);
-  free(xv);
-  free(yv);
   free(local_results);
 
   return 0;

@@ -43,27 +43,27 @@ int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector &x,
 
   cudaMalloc((void **)&xv_d, n_size);
 
-  if (gpuAssert(cudaPeekAtLastError()) == -1) {
+  if (gpuCheckError() == -1) {
     return -1;
   }
 
   cudaMalloc((void **)&yv_d, n_size);
 
-  if (gpuAssert(cudaPeekAtLastError()) == -1) {
+  if (gpuCheckError() == -1) {
     return -1;
   }
 
   cudaMalloc((void **)&wv_d, n_size);
-  if (gpuAssert(cudaPeekAtLastError()) == -1) {
+  if (gpuCheckError() == -1) {
     return -1;
   }
 
   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
-  if (gpuAssert(cudaPeekAtLastError()) == -1) {
+  if (gpuCheckError() == -1) {
     return -1;
   }
   cudaMemcpy(yv_d, yv, n_size, cudaMemcpyHostToDevice);
-  if (gpuAssert(cudaPeekAtLastError()) == -1) {
+  if (gpuCheckError() == -1) {
     return -1;
   }
 
@@ -72,12 +72,12 @@ int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector &x,
   kernelWAXPBY<<<numBlocks, deviceWarpSize>>>(n, alpha, beta, xv_d, yv_d, wv_d,
                                         deviceWarpSize);
   cudaDeviceSynchronize();
-  if (gpuAssert(cudaPeekAtLastError()) == -1) {
+  if (gpuCheckError() == -1) {
     return -1;
   }
 
   cudaMemcpy(wv, wv_d, n_size, cudaMemcpyDeviceToHost);
-  if (gpuAssert(cudaPeekAtLastError()) == -1) {
+  if (gpuCheckError() == -1) {
     return -1;
   }
 

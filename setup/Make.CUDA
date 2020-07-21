@@ -17,9 +17,9 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 
 CXX          = g++
 NVCC         = nvcc
-NVCC_LIBS    = -lcuda -lcudart
+NVCC_LIBS    = -lcuda -lcudart -lcublas -lcusparse
 
-COMPILER_OPTIONS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp
+COMPILER_OPTIONS = -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0 -fopenmp -mavx
 
 NVCCFLAGS     = $(HPCG_DEFS) --compiler-options="$(COMPILER_OPTIONS)"
 # $(CUDA_COMPILER_OPTIONS)
