@@ -49,7 +49,8 @@ HPCG_DEPS = src/CG.o \
 
 CUDA_DEPS = cuda-src/ComputeWAXPBY_cuda.o \
 			cuda-src/InitCuda.o \
-			cuda-src/ComputeDotProduct_cuda.o
+			cuda-src/ComputeDotProduct_cuda.o \
+			cuda-src/ComputeSPMV_cuda.o
 
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
 PRIMARY_HEADERS = ./src/Geometry.hpp ./src/SparseMatrix.hpp ./src/Vector.hpp ./src/CGData.hpp \
@@ -197,3 +198,5 @@ cuda-src/ComputeWAXPBY_cuda.o: ./cuda-src/ComputeWAXPBY_cuda.cu ./cuda-src/Compu
 cuda-src/ComputeDotProduct_cuda.o: ./cuda-src/ComputeDotProduct_cuda.cu ./cuda-src/ComputeDotProduct_cuda.cuh $(PRIMARY_HEADERS)
 	$(NVCC) -c $(NVCCFLAGS) -I./src -I./cuda-src $< -o $@
 
+cuda-src/ComputeSPMV_cuda.o: ./cuda-src/ComputeSPMV_cuda.cu ./cuda-src/ComputeSPMV_cuda.cuh $(PRIMARY_HEADERS)
+	$(NVCC) -c $(NVCCFLAGS) -I./src -I./cuda-src $< -o $@

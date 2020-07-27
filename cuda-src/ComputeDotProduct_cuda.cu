@@ -38,48 +38,37 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
 
   result = 0.0;
 
-  printf("entering DotProd\n");
   cudaMalloc((void **)&xv_d, n_size);
   if (gpuCheckError() == -1) {
     return -1;
   }
-  printf("malloc 1 finished\n");
 
   cudaMalloc((void **)&yv_d, n_size);
 
   if (gpuCheckError() == -1) {
     return -1;
   }
-  printf("malloc 2 finished\n");
 
   cudaMalloc((void **)&local_results_d, n_size);
 
   if (gpuCheckError() == -1) {
     return -1;
   }
-  printf("malloc 3 finished\n");
-
 
   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
   if (gpuCheckError() == -1) {
     return -1;
   }
-  printf("memcpy 1 finished\n");
-
 
   cudaMemcpy(yv_d, yv, n_size, cudaMemcpyHostToDevice);
   if (gpuCheckError() == -1) {
     return -1;
   }
-  printf("memcpy 2 finished\n");
-
 
   cudaMemcpy(local_results_d, local_results, n_size, cudaMemcpyHostToDevice);
   if (gpuCheckError() == -1) {
     return -1;
   }
-  printf("memcpy 3 finished\n");
-
 
   cudaDeviceSynchronize();
 
@@ -92,23 +81,17 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
   cublasCreate(&h);
   cublasSetPointerMode(h, CUBLAS_POINTER_MODE_HOST);
 
-  
   if (gpuCheckError() == -1) {
     return -1;
   }
 
-  printf("cublas set\n");
   cublasDdot(h, n, xv_d, 1, yv_d, 1, local_results_d);
-
-  printf("ddot run finished\n");
 
   cudaDeviceSynchronize();
 
   if (gpuCheckError() == -1) {
     return -1;
   }
-
-  printf("ddot check passed \n");
 
   cudaMemcpy(local_results, local_results_d, n_size, cudaMemcpyDeviceToHost);
   if (gpuCheckError() == -1) {
@@ -116,6 +99,9 @@ int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
   }
   cudaDeviceSynchronize();
 
+#ifndef HPCG_NO_OPENMP
+#pragma omp parallel for reduction(+ : result)
+#endif
   for (int i = 0; i < n; i++) {
     result += local_results[i];
   }

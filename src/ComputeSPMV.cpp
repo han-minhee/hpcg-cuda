@@ -20,7 +20,7 @@
 
 #include "ComputeSPMV.hpp"
 #include "ComputeSPMV_ref.hpp"
-
+#include "../cuda-src/ComputeSPMV_cuda.cuh"
 /*!
   Routine to compute sparse matrix vector product y = Ax where:
   Precondition: First call exchange_externals to get off-processor values of x
@@ -40,6 +40,6 @@
 int ComputeSPMV( const SparseMatrix & A, Vector & x, Vector & y) {
 
   // This line and the next two lines should be removed and your version of ComputeSPMV should be used.
-  A.isSpmvOptimized = false;
-  return ComputeSPMV_ref(A, x, y);
+  A.isSpmvOptimized = true;
+  return ComputeSPMV_cuda(A, x, y);
 }

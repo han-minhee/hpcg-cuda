@@ -20,7 +20,6 @@
 
 #include "ComputeDotProduct.hpp"
 #include "ComputeDotProduct_ref.hpp"
-#include "../cuda-src/ComputeDotProduct_cuda.cuh"
 
 int ComputeDotProduct(const local_int_t n, const Vector & x, const Vector & y,
     double & result, double & time_allreduce, bool & isOptimized) {

@@ -14,8 +14,10 @@
 
 #ifndef COMPUTEDOTPRODUCT_HPP
 #define COMPUTEDOTPRODUCT_HPP
+#include "../cuda-src/ComputeDotProduct_cuda.cuh"
 #include "Vector.hpp"
-int ComputeDotProduct(const local_int_t n, const Vector & x, const Vector & y,
-    double & result, double & time_allreduce, bool & isOptimized);
+int ComputeDotProduct(const local_int_t n, const Vector &x, const Vector &y,
+                      double &result, double &time_allreduce,
+                      bool &isOptimized);
 
 #endif // COMPUTEDOTPRODUCT_HPP

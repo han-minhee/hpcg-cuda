@@ -1,9 +1,32 @@
 #include "ComputeSPMV_cuda.cuh"
 
-__global__ void kernelSPMV(int n, double *xv, double *yv) {}
+__global__ void kernelSPMV(int n, double *xv, double *yv, int blockSize) {
 
-// ref:
-// https://medium.com/analytics-vidhya/sparse-matrix-vector-multiplication-with-cuda-42d191878e8f
+  int row = blockDim.x * blockIdx.x + threadIdx.x;
+  int x;
+  int i;
+  int offset = row * blockSize;
+  double sum;
+  for (x = offset; x < offset + blockSize; x++) {
+    if (x < num_rows) {
+      sum = 0;
+      for (i = 0; i < AnonzerosInRow[x]; i++) {
+        sum += AmatrixValues[x * 27 + i] * xMatrix[AmtxIndL[x * 27 + i]];
+      }
+
+      yMatrix[x] = sum;
+    }
+  }
+}
+
+void ConvertToCRS(const SparseMatrix &A, CRSArrays &csr) {
+  csr.nnz = A.localNumberOfNonzeros;
+  csr.m = A.localNumberOfRows;
+  csr.cu_csrValA = *A.matrixValues;
+  csr.cu_csrColIndA = (int *)A.nonzerosInRow;
+  csr.cu_csrRowPtrA = *A.mtxIndL;
+  return;
+}
 
 int ComputeSPMV_cuda(const SparseMatrix &A, Vector &x, Vector &y) {
   assert(x.localLength >= A.localNumberOfColumns);
@@ -15,28 +38,36 @@ int ComputeSPMV_cuda(const SparseMatrix &A, Vector &x, Vector &y) {
   double *xv_d;
   double *yv_d;
 
-  size_t nRow = A.localNumberOfRows;
-  size_t sizeY = nRow * sizeof(double);
-
-  cudaMalloc((void **)&yv_d, sizeY);
-
+  cudaMalloc((void **)&xv_d, x.localLength * sizeof(double));
   if (gpuCheckError() == -1) {
     return -1;
   }
+  printf("malloc 1\n");
 
-  for (int i = 0; i <nRow; i++){
-    double sum = 0.0f;
-    double *currentValues = A.matrixValues[i];
-    int *currentIndices = A.mtxIndL[i];
-    int currentNumberOfNoneZeros = A.nonzerosInRow[i];
-
-
+  cudaMalloc((void **)&yv_d, y.localLength * sizeof(double));
+  if (gpuCheckError() == -1) {
+    return -1;
   }
+  printf("malloc 2\n");
+
+  cudaMemcpy(xv_d, xv, x.localLength * sizeof(double), cudaMemcpyHostToDevice);
+  if (gpuCheckError() == -1) {
+    return -1;
+  }
+  printf("cpy 1\n");
+
+  cudaMemcpy(yv_d, yv, y.localLength * sizeof(double), cudaMemcpyHostToDevice);
+  if (gpuCheckError() == -1) {
+    return -1;
+  }
+  printf("cpy 2\n");
+
+  cudaDeviceSynchronize();
 
   return 0;
 }
 
-int ComputeSPMV_ref(const SparseMatrix &A, Vector &x, Vector &y) {
+int ComputeSPMV_ref_cuda(const SparseMatrix &A, Vector &x, Vector &y) {
 
   assert(x.localLength >= A.localNumberOfColumns); // Test vector lengths
   assert(y.localLength >= A.localNumberOfRows);

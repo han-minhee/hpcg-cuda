@@ -23,7 +23,6 @@
   @param[inout] x On entry, x should contain relevant values, on exit x contains
   the result of one symmetric GS sweep with r as the RHS.
 
-
   @warning Early versions of this kernel (Version 1.1 and earlier) had the r and
   x arguments in reverse order, and out of sync with other kernels.
 
@@ -34,10 +33,10 @@
 
 #include "../src/SparseMatrix.hpp"
 #include "../src/Vector.hpp"
-
 #include "cuda.h"
 #include "cuda_runtime.h"
-
 #include <cassert>
+#include <cublas_v2.h>
+#include <cusparse_v2.h>
 
 int ComputeSYMGS_cuda(const SparseMatrix &A, const Vector &r, Vector &x);
