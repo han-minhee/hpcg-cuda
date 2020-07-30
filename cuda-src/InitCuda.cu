@@ -41,7 +41,7 @@ int getDeviceProp(cudaDeviceProp deviceProp) {
   }
 }
 int gpuCheckError(void){
-  gpuAssert(cudaPeekAtLastError());
+  return gpuAssert(cudaPeekAtLastError());
 }
 
 

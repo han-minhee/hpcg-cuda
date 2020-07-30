@@ -1,0 +1,54 @@
+
+# modified by Han
+
+SHELL        = /bin/sh
+CD           = cd
+CP           = cp
+LN_S         = ln -s -f
+MKDIR        = mkdir -p
+RM           = /bin/rm -f
+TOUCH        = touch
+
+TOPdir       = .
+SRCdir       = $(TOPdir)/src
+INCdir       = $(TOPdir)/src -I$(TOPdir)/cuda-src
+BINdir       = $(TOPdir)/BINdir
+
+MPdir        =
+MPinc        =
+MPlib        =
+
+HPCG_INCLUDES = -I$(INCdir) -I$(INCdir)/$(arch) $(MPinc)
+HPCG_LIBS     =
+#
+# - Compile time options -----------------------------------------------
+#
+# -DHPCG_NO_MPI	        Define to disable MPI
+# -DHPCG_NO_OPENMP	Define to disable OPENMP
+# -DHPCG_CONTIGUOUS_ARRAYS Define to have sparse matrix arrays long and contiguous
+# -DHPCG_DEBUG       	Define to enable debugging output
+# -DHPCG_DETAILED_DEBUG Define to enable very detailed 
+
+HPCG_OPTS     = 
+HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
+
+CUDAdir      =
+CUDAinc      = 
+CUDAlib      = -lcuda -lcudart -lcublas -lcusparse
+
+CXX          = mpicxx
+#CXXFLAGS     = $(HPCG_DEFS) -fomit-frame-pointer -O3 -funroll-loops -W -Wall
+CXXFLAGS     = $(HPCG_DEFS) -O3 -ffast-math -ftree-vectorize -ftree-vectorizer-verbose=0
+#
+
+NVCC = nvcc
+NVCC_OPT     =  --compiler-options="$(CXXFLAGS)"
+
+LINKER       = $(CXX)
+LINKFLAGS    = $(CXXFLAGS)
+
+
+ARCHIVER     = ar
+ARFLAGS      = r
+RANLIB       = echo
+#----------------------------------------------------------------------
