@@ -16,6 +16,5 @@
 #define READHPCGDAT_HPP
 
 int ReadHpcgDat(int *localDimensions, int *secondsPerRun, int *localProcDimensions);
-int ReadHpcgDatWOLocalProc(int *localDimensions, int *secondsPerRun);
 
 #endif // READHPCGDAT_HPP

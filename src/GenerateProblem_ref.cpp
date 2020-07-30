@@ -1,3 +1,17 @@
+
+//@HEADER
+// ***************************************************
+//
+// HPCG: High Performance Conjugate Gradient Benchmark
+//
+// Contact:
+// Michael A. Heroux ( maherou@sandia.gov)
+// Jack Dongarra     (dongarra@eecs.utk.edu)
+// Piotr Luszczek    (luszczek@eecs.utk.edu)
+//
+// ***************************************************
+//@HEADER
+
 /*!
  @file GenerateProblem_ref.cpp
 
@@ -46,6 +60,8 @@ void GenerateProblem_ref(SparseMatrix & A, Vector * b, Vector * x, Vector * xexa
   global_int_t gix0 = A.geom->gix0;
   global_int_t giy0 = A.geom->giy0;
   global_int_t giz0 = A.geom->giz0;
+
+  printf("global=(%d, %d, %d), local=(%d, %d, %d)\n", gnx, gny, gnz, nx, ny, nz);
 
   local_int_t localNumberOfRows = nx*ny*nz; // This is the size of our subblock
   // If this assert fails, it most likely means that the local_int_t is set to int and should be set to long long
