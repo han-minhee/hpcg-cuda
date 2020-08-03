@@ -1,24 +1,21 @@
 #include "ComputeWAXPBY_cuda.cuh"
 
-__global__ void kernelWAXPBY(int n, double alpha, double beta, double *xv,
-                             double *yv, double *wv, int deviceWarpSize) {
-  int localIndex;
-  int elemsPerThreads = deviceWarpSize;
+#define BLOCK_SIZE 32
 
-  int globalIndex = blockDim.x * blockIdx.x + threadIdx.x;
-  globalIndex *= elemsPerThreads;
-  if (globalIndex + elemsPerThreads >= n)
+__global__ void kernel_waxpby(local_int_t size, double alpha, const double *x,
+                              double beta, const double *y, double *w) {
+  local_int_t gid = blockIdx.x * blockDim.x + threadIdx.x;
+
+  if (gid >= size) {
     return;
+  }
 
-  for (localIndex = globalIndex; localIndex < globalIndex + elemsPerThreads;
-       localIndex++) {
-    if (alpha == 1.0) {
-      wv[localIndex] = xv[localIndex] + beta * yv[localIndex];
-    } else if (beta == 1.0) {
-      wv[localIndex] = alpha * xv[localIndex] + yv[localIndex];
-    } else {
-      wv[localIndex] = alpha * xv[localIndex] + beta * yv[localIndex];
-    }
+  if (alpha == 1.0) {
+    w[gid] = fma(beta, y[gid], x[gid]);
+  } else if (beta == 1.0) {
+    w[gid] = fma(alpha, x[gid], y[gid]);
+  } else {
+    w[gid] = fma(alpha, x[gid], beta * y[gid]);
   }
 }
 
@@ -35,52 +32,61 @@ int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector &x,
   double *xv_d;
   double *yv_d;
   double *wv_d;
+  assert(x.localLength >= n);
+  assert(y.localLength >= n);
+  assert(w.localLength >= n);
 
-  // cudaMalloc
   size_t n_size = n * sizeof(double);
-  size_t deviceWarpSize = 32;
-
 
   cudaMalloc((void **)&xv_d, n_size);
 
   if (gpuCheckError() == -1) {
     return -1;
   }
+  // printf("line passed %d\n", __LINE__);
 
   cudaMalloc((void **)&yv_d, n_size);
 
   if (gpuCheckError() == -1) {
     return -1;
   }
+  // printf("line passed %d\n", __LINE__);
 
   cudaMalloc((void **)&wv_d, n_size);
   if (gpuCheckError() == -1) {
     return -1;
   }
+  // printf("line passed %d\n", __LINE__);
 
   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
   if (gpuCheckError() == -1) {
     return -1;
   }
+  // printf("line passed %d\n", __LINE__);
+
   cudaMemcpy(yv_d, yv, n_size, cudaMemcpyHostToDevice);
   if (gpuCheckError() == -1) {
     return -1;
   }
+  // printf("line passed %d\n", __LINE__);
 
-  int numBlocks = (n + deviceWarpSize - 1) / deviceWarpSize;
+  size_t blockDim = (n - 1) / 512 + 1;
+  size_t globalDim = 512;
 
-  kernelWAXPBY<<<numBlocks, deviceWarpSize>>>(n, alpha, beta, xv_d, yv_d, wv_d,
-                                        deviceWarpSize);
+  kernel_waxpby<<<blockDim, globalDim>>>(n, alpha, xv_d, beta, yv_d, wv_d);
+
+  // printf("line passed %d\n", __LINE__);
   cudaDeviceSynchronize();
   if (gpuCheckError() == -1) {
     return -1;
   }
+  // printf("line passed %d\n", __LINE__);
 
   cudaMemcpy(wv, wv_d, n_size, cudaMemcpyDeviceToHost);
   if (gpuCheckError() == -1) {
     return -1;
   }
-
+  // printf("line passed %d\n", __LINE__);
   cudaDeviceSynchronize();
   cudaFree(wv_d);
   cudaFree(xv_d);

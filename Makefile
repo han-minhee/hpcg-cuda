@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 
-arch = Linux_MPI
+arch = CUDA
 setup_file = setup/Make.$(arch)
 
 include $(setup_file)
@@ -46,17 +46,20 @@ HPCG_DEPS = src/CG.o \
 	    src/init.o \
 	    src/finalize.o
 
+CUDA_DEPS = cuda-src/ComputeWAXPBY_cuda.o \
+			cuda-src/InitCuda.o
+
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
 PRIMARY_HEADERS = ./src/Geometry.hpp ./src/SparseMatrix.hpp ./src/Vector.hpp ./src/CGData.hpp \
                   ./src/MGData.hpp ./src/hpcg.hpp
 
 all: bin/xhpcg
 
-bin/xhpcg: src/main.o $(HPCG_DEPS)
-	$(LINKER) $(LINKFLAGS) src/main.o $(HPCG_DEPS) $(HPCG_LIBS) -o bin/xhpcg
+bin/xhpcg: src/main.o $(HPCG_DEPS) $(CUDA_DEPS)
+	$(LINKER) $(LINKFLAGS) src/main.o $(HPCG_OPTS) $(HPCG_DEPS) $(CUDA_DEPS) $(HPCG_LIBS) $(NVCC_LIBS) -o bin/xhpcg
 
 clean:
-	rm -f src/*.o bin/xhpcg
+	rm -f src/*.o cuda-src/*.o bin/xhpcg
 
 .PHONY: all clean
 
@@ -180,3 +183,11 @@ src/CheckAspectRatio.o: ./src/CheckAspectRatio.cpp ./src/CheckAspectRatio.hpp $(
 src/OutputFile.o: ./src/OutputFile.cpp ./src/OutputFile.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
+
+# CUDA Implementation from Here
+
+cuda-src/InitCuda.o: ./cuda-src/InitCuda.cu ./cuda-src/InitCuda.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ComputeWAXPBY_cuda.o: ./cuda-src/ComputeWAXPBY_cuda.cu ./cuda-src/ComputeWAXPBY_cuda.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@

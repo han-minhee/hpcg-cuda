@@ -46,17 +46,20 @@ HPCG_DEPS = src/CG.o \
 	    src/init.o \
 	    src/finalize.o
 
+CUDA_DEPS = cuda-src/ComputeWAXPBY_cuda.o \
+			cuda-src/InitCuda.o
+
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
 PRIMARY_HEADERS = HPCG_SRC_PATH/src/Geometry.hpp HPCG_SRC_PATH/src/SparseMatrix.hpp HPCG_SRC_PATH/src/Vector.hpp HPCG_SRC_PATH/src/CGData.hpp \
                   HPCG_SRC_PATH/src/MGData.hpp HPCG_SRC_PATH/src/hpcg.hpp
 
 all: bin/xhpcg
 
-bin/xhpcg: src/main.o $(HPCG_DEPS)
-	$(LINKER) $(LINKFLAGS) src/main.o $(HPCG_DEPS) $(HPCG_LIBS) -o bin/xhpcg
+bin/xhpcg: src/main.o $(HPCG_DEPS) $(CUDA_DEPS)
+	$(LINKER) $(LINKFLAGS) src/main.o $(HPCG_OPTS) $(HPCG_DEPS) $(CUDA_DEPS) $(HPCG_LIBS) $(NVCC_LIBS) -o bin/xhpcg
 
 clean:
-	rm -f src/*.o bin/xhpcg
+	rm -f src/*.o cuda-src/*.o bin/xhpcg
 
 .PHONY: all clean
 
@@ -180,3 +183,11 @@ src/CheckAspectRatio.o: HPCG_SRC_PATH/src/CheckAspectRatio.cpp HPCG_SRC_PATH/src
 src/OutputFile.o: HPCG_SRC_PATH/src/OutputFile.cpp HPCG_SRC_PATH/src/OutputFile.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
+
+# CUDA Implementation from Here
+
+cuda-src/InitCuda.o: HPCG_SRC_PATH/cuda-src/InitCuda.cu HPCG_SRC_PATH/cuda-src/InitCuda.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeWAXPBY_cuda.o: HPCG_SRC_PATH/cuda-src/ComputeWAXPBY_cuda.cu HPCG_SRC_PATH/cuda-src/ComputeWAXPBY_cuda.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
