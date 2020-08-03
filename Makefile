@@ -63,7 +63,7 @@ clean:
 
 .PHONY: all clean
 
-src/main.o: ./src/main.cpp $(PRIMARY_HEADERS)
+src/main.o: ./src/main.cu $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
 src/CG.o: ./src/CG.cpp ./src/CG.hpp $(PRIMARY_HEADERS)

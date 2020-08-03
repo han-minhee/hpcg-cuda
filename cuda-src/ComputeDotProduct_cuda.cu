@@ -3,20 +3,38 @@
 // notice: originally, for the use of MPI, there should be result,
 // time_allreduce variable, but currently omitted. instead of changing a value,
 // it returns a double var.
+#define BLOCK_SIZE 32
 
-__global__ void kernelDotProduct(int n, double *xv, double *yv,
-                                 double *local_results, int deviceWarpSize) {
-  int localIndex;
-  int elemsPerThreads = deviceWarpSize;
+__global__ void kernel_dot2_part1(local_int_t n, const double *x,
+                                  const double *y, double *workspace) {
+  local_int_t tid = hipThreadIdx_x;
+  local_int_t gid = hipBlockIdx_x * BLOCK_SIZE + tid;
+  local_int_t inc = hipGridDim_x * BLOCK_SIZE;
 
-  int globalIndex = blockDim.x * blockIdx.x + threadIdx.x;
-  globalIndex *= elemsPerThreads;
-  if (globalIndex + elemsPerThreads >= n)
-    return;
+  double sum = 0.0;
+  for (local_int_t idx = gid; idx < n; idx += inc) {
+    sum = fma(y[idx], x[idx], sum);
+  }
 
-  for (localIndex = globalIndex; localIndex < globalIndex + elemsPerThreads;
-       localIndex++) {
-    local_results[localIndex] = xv[localIndex] * yv[localIndex];
+  __shared__ double sdata[BLOCK_SIZE];
+  sdata[tid] = sum;
+
+  reduce_sum<BLOCK_SIZE>(tid, sdata);
+
+  if (tid == 0) {
+    workspace[hipBlockIdx_x] = sdata[0];
+  }
+}
+
+template <unsigned int BLOCK_SIZE>
+__launch_bounds__(256) __global__ void kernel_dot_part2(double *workspace) {
+  __shared__ double sdata[BLOCK_SIZE];
+  sdata[hipThreadIdx_x] = workspace[hipThreadIdx_x];
+
+  reduce_sum<BLOCK_SIZE>(hipThreadIdx_x, sdata);
+
+  if (hipThreadIdx_x == 0) {
+    workspace[0] = sdata[0];
   }
 }
 
