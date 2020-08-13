@@ -16,15 +16,15 @@
   @see ComputeWAXPBY
 */
 #include "../src/Vector.hpp"
-#include "Util.cuh"
+#include "../src/mytimer.hpp"
+#include "Utils.cuh"
 #include "cuda_runtime.h"
 #include <cassert>
 #include <cstdio>
-#include "../src/mytimer.hpp"
 
-
-int ComputeWAXPBY_cuda_d(const local_int_t n, const double alpha, const Vector &x,
-                       const double beta, const Vector &y, Vector &w);
+int ComputeWAXPBY_cuda_d(const local_int_t n, const double alpha,
+                         const Vector &x, const double beta, const Vector &y,
+                         Vector &w);
 
 int ComputeWAXPBY_cuda(const local_int_t n, const double alpha, const Vector &x,
                        const double beta, const Vector &y, Vector &w);
