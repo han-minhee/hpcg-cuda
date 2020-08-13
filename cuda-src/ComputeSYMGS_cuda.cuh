@@ -33,10 +33,8 @@
 
 #include "../src/SparseMatrix.hpp"
 #include "../src/Vector.hpp"
-#include "cuda.h"
 #include "cuda_runtime.h"
 #include <cassert>
-#include <cublas_v2.h>
-#include <cusparse_v2.h>
+#include "Util.h"
 
 int ComputeSYMGS_cuda(const SparseMatrix &A, const Vector &r, Vector &x);

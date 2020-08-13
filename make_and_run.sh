@@ -1,4 +1,4 @@
 ./configure CUDA
-make
+make -j
 cd bin
 ./xhpcg

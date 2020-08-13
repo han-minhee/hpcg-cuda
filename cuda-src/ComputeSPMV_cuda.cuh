@@ -17,11 +17,7 @@
 
 #include "../src/SparseMatrix.hpp"
 #include "../src/Vector.hpp"
-#include "InitCuda.cuh"
-#include "cublas_v2.h"
-#include "cuda.h"
 #include "cuda_runtime.h"
-#include "cusparse.h"
 #include "time.h"
 #include <cassert>
 #include <cstdlib>

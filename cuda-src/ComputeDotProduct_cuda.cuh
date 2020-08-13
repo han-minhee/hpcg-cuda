@@ -16,11 +16,10 @@
 */
 
 #include "../src/Vector.hpp"
-#include "InitCuda.cuh"
-#include "cuda.h"
+#include "Util.cuh"
 #include "cuda_runtime.h"
 #include <cassert>
-#include <cublas_v2.h>
+#include <cstdio>
 
 int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
                            const Vector &y, double &result,

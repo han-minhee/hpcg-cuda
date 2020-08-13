@@ -47,7 +47,10 @@ HPCG_DEPS = src/CG.o \
 	    src/finalize.o
 
 CUDA_DEPS = cuda-src/ComputeWAXPBY_cuda.o \
-			cuda-src/InitCuda.o
+			cuda-src/Util.o \
+			cuda-src/ComputeSPMV_cuda.o \
+			cuda-src/ComputeDotProduct_cuda.o \
+			src/SparseMatrix.o
 
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
 PRIMARY_HEADERS = HPCG_SRC_PATH/src/Geometry.hpp HPCG_SRC_PATH/src/SparseMatrix.hpp HPCG_SRC_PATH/src/Vector.hpp HPCG_SRC_PATH/src/CGData.hpp \
@@ -186,8 +189,17 @@ src/OutputFile.o: HPCG_SRC_PATH/src/OutputFile.cpp HPCG_SRC_PATH/src/OutputFile.
 
 # CUDA Implementation from Here
 
-cuda-src/InitCuda.o: HPCG_SRC_PATH/cuda-src/InitCuda.cu HPCG_SRC_PATH/cuda-src/InitCuda.cuh $(PRIMARY_HEADERS)
+cuda-src/Util.o: HPCG_SRC_PATH/cuda-src/Util.cu HPCG_SRC_PATH/cuda-src/Util.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
 
 cuda-src/ComputeWAXPBY_cuda.o: HPCG_SRC_PATH/cuda-src/ComputeWAXPBY_cuda.cu HPCG_SRC_PATH/cuda-src/ComputeWAXPBY_cuda.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeDotProduct_cuda.o: HPCG_SRC_PATH/cuda-src/ComputeDotProduct_cuda.cu HPCG_SRC_PATH/cuda-src/ComputeDotProduct_cuda.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeSPMV_cuda.o: HPCG_SRC_PATH/cuda-src/ComputeSPMV_cuda.cu HPCG_SRC_PATH/cuda-src/ComputeSPMV_cuda.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+src/SparseMatrix.o: HPCG_SRC_PATH/src/SparseMatrix.cu HPCG_SRC_PATH/src/SparseMatrix.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@

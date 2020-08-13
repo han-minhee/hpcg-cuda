@@ -1,133 +1,166 @@
 #include "ComputeDotProduct_cuda.cuh"
 
-// notice: originally, for the use of MPI, there should be result,
-// time_allreduce variable, but currently omitted. instead of changing a value,
-// it returns a double var.
-#define BLOCK_SIZE 32
+__device__ void reduce_sum(local_int_t tid, double *data) {
+  size_t BLOCK_SIZE = blockDim.x;
+  __syncthreads();
 
-__global__ void kernel_dot2_part1(local_int_t n, const double *x,
-                                  const double *y, double *workspace) {
-  local_int_t tid = hipThreadIdx_x;
-  local_int_t gid = hipBlockIdx_x * BLOCK_SIZE + tid;
-  local_int_t inc = hipGridDim_x * BLOCK_SIZE;
-
-  double sum = 0.0;
-  for (local_int_t idx = gid; idx < n; idx += inc) {
-    sum = fma(y[idx], x[idx], sum);
+  if (BLOCK_SIZE > 512) {
+    if (tid < 512 && tid + 512 < BLOCK_SIZE) {
+      data[tid] += data[tid + 512];
+    }
+    __syncthreads();
   }
-
-  __shared__ double sdata[BLOCK_SIZE];
-  sdata[tid] = sum;
-
-  reduce_sum<BLOCK_SIZE>(tid, sdata);
-
-  if (tid == 0) {
-    workspace[hipBlockIdx_x] = sdata[0];
+  if (BLOCK_SIZE > 256) {
+    if (tid < 256 && tid + 256 < BLOCK_SIZE) {
+      data[tid] += data[tid + 256];
+    }
+    __syncthreads();
+  }
+  if (BLOCK_SIZE > 128) {
+    if (tid < 128 && tid + 128 < BLOCK_SIZE) {
+      data[tid] += data[tid + 128];
+    }
+    __syncthreads();
+  }
+  if (BLOCK_SIZE > 64) {
+    if (tid < 64 && tid + 64 < BLOCK_SIZE) {
+      data[tid] += data[tid + 64];
+    }
+    __syncthreads();
+  }
+  if (BLOCK_SIZE > 32) {
+    if (tid < 32 && tid + 32 < BLOCK_SIZE) {
+      data[tid] += data[tid + 32];
+    }
+    __syncthreads();
+  }
+  if (BLOCK_SIZE > 16) {
+    if (tid < 16 && tid + 16 < BLOCK_SIZE) {
+      data[tid] += data[tid + 16];
+    }
+    __syncthreads();
+  }
+  if (BLOCK_SIZE > 8) {
+    if (tid < 8 && tid + 8 < BLOCK_SIZE) {
+      data[tid] += data[tid + 8];
+    }
+    __syncthreads();
+  }
+  if (BLOCK_SIZE > 4) {
+    if (tid < 4 && tid + 4 < BLOCK_SIZE) {
+      data[tid] += data[tid + 4];
+    }
+    __syncthreads();
+  }
+  if (BLOCK_SIZE > 2) {
+    if (tid < 2 && tid + 2 < BLOCK_SIZE) {
+      data[tid] += data[tid + 2];
+    }
+    __syncthreads();
+  }
+  if (BLOCK_SIZE > 1) {
+    if (tid < 1 && tid + 1 < BLOCK_SIZE) {
+      data[tid] += data[tid + 1];
+    }
+    __syncthreads();
   }
 }
 
-template <unsigned int BLOCK_SIZE>
-__launch_bounds__(256) __global__ void kernel_dot_part2(double *workspace) {
-  __shared__ double sdata[BLOCK_SIZE];
-  sdata[hipThreadIdx_x] = workspace[hipThreadIdx_x];
+__global__ void kernel_dodProduct1(local_int_t n, const double *x,
+                                   double *workspace) {
+  size_t BLOCK_SIZE = 32;
+  local_int_t tid = threadIdx.x;
+  local_int_t gid = blockIdx.x * BLOCK_SIZE + tid;
+  local_int_t inc = gridDim.x * BLOCK_SIZE;
 
-  reduce_sum<BLOCK_SIZE>(hipThreadIdx_x, sdata);
+  double sum = 0.0;
+  for (local_int_t idx = gid; idx < n; idx += inc) {
+    double val = x[idx];
+    sum = fma(val, val, sum);
+  }
+  // shared
+  double sdata[32];
+  sdata[tid] = sum;
 
-  if (hipThreadIdx_x == 0) {
-    workspace[0] = sdata[0];
+  reduce_sum(tid, sdata);
+
+  if (tid == 0) {
+    workspace[blockIdx.x] = sdata[0];
+  }
+}
+
+__global__ void kernel_dodProduct2(local_int_t n, const double *x,
+                                   const double *y, double *workspace) {
+  size_t BLOCK_SIZE = 32;
+  local_int_t tid = threadIdx.x;
+  local_int_t gid = blockIdx.x * BLOCK_SIZE + tid;
+  local_int_t inc = gridDim.x * BLOCK_SIZE;
+
+  double sum = 0.0;
+  for (local_int_t idx = gid; idx < n; idx += inc) {
+    double val = x[idx];
+    double val1 = y[idx];
+    sum = fma(val, val1, sum);
+  }
+  // shared
+  double sdata[32];
+  sdata[tid] = sum;
+
+  reduce_sum(tid, sdata);
+
+  if (tid == 0) {
+    workspace[blockIdx.x] = sdata[0];
   }
 }
 
 int ComputeDotProduct_cuda(const local_int_t n, const Vector &x,
                            const Vector &y, double &result,
                            double &time_allreduce) {
+
   assert(x.localLength >= n); // Test vector lengths
   assert(y.localLength >= n);
 
+  double local_result = 0.0;
   double *xv = x.values;
   double *yv = y.values;
-  double *local_results = new double[n]();
 
   double *xv_d;
   double *yv_d;
-  double *local_results_d;
+  double *workspace_d;
 
   size_t n_size = n * sizeof(double);
-
-  result = 0.0;
+  printFileLine;
 
   cudaMalloc((void **)&xv_d, n_size);
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
+  checkGPUandPrintLine;
 
   cudaMalloc((void **)&yv_d, n_size);
-
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
-
-  cudaMalloc((void **)&local_results_d, n_size);
-
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
+  checkGPUandPrintLine;
 
   cudaMemcpy(xv_d, xv, n_size, cudaMemcpyHostToDevice);
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
+  checkGPUandPrintLine;
 
   cudaMemcpy(yv_d, yv, n_size, cudaMemcpyHostToDevice);
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
+  checkGPUandPrintLine;
 
-  cudaMemcpy(local_results_d, local_results, n_size, cudaMemcpyHostToDevice);
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
+  cudaMalloc((void **)&workspace_d, n_size);
+  checkGPUandPrintLine;
 
-  cudaDeviceSynchronize();
+  // double endMemcpy = mytimer();
 
-  size_t deviceWarpSize = 32;
-  int numBlocks = (n + deviceWarpSize - 1) / deviceWarpSize;
-  // kernelDotProduct<<<numBlocks, deviceWarpSize>>>(
-  //    n, xv_d, yv_d, local_results_d, deviceWarpSize);
+  size_t blockDim = (n - 1) / 512 + 1;
+  size_t globalDim = 512;
 
-  cublasHandle_t h;
-  cublasCreate(&h);
-  cublasSetPointerMode(h, CUBLAS_POINTER_MODE_HOST);
+  kernel_dodProduct1<<<blockDim, globalDim>>>(x.localLength, xv_d, workspace_d);
+  checkGPUandPrintLine;
 
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
+  // cudaMemcpy(result, workspace_d, sizeof(double), cudaMemcpyDeviceToHost);
 
-  cublasDdot(h, n, xv_d, 1, yv_d, 1, local_results_d);
-
-  cudaDeviceSynchronize();
-
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
-
-  cudaMemcpy(local_results, local_results_d, n_size, cudaMemcpyDeviceToHost);
-  if (gpuCheckError() == -1) {
-    return -1;
-  }
-  cudaDeviceSynchronize();
-
-#ifndef HPCG_NO_OPENMP
-#pragma omp parallel for reduction(+ : result)
-#endif
-  for (int i = 0; i < n; i++) {
-    result += local_results[i];
-  }
+  checkGPUandPrintLine;
 
   cudaFree(xv_d);
   cudaFree(yv_d);
-  cudaFree(local_results_d);
-  free(local_results);
+  cudaFree(workspace_d);
 
   return 0;
 }

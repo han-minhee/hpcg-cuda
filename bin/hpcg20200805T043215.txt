@@ -1,0 +1,5 @@
+WARNING: PERFORMING UNPRECONDITIONED ITERATIONS
+Call [0] Number of Iterations [11] Scaled Residual [8.06948e-13]
+WARNING: PERFORMING UNPRECONDITIONED ITERATIONS
+Call [1] Number of Iterations [11] Scaled Residual [8.06948e-13]
+Call [0] Number of Iterations [1] Scaled Residual [3.81776e-16]

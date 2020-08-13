@@ -120,7 +120,7 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 NVCC_LIBS    = -lcuda -lcudart -lcublas -lcusparse
 
 CXX          = nvcc
-COMPILER_OPTS = -fomit-frame-pointer -O3 -funroll-loops -W -Wall -pedantic
+COMPILER_OPTS = -fomit-frame-pointer -O3 -funroll-loops -W -Wall
 CXXFLAGS     =  --compiler-options= "$(COMPILER_OPTS)"  $(HPCG_DEFS)
 
 #

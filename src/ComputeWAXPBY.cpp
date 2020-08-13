@@ -20,7 +20,6 @@
 
 #include "ComputeWAXPBY.hpp"
 #include "ComputeWAXPBY_ref.hpp"
-#include "../cuda-src/ComputeWAXPBY_cuda.cuh"
 
 /*!
   Routine to compute the update of a vector with the sum of two
@@ -44,6 +43,6 @@ int ComputeWAXPBY(const local_int_t n, const double alpha, const Vector & x,
     const double beta, const Vector & y, Vector & w, bool & isOptimized) {
 
   // This line and the next two lines should be removed and your version of ComputeWAXPBY should be used.
-  isOptimized = true;
-  return ComputeWAXPBY_cuda(n, alpha, x, beta, y, w);
+  isOptimized = false;
+  return ComputeWAXPBY_ref(n, alpha, x, beta, y, w);
 }
