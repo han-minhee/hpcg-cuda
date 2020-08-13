@@ -15,7 +15,7 @@
   @see ComputeDotProduct
 */
 
-#include "../src/Vector.hpp"
+#include "../src/"Vector.cuh""
 #include "Util.cuh"
 #include "cuda_runtime.h"
 #include <cassert>

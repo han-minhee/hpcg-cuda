@@ -53,7 +53,7 @@ CUDA_DEPS = cuda-src/ComputeWAXPBY_cuda.o \
 			src/SparseMatrix.o
 
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
-PRIMARY_HEADERS = ./src/Geometry.hpp ./src/SparseMatrix.hpp ./src/Vector.hpp ./src/CGData.hpp \
+PRIMARY_HEADERS = ./src/Geometry.hpp ./src/SparseMatrix.hpp ./src/"Vector.cuh" ./src/CGData.hpp \
                   ./src/MGData.hpp ./src/hpcg.hpp
 
 all: bin/xhpcg

@@ -32,7 +32,7 @@
 */
 
 #include "../src/SparseMatrix.hpp"
-#include "../src/Vector.hpp"
+#include "../src/"Vector.cuh""
 #include "cuda_runtime.h"
 #include <cassert>
 #include "Util.h"

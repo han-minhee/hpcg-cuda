@@ -36,4 +36,3 @@ int gpuAssert(cudaError_t code);
 int initDevice(void);
 int gpuCheckError(void);
 int getDeviceProp(cudaDeviceProp deviceProp);
-

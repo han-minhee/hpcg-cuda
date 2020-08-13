@@ -15,7 +15,7 @@
 
   @see ComputeWAXPBY
 */
-#include "../src/Vector.hpp"
+#include "../src/"Vector.cuh""
 #include "../src/mytimer.hpp"
 #include "Utils.cuh"
 #include "cuda_runtime.h"

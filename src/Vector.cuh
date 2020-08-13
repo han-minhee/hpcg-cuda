@@ -13,7 +13,7 @@
 //@HEADER
 
 /*!
- @file Vector.hpp
+ @file "Vector.cuh"
 
  HPCG data structures for dense vectors
  */
@@ -24,6 +24,14 @@
 #include <cassert>
 #include <cstdlib>
 #include <cuda_runtime.h>
+
+#define CudaVectorCopyHostToDevice(vector)                                     \
+  cudaMemcpy(vector.d_values, vector.values, sizeof(vector.values),            \
+             cudaMemcpyHostToDevice);
+
+#define CudaVectorCopyDeviceToHost(vector)                                     \
+  cudaMemcpy(vector.values, vector.d_values, sizeof(vector.d_values),          \
+             cudaMemcpyDeviceToHost);
 
 struct Vector_STRUCT {
   local_int_t localLength; //!< length of local portion of the vector
