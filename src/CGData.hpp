@@ -22,7 +22,7 @@
 #define CGDATA_HPP
 
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 
 struct CGData_STRUCT {
   Vector r; //!< pointer to residual vector

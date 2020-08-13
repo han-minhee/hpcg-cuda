@@ -23,7 +23,7 @@
 
 #include "hpcg.hpp"
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 #include "CGData.hpp"
 
 

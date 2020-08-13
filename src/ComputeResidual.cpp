@@ -24,7 +24,7 @@
 #include <omp.h>
 #endif
 
-#include "Vector.hpp"
+#include "Vector.cuh"
 
 #ifdef HPCG_DETAILED_DEBUG
 #include <fstream>

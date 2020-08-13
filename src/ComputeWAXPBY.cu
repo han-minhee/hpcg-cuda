@@ -18,7 +18,7 @@
  HPCG routine
  */
 
-#include "ComputeWAXPBY.hpp"
+#include "ComputeWAXPBY.cuh"
 #include "ComputeWAXPBY_ref.hpp"
 
 /*!

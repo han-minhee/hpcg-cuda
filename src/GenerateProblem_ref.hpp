@@ -15,7 +15,7 @@
 #ifndef GENERATEPROBLEM_REF_HPP
 #define GENERATEPROBLEM_REF_HPP
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 
 void GenerateProblem_ref(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact);
 #endif // GENERATEPROBLEM_REF_HPP

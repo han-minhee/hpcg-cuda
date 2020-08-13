@@ -15,7 +15,7 @@
 #ifndef COMPUTEMG_HPP
 #define COMPUTEMG_HPP
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 
 int ComputeMG(const SparseMatrix  & A, const Vector & r, Vector & x);
 

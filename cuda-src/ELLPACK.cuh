@@ -60,7 +60,7 @@
 
 #include "utils.hpp"
 #include "Geometry.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 #include "MGData.hpp"
 #if __cplusplus < 201103L
 // for C++03

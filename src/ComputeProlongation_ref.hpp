@@ -14,7 +14,7 @@
 
 #ifndef COMPUTEPROLONGATION_REF_HPP
 #define COMPUTEPROLONGATION_REF_HPP
-#include "Vector.hpp"
+#include "Vector.cuh"
 #include "SparseMatrix.hpp"
 int ComputeProlongation_ref(const SparseMatrix & Af, Vector & xf);
 #endif // COMPUTEPROLONGATION_REF_HPP

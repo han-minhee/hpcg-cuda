@@ -23,7 +23,7 @@
 
 #include <cassert>
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 
 struct MGData_STRUCT {
   int numberOfPresmootherSteps; // Call ComputeSYMGS this many times prior to coarsening

@@ -16,7 +16,7 @@
 #define CG_REF_HPP
 
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 #include "CGData.hpp"
 
 int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,

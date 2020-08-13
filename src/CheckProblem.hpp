@@ -15,7 +15,7 @@
 #ifndef CHECKPROBLEM_HPP
 #define CHECKPROBLEM_HPP
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 
 void CheckProblem(SparseMatrix & A, Vector * b, Vector * x, Vector * xexact);
 #endif // CHECKPROBLEM_HPP

@@ -55,7 +55,7 @@ using std::endl;
 #include "CG_ref.hpp"
 #include "Geometry.hpp"
 #include "SparseMatrix.hpp"
-#include "Vector.hpp"
+#include "Vector.cuh"
 #include "CGData.hpp"
 #include "TestCG.hpp"
 #include "TestSymmetry.hpp"
