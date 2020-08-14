@@ -1,29 +1,8 @@
-
-//@HEADER
-// ***************************************************
-//
-// HPCG: High Performance Conjugate Gradient Benchmark
-//
-// Contact:
-// Michael A. Heroux ( maherou@sandia.gov)
-// Jack Dongarra     (dongarra@eecs.utk.edu)
-// Piotr Luszczek    (luszczek@eecs.utk.edu)
-//
-// ***************************************************
-//@HEADER
-
-/*!
- @file "Vector.cuh"
-
- HPCG data structures for dense vectors
- */
-
-#ifndef VECTOR_HPP
-#define VECTOR_HPP
 #include "Geometry.hpp"
 #include <cassert>
 #include <cstdlib>
 #include <cuda_runtime.h>
+#incldue < curand.h>
 
 #define CudaVectorCopyHostToDevice(vector)                                     \
   cudaMemcpy(vector.d_values, vector.values, sizeof(vector.values),            \
@@ -57,8 +36,13 @@ inline void InitializeVector(Vector &v, local_int_t localLength) {
   v.localLength = localLength;
   v.values = new double[localLength];
   v.optimizationData = 0;
-  cudaMalloc((void **)&v.d_values, localLength * sizeof(double));
   return;
+}
+
+inline void CudaInitializeVector(Vecotr &V, local_int_t localLength) {
+  v.localLength = localLength;
+  v.optimizationData = 0;
+  cudaMalloc((void **)&v.d_values, localLength * sizeof(double));
 }
 
 /*!
@@ -73,8 +57,11 @@ inline void ZeroVector(Vector &v) {
   for (int i = 0; i < localLength; ++i)
     vv[i] = 0.0;
 
-  cudaMemset((void **)&v.d_values, 0.0, localLength * sizeof(double));
   return;
+}
+
+inline void CudaZeroVector(Vector &v) {
+  cudaMemset((void **)&v.d_values, 0.0, v.localLength * sizeof(double));
 }
 
 /*!
@@ -85,18 +72,29 @@ inline void ZeroVector(Vector &v) {
   @param[in] value Value to scale by
  */
 
+// Should be implemented in some different way?
+inline void ScaleVectorValue(Vector &v, local_int_t index, double value) {
+  assert(index >= 0 && index < v.localLength);
+  double *vv = v.values;
+  vv[index] *= value;
+  return;
+}
+
 __global__ void scale_elem(double *arr, int idx, double val) {
   arr[idx] *= val;
 }
+//  scale_elem<<<1, 1>>>(v.d_values, index, value);
 
-inline void ScaleVectorValue(Vector &v, local_int_t index, double value) {
+inline void CudaScaleVectorValue(Vector &v, local_int_t index, double value) {
   assert(index >= 0 && index < v.localLength);
+  cudaMemcpyDeviceToHost(v);
   double *vv = v.values;
   vv[index] *= value;
 
   scale_elem<<<1, 1>>>(v.d_values, index, value);
   return;
 }
+
 /*!
   Fill the input vector with pseudo-random values.
 
@@ -112,6 +110,17 @@ inline void FillRandomVector(Vector &v) {
              cudaMemcpyHostToDevice);
   return;
 }
+
+// TODO: chage to Curand later
+inline void CudaFillRandomVector(Vector &v) {
+  local_int_t localLength = v.localLength;
+  double *vv = v.values;
+  for (int i = 0; i < localLength; ++i)
+    vv[i] = rand() / (double)(RAND_MAX) + 1.0;
+
+  cudaMemcpy(v.d_values, vv, localLength * sizeof(double),
+             cudaMemcpyHostToDevice);
+}
 /*!
   Copy input vector to output vector.
 
@@ -125,10 +134,12 @@ inline void CopyVector(const Vector &v, Vector &w) {
   double *wv = w.values;
   for (int i = 0; i < localLength; ++i)
     wv[i] = vv[i];
-
-  cudaMemcpy(w.d_values, v.d_values, localLength * sizeof(double),
-             cudaMemcpyDeviceToDevice);
   return;
+}
+
+inlince void CudaCopyVector(const Vector &v, Vector &w){
+    cudaMemcpy(w.d_values, v.d_values, v.localLength * sizeof(double),
+             cudaMemcpyDeviceToDevice);
 }
 
 /*!
@@ -140,9 +151,13 @@ inline void CopyVector(const Vector &v, Vector &w) {
 inline void DeleteVector(Vector &v) {
 
   delete[] v.values;
-  cudaFree(v.d_values);
   v.localLength = 0;
   return;
+}
+
+inline void CudaDeleteVector(Vector &v){
+    cudaFree(v.d_values);
+    v.localLength = 0;
 }
 
 #endif // VECTOR_HPP
