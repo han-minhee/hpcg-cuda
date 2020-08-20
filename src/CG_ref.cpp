@@ -22,7 +22,7 @@
 
 #include <cmath>
 
-#include "hpcg.cuh"
+#include "hpcg.hpp"
 
 #include "CG_ref.hpp"
 #include "mytimer.hpp"

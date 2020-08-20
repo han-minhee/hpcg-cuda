@@ -136,7 +136,7 @@ src/ComputeDotProduct_ref.o: HPCG_SRC_PATH/src/ComputeDotProduct_ref.cpp HPCG_SR
 src/finalize.o: HPCG_SRC_PATH/src/finalize.cpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/init.o: HPCG_SRC_PATH/src/Init.cu $(PRIMARY_HEADERS)
+src/init.o: HPCG_SRC_PATH/src/Init.cpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 src/mytimer.o: HPCG_SRC_PATH/src/mytimer.cpp HPCG_SRC_PATH/src/mytimer.hpp $(PRIMARY_HEADERS)

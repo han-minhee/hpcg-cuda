@@ -19,7 +19,7 @@
  */
 
 #ifndef HPCG_NO_MPI
-#include "ExchangeHalo.cuh"
+#include "ExchangeHalo.hpp"
 #endif
 #include "ComputeSYMGS_ref.hpp"
 #include <cassert>

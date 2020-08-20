@@ -1,4 +1,5 @@
-#include "Util.cuh"
+
+#include "Utils.cuh"
 
 int numSM;
 int numSP;

@@ -14,7 +14,7 @@
 
 #ifndef SETUPHALO_REF_HPP
 #define SETUPHALO_REF_HPP
-#include "SparseMatrix.cuh"
+#include "SparseMatrix.hpp"
 
 void SetupHalo_ref(SparseMatrix & A);
 

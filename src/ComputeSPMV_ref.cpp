@@ -21,7 +21,7 @@
 #include "ComputeSPMV_ref.hpp"
 
 #ifndef HPCG_NO_MPI
-#include "ExchangeHalo.cuh"
+#include "ExchangeHalo.hpp"
 #endif
 
 #ifndef HPCG_NO_OPENMP

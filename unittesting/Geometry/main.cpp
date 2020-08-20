@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include "GenerateGeometry.hpp"
-//#include "hpcg.cuh"
+//#include "hpcg.hpp"
 int main(int argc, char * argv[]) {
 /*
   HPCG_Params params;

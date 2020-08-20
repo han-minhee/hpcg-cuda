@@ -31,7 +31,7 @@
 #ifdef HPCG_DETAILED_DEBUG
 #include <fstream>
 using std::endl;
-#include "hpcg.cuh"
+#include "hpcg.hpp"
 #include <cassert>
 #endif
 
