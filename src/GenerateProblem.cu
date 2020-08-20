@@ -7,7 +7,7 @@
 #include "GenerateProblem.cuh"
 #include "Utils.cuh"
 
-/// sizeof(bool) * blocksizey + sizeof(int) * blocksizex * blocksizey,   \
+// sizeof(bool) * blocksizey + sizeof(int) * blocksizex * blocksizey,   \
                         0,
 #define LAUNCH_GENERATE_PROBLEM(blocksizex, blocksizey)                        \
   kernel_generate_problem<blocksizex, blocksizey>                              \

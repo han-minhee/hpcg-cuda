@@ -136,7 +136,7 @@ src/ComputeDotProduct_ref.o: ./src/ComputeDotProduct_ref.cpp ./src/ComputeDotPro
 src/finalize.o: ./src/finalize.cu $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
-src/init.o: ./src/init.cpp $(PRIMARY_HEADERS)
+src/init.o: ./src/Init.cu $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
 src/mytimer.o: ./src/mytimer.cpp ./src/mytimer.hpp $(PRIMARY_HEADERS)
