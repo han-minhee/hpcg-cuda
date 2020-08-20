@@ -1,27 +1,7 @@
-
-//@HEADER
-// ***************************************************
-//
-// HPCG: High Performance Conjugate Gradient Benchmark
-//
-// Contact:
-// Michael A. Heroux ( maherou@sandia.gov)
-// Jack Dongarra     (dongarra@eecs.utk.edu)
-// Piotr Luszczek    (luszczek@eecs.utk.edu)
-//
-// ***************************************************
-//@HEADER
-
-/*!
- @file CGData.hpp
-
- HPCG data structure
- */
-
 #ifndef CGDATA_HPP
 #define CGDATA_HPP
 
-#include "SparseMatrix.hpp"
+#include "SparseMatrix.cuh"
 #include "Vector.cuh"
 
 struct CGData_STRUCT {
@@ -48,6 +28,14 @@ inline void InitializeSparseCGData(SparseMatrix & A, CGData & data) {
   return;
 }
 
+inline void CudaInitializeSparseCGData(SparseMatrix& A, CGData& data)
+{
+    CudaInitializeVector(data.r, A.localNumberOfRows);
+    CudaInitializeVector(data.z, A.localNumberOfColumns);
+    CudaInitializeVector(data.p, A.localNumberOfColumns);
+    CudaInitializeVector(data.Ap, A.localNumberOfRows);
+}
+
 /*!
  Destructor for the CG vectors data.
 
@@ -61,6 +49,15 @@ inline void DeleteCGData(CGData & data) {
   DeleteVector (data.Ap);
   return;
 }
+
+inline void CudaDeleteCGData(CGData& data)
+{
+    CudaDeleteVector (data.r);
+    CudaDeleteVector (data.z);
+    CudaDeleteVector (data.p);
+    CudaDeleteVector (data.Ap);
+}
+
 
 #endif // CGDATA_HPP
 

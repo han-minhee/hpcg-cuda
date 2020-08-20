@@ -14,9 +14,9 @@
 
 #ifndef REPORTRESULTS_HPP
 #define REPORTRESULTS_HPP
-#include "SparseMatrix.hpp"
-#include "TestCG.hpp"
-#include "TestSymmetry.hpp"
+#include "SparseMatrix.cuh"
+#include "TestCG.cuh"
+#include "TestSymmetry.cuh"
 #include "TestNorms.hpp"
 
 void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgSets, int refMaxIters, int optMaxIters, double times[],

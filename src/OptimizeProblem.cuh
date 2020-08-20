@@ -15,9 +15,9 @@
 #ifndef OPTIMIZEPROBLEM_HPP
 #define OPTIMIZEPROBLEM_HPP
 
-#include "SparseMatrix.hpp"
+#include "SparseMatrix.cuh"
 #include "Vector.cuh"
-#include "CGData.hpp"
+#include "CGData.cuh"
 
 int OptimizeProblem(SparseMatrix & A, CGData & data,  Vector & b, Vector & x, Vector & xexact);
 

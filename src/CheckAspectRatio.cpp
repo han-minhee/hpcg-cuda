@@ -23,7 +23,7 @@
 #include <mpi.h>
 #endif
 
-#include "hpcg.hpp"
+#include "hpcg.cuh"
 
 #include "CheckAspectRatio.hpp"
 

@@ -27,7 +27,7 @@
 
 #ifdef HPCG_DEBUG
 #include <fstream>
-#include "hpcg.hpp"
+#include "hpcg.cuh"
 using std::endl;
 
 #endif

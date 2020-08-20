@@ -15,7 +15,7 @@
 #ifndef COMPUTESPMV_REF_HPP
 #define COMPUTESPMV_REF_HPP
 #include "Vector.cuh"
-#include "SparseMatrix.hpp"
+#include "SparseMatrix.cuh"
 
 int ComputeSPMV_ref( const SparseMatrix & A, Vector  & x, Vector & y);
 

@@ -1,8 +1,12 @@
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
+
 #include "Geometry.hpp"
+#include "Utils.cuh"
 #include <cassert>
 #include <cstdlib>
 #include <cuda_runtime.h>
-#incldue < curand.h>
+#include <curand.h>
 
 #define CudaVectorCopyHostToDevice(vector)                                     \
   cudaMemcpy(vector.d_values, vector.values, sizeof(vector.values),            \
@@ -39,7 +43,7 @@ inline void InitializeVector(Vector &v, local_int_t localLength) {
   return;
 }
 
-inline void CudaInitializeVector(Vecotr &V, local_int_t localLength) {
+inline void CudaInitializeVector(Vector &v, local_int_t localLength) {
   v.localLength = localLength;
   v.optimizationData = 0;
   cudaMalloc((void **)&v.d_values, localLength * sizeof(double));
@@ -80,18 +84,15 @@ inline void ScaleVectorValue(Vector &v, local_int_t index, double value) {
   return;
 }
 
-__global__ void scale_elem(double *arr, int idx, double val) {
-  arr[idx] *= val;
-}
-//  scale_elem<<<1, 1>>>(v.d_values, index, value);
+// __global__ void scale_elem(double *arr, int idx, double val) {
+//   arr[idx] *= val;
+// }
+// //  scale_elem<<<1, 1>>>(v.d_values, index, value);
 
 inline void CudaScaleVectorValue(Vector &v, local_int_t index, double value) {
   assert(index >= 0 && index < v.localLength);
-  cudaMemcpyDeviceToHost(v);
-  double *vv = v.values;
-  vv[index] *= value;
-
-  scale_elem<<<1, 1>>>(v.d_values, index, value);
+  ScaleVectorValue(v, index, value);
+  vectorMemcpyFromHostToDevice(v);
   return;
 }
 
@@ -137,8 +138,8 @@ inline void CopyVector(const Vector &v, Vector &w) {
   return;
 }
 
-inlince void CudaCopyVector(const Vector &v, Vector &w){
-    cudaMemcpy(w.d_values, v.d_values, v.localLength * sizeof(double),
+inline void CudaCopyVector(const Vector &v, Vector &w) {
+  cudaMemcpy(w.d_values, v.d_values, v.localLength * sizeof(double),
              cudaMemcpyDeviceToDevice);
 }
 
@@ -155,9 +156,9 @@ inline void DeleteVector(Vector &v) {
   return;
 }
 
-inline void CudaDeleteVector(Vector &v){
-    cudaFree(v.d_values);
-    v.localLength = 0;
+inline void CudaDeleteVector(Vector &v) {
+  cudaFree(v.d_values);
+  v.localLength = 0;
 }
 
 #endif // VECTOR_HPP

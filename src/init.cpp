@@ -34,7 +34,7 @@ const char* NULLDEVICE="/dev/null";
 #include <fstream>
 #include <iostream>
 
-#include "hpcg.hpp"
+#include "hpcg.cuh"
 
 #include "ReadHpcgDat.hpp"
 

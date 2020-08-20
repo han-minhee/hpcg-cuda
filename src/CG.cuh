@@ -1,23 +1,9 @@
-
-//@HEADER
-// ***************************************************
-//
-// HPCG: High Performance Conjugate Gradient Benchmark
-//
-// Contact:
-// Michael A. Heroux ( maherou@sandia.gov)
-// Jack Dongarra     (dongarra@eecs.utk.edu)
-// Piotr Luszczek    (luszczek@eecs.utk.edu)
-//
-// ***************************************************
-//@HEADER
-
 #ifndef CG_HPP
 #define CG_HPP
 
-#include "SparseMatrix.hpp"
+#include "SparseMatrix.cuh"
 #include "Vector.cuh"
-#include "CGData.hpp"
+#include "CGData.cuh"
 
 int CG(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     const int max_iter, const double tolerance, int & niters, double & normr,  double & normr0,

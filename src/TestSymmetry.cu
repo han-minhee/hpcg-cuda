@@ -1,24 +1,3 @@
-
-//@HEADER
-// ***************************************************
-//
-// HPCG: High Performance Conjugate Gradient Benchmark
-//
-// Contact:
-// Michael A. Heroux ( maherou@sandia.gov)
-// Jack Dongarra     (dongarra@eecs.utk.edu)
-// Piotr Luszczek    (luszczek@eecs.utk.edu)
-//
-// ***************************************************
-//@HEADER
-
-/*!
- @file TestSymmetry.cpp
-
- HPCG routine
- */
-
-// The MPI include must be first for Windows platforms
 #ifndef HPCG_NO_MPI
 #include <mpi.h>
 #endif
@@ -29,43 +8,26 @@ using std::endl;
 #include <vector>
 #include <cmath>
 
-#include "hpcg.hpp"
+#include "hpcg.cuh"
 
-#include "ComputeSPMV.hpp"
-#include "ComputeMG.hpp"
-#include "ComputeDotProduct.hpp"
-#include "ComputeResidual.hpp"
+#include "ComputeSPMV.cuh"
+#include "ComputeMG.cuh"
+#include "ComputeDotProduct.cuh"
+#include "ComputeResidual.cuh"
 #include "Geometry.hpp"
-#include "SparseMatrix.hpp"
-#include "TestSymmetry.hpp"
+#include "SparseMatrix.cuh"
+#include "TestSymmetry.cuh"
 
-/*!
-  Tests symmetry-preserving properties of the sparse matrix vector multiply and multi-grid routines.
 
-  @param[in]    geom   The description of the problem's geometry.
-  @param[in]    A      The known system matrix
-  @param[in]    b      The known right hand side vector
-  @param[in]    xexact The exact solution vector
-  @param[inout] testsymmetry_data The data structure with the results of the CG symmetry test including pass/fail information
-
-  @return returns 0 upon success and non-zero otherwise
-
-  @see ComputeDotProduct
-  @see ComputeDotProduct_ref
-  @see ComputeSPMV
-  @see ComputeSPMV_ref
-  @see ComputeMG
-  @see ComputeMG_ref
-*/
 int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData & testsymmetry_data) {
 
  local_int_t nrow = A.localNumberOfRows;
  local_int_t ncol = A.localNumberOfColumns;
 
  Vector x_ncol, y_ncol, z_ncol;
- InitializeVector(x_ncol, ncol);
- InitializeVector(y_ncol, ncol);
- InitializeVector(z_ncol, ncol);
+ CudaInitializeVector(x_ncol, ncol);
+ CudaInitializeVector(y_ncol, ncol);
+ CudaInitializeVector(z_ncol, ncol);
 
  double t4 = 0.0; // Needed for dot-product call, otherwise unused
  testsymmetry_data.count_fail = 0;
@@ -73,8 +35,8 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
  // Test symmetry of matrix
 
  // First load vectors with random values
- FillRandomVector(x_ncol);
- FillRandomVector(y_ncol);
+ CudaFillRandomVector(x_ncol);
+ CudaFillRandomVector(y_ncol);
 
  double xNorm2, yNorm2;
  double ANorm = 2 * 26.0;
@@ -119,7 +81,7 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
  if (testsymmetry_data.depsym_mg > 1.0) ++testsymmetry_data.count_fail;  // If the difference is > 1, count it wrong
  if (A.geom->rank==0) HPCG_fout << "Departure from symmetry (scaled) for MG abs(x'*Minv*y - y'*Minv*x) = " << testsymmetry_data.depsym_mg << endl;
 
- CopyVector(xexact, x_ncol); // Copy exact answer into overlap vector
+ CudaCopyVector(xexact, x_ncol); // Copy exact answer into overlap vector
 
  int numberOfCalls = 2;
  double residual = 0.0;
@@ -130,9 +92,9 @@ int TestSymmetry(SparseMatrix & A, Vector & b, Vector & xexact, TestSymmetryData
      HPCG_fout << "Error in call to compute_residual: " << ierr << ".\n" << endl;
    if (A.geom->rank==0) HPCG_fout << "SpMV call [" << i << "] Residual [" << residual << "]" << endl;
  }
- DeleteVector(x_ncol);
- DeleteVector(y_ncol);
- DeleteVector(z_ncol);
+ CudaDeleteVector(x_ncol);
+ CudaDeleteVector(y_ncol);
+ CudaDeleteVector(z_ncol);
 
  return 0;
 }

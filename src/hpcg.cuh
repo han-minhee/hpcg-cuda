@@ -1,23 +1,3 @@
-
-//@HEADER
-// ***************************************************
-//
-// HPCG: High Performance Conjugate Gradient Benchmark
-//
-// Contact:
-// Michael A. Heroux ( maherou@sandia.gov)
-// Jack Dongarra     (dongarra@eecs.utk.edu)
-// Piotr Luszczek    (luszczek@eecs.utk.edu)
-//
-// ***************************************************
-//@HEADER
-
-/*!
- @file hpcg.hpp
-
- HPCG data structures and functions
- */
-
 #ifndef HPCG_HPP
 #define HPCG_HPP
 
@@ -40,6 +20,8 @@ struct HPCG_Params_STRUCT {
   int pz; //!< Partition in the z processor dimension, default is npz
   local_int_t zl; //!< nz for processors in the z dimension with value less than pz
   local_int_t zu; //!< nz for processors in the z dimension with value greater than pz
+
+  int device; //!< CUDA device
 };
 /*!
   HPCG_Params is a shorthand for HPCG_Params_STRUCT

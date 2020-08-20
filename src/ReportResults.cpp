@@ -25,13 +25,13 @@
 #include <vector>
 #include "ReportResults.hpp"
 #include "OutputFile.hpp"
-#include "OptimizeProblem.hpp"
+#include "OptimizeProblem.cuh"
 
 #ifdef HPCG_DEBUG
 #include <fstream>
 using std::endl;
 
-#include "hpcg.hpp"
+#include "hpcg.cuh"
 #endif
 
 /*!
@@ -77,7 +77,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     double fnrow = A.totalNumberOfRows;
     double fnnz = A.totalNumberOfNonzeros;
 
-    // Op counts come from implementation of CG in CG.cpp (include 1 extra for the CG preamble ops)
+    // Op counts come from implementation of CG in CG.cu (include 1 extra for the CG preamble ops)
     double fnops_ddot = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow; // 3 ddots with nrow adds and nrow mults
     double fnops_waxpby = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow; // 3 WAXPBYs with nrow adds and nrow mults
     double fnops_sparsemv = (fniters+fNumberOfCgSets)*2.0*fnnz; // 1 SpMV with nnz adds and nnz mults
@@ -100,7 +100,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
 
     // ======================== Memory bandwidth model =======================================
 
-    // Read/Write counts come from implementation of CG in CG.cpp (include 1 extra for the CG preamble ops)
+    // Read/Write counts come from implementation of CG in CG.cu (include 1 extra for the CG preamble ops)
     double fnreads_ddot = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow*sizeof(double); // 3 ddots with 2 nrow reads
     double fnwrites_ddot = (3.0*fniters+fNumberOfCgSets)*sizeof(double); // 3 ddots with 1 write
     double fnreads_waxpby = (3.0*fniters+fNumberOfCgSets)*2.0*fnrow*sizeof(double); // 3 WAXPBYs with nrow adds and nrow mults
@@ -157,7 +157,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     fnbytes += fnrow*numberOfNonzerosPerRow*((double) sizeof(global_int_t)); // mtxIndG[1..nrows]
     fnbytes += fnrow*((double) 3*sizeof(double)); // x, b, xexact
 
-    // Model for CGData.hpp
+    // Model for CGData.cuh
     double fncol = ((global_int_t) A.localNumberOfColumns) * size; // Estimate of the global number of columns using the value from rank 0
     fnbytes += fnrow*((double) 2*sizeof(double)); // r, Ap
     fnbytes += fncol*((double) 2*sizeof(double)); // z, p
@@ -165,7 +165,7 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
     std::vector<double> fnbytesPerLevel(numberOfMgLevels); // Count byte usage per level (level 0 is main CG level)
     fnbytesPerLevel[0] = fnbytes;
 
-    // Benchmarker-provided model for OptimizeProblem.cpp
+    // Benchmarker-provided model for OptimizeProblem.cu
     double fnbytes_OptimizedProblem = OptimizeProblemMemoryUse(A);
     fnbytes += fnbytes_OptimizedProblem;
 
@@ -174,13 +174,13 @@ void ReportResults(const SparseMatrix & A, int numberOfMgLevels, int numberOfCgS
       double fnrow_Af = Af->totalNumberOfRows;
       double fncol_Af = ((global_int_t) Af->localNumberOfColumns) * size; // Estimate of the global number of columns using the value from rank 0
       double fnbytes_Af = 0.0;
-      // Model for GenerateCoarseProblem.cpp
+      // Model for GenerateCoarseProblem.cu
       fnbytes_Af += fnrow_Af*((double) sizeof(local_int_t)); // f2cOperator
       fnbytes_Af += fnrow_Af*((double) sizeof(double)); // rc
       fnbytes_Af += 2.0*fncol_Af*((double) sizeof(double)); // xc, Axf are estimated based on the size of these arrays on rank 0
       fnbytes_Af += ((double) (sizeof(Geometry)+sizeof(SparseMatrix)+3*sizeof(Vector)+sizeof(MGData))); // Account for structs geomc, Ac, rc, xc, Axf - (minor)
 
-      // Model for GenerateProblem.cpp (called within GenerateCoarseProblem.cpp)
+      // Model for GenerateProblem.cu (called within GenerateCoarseProblem.cu)
       fnbytes_Af += fnrow_Af*sizeof(char);      // array nonzerosInRow
       fnbytes_Af += fnrow_Af*((double) sizeof(global_int_t*)); // mtxIndG
       fnbytes_Af += fnrow_Af*((double) sizeof(local_int_t*));  // mtxIndL

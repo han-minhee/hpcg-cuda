@@ -15,9 +15,9 @@
 #ifndef CG_REF_HPP
 #define CG_REF_HPP
 
-#include "SparseMatrix.hpp"
+#include "SparseMatrix.cuh"
 #include "Vector.cuh"
-#include "CGData.hpp"
+#include "CGData.cuh"
 
 int CG_ref(const SparseMatrix & A, CGData & data, const Vector & b, Vector & x,
     const int max_iter, const double tolerance, int & niters, double & normr,  double & normr0,
