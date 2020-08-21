@@ -41,7 +41,7 @@ int ComputeWAXPBY(local_int_t n, double alpha, const Vector &x, double beta,
 }
 
 template <unsigned int BLOCKSIZE>
-__device__ void reduce_sum(local_int_t tid, double *data) {
+__device__ void kernelDeviceReduceSum(local_int_t tid, double *data) {
   __syncthreads();
 
   if (BLOCKSIZE > 512) {
@@ -125,7 +125,7 @@ __launch_bounds__(BLOCKSIZE) __global__
     sdata[tid] = fma(val, val, sdata[tid]);
   }
 
-  reduce_sum<BLOCKSIZE>(tid, sdata);
+  kernelDeviceReduceSum<BLOCKSIZE>(tid, sdata);
 
   if (tid == 0) {
     workspace[blockIdx.x] = sdata[0];
@@ -147,7 +147,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 
   __syncthreads();
 
-  reduce_sum<BLOCKSIZE>(tid, sdata);
+  kernelDeviceReduceSum<BLOCKSIZE>(tid, sdata);
 
   if (tid == 0) {
     workspace[0] = sdata[0];

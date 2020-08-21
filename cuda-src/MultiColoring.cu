@@ -1,16 +1,16 @@
-
 #include "MultiColoring.cuh"
 #include "Utils.cuh"
 
+#include <cub/cub.cuh>
 #include <cuda_runtime.h>
-#include <thrust/sort.h>
 
-// 2 * sizeof(bool) * blocksizey, 0,
+// ,
 #define LAUNCH_JPL(blocksizex, blocksizey)                                     \
-  kernel_jpl<blocksizex, blocksizey>                                           \
-      <<<dim3((m - 1) / blocksizey + 1), dim3(blocksizex, blocksizey)>>>(      \
-          m, A.d_rowHash, color1, color2, A.d_nonzerosInRow, A.d_mtxIndL,      \
-          A.perm)
+  kernelJPL<blocksizex, blocksizey>                                            \
+      <<<dim3((m - 1) / blocksizey + 1), dim3(blocksizex, blocksizey),         \
+         2 * sizeof(bool) * blocksizey, 0>>>(m, A.d_rowHash, color1, color2,   \
+                                             A.d_nonzerosInRow, A.d_mtxIndL,   \
+                                             A.perm)
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
@@ -39,7 +39,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 }
 
 template <unsigned int BLOCKSIZE>
-__device__ void reduce_sum(local_int_t tid, local_int_t *data) {
+__device__ void kernelDeviceReduceSum(local_int_t tid, local_int_t *data) {
   __syncthreads();
 
   if (BLOCKSIZE > 512) {
@@ -106,9 +106,9 @@ __device__ void reduce_sum(local_int_t tid, local_int_t *data) {
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_count_color_part1(local_int_t size, local_int_t color,
-                                  const local_int_t *__restrict__ colors,
-                                  local_int_t *__restrict__ workspace) {
+    void kernelCountColorsPart1(local_int_t size, local_int_t color,
+                                const local_int_t *__restrict__ colors,
+                                local_int_t *__restrict__ workspace) {
   local_int_t tid = threadIdx.x;
   local_int_t gid = blockIdx.x * BLOCKSIZE + tid;
   local_int_t inc = gridDim.x * BLOCKSIZE;
@@ -124,7 +124,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 
   sdata[tid] = sum;
 
-  reduce_sum<BLOCKSIZE>(tid, sdata);
+  kernelDeviceReduceSum<BLOCKSIZE>(tid, sdata);
 
   if (tid == 0) {
     workspace[blockIdx.x] = sdata[0];
@@ -146,7 +146,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 
   sdata[tid] = sum;
 
-  reduce_sum<BLOCKSIZE>(tid, sdata);
+  kernelDeviceReduceSum<BLOCKSIZE>(tid, sdata);
 
   if (tid == 0) {
     workspace[0] = sdata[0];
@@ -155,11 +155,11 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
-    void kernel_jpl(local_int_t m, const local_int_t *__restrict__ hash,
-                    int color1, int color2,
-                    const char *__restrict__ nonzerosInRow,
-                    const local_int_t *__restrict__ mtxIndL,
-                    local_int_t *__restrict__ colors) {
+    void kernelJPL(local_int_t m, const local_int_t *__restrict__ hash,
+                   int color1, int color2,
+                   const char *__restrict__ nonzerosInRow,
+                   const local_int_t *__restrict__ mtxIndL,
+                   local_int_t *__restrict__ colors) {
   local_int_t row = blockIdx.x * BLOCKSIZEY + threadIdx.y;
 
   extern __shared__ bool sdata[];
@@ -281,7 +281,7 @@ void JPLColoring(SparseMatrix &A) {
       LAUNCH_JPL(27, 4);
 
     // Count colored vertices
-    kernel_count_color_part1<256>
+    kernelCountColorsPart1<256>
         <<<dim3(256), dim3(256)>>>(m, color1, A.perm, tmp);
 
     kernel_count_color_part2<256><<<dim3(1), dim3(256)>>>(256, tmp);
@@ -290,7 +290,7 @@ void JPLColoring(SparseMatrix &A) {
     CUDA_CHECK_COMMAND(cudaMemcpy(&A.sizes[A.nblocks], tmp, sizeof(local_int_t),
                                   cudaMemcpyDeviceToHost));
 
-    kernel_count_color_part1<256>
+    kernelCountColorsPart1<256>
         <<<dim3(256), dim3(256)>>>(m, color2, A.perm, tmp);
 
     kernel_count_color_part2<256><<<dim3(1), dim3(256)>>>(256, tmp);
@@ -333,15 +333,20 @@ void JPLColoring(SparseMatrix &A) {
   int startbit = 0;
   int endbit = 32 - __builtin_clz(A.nblocks);
 
+  // SortPairs (void *d_temp_storage, size_t &temp_storage_bytes, const KeyT
+  // *d_keys_in, KeyT *d_keys_out, const ValueT *d_values_in, ValueT
+  // *d_values_out, int num_items, int begin_bit=0, int end_bit=sizeof(KeyT)*8,
+  // cudaStream_t stream=0, bool debug_synchronous=false)
   // TODO: radix_sort_pairs
-  // CUDA_CHECK_COMMAND(radix_sort_pairs(buf, size, keys, vals, m, startbit,
-  // endbit));
+  CUDA_CHECK_COMMAND(cub::DeviceRadixSort::SortPairs(
+      buf, size, A.perm, tmp_color, perm, tmp_perm, m, startbit, endbit));
   CUDA_CHECK_COMMAND(cudaMalloc(&buf, size));
   // CUDA_CHECK_COMMAND(radix_sort_pairs(buf, size, keys, vals, m, startbit,
   // endbit));
   CUDA_CHECK_COMMAND(cudaFree(buf));
 
-  // kernel_create_perm<1024><<<dim3((m - 1) / 1024 + 1), dim3(1024)>>>(m, vals.current(), A.perm);
+  kernel_create_perm<1024>
+      <<<dim3((m - 1) / 1024 + 1), dim3(1024)>>>(m, perm, A.perm);
 
   CUDA_CHECK_COMMAND(cudaFree(tmp_color));
   CUDA_CHECK_COMMAND(cudaFree(tmp_perm));

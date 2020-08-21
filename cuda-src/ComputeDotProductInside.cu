@@ -8,7 +8,7 @@
 
 #include <cuda_runtime.h>
 
-__device__ void reduce_sum(local_int_t tid, double *data) {
+__device__ void kernelDeviceReduceSum(local_int_t tid, double *data) {
   unsigned int BLOCKSIZE = blockDim.x;
   __syncthreads();
 
@@ -90,7 +90,7 @@ __launch_bounds__(BLOCKSIZE) __global__
   __shared__ double sdata[BLOCKSIZE /*BLOCKSIZE*/];
   sdata[tid] = sum;
 
-  reduce_sum(tid, sdata);
+  kernelDeviceReduceSum(tid, sdata);
 
   if (tid == 0) {
     workspace[blockIdx.x] = sdata[0];
@@ -113,7 +113,7 @@ __launch_bounds__(BLOCKSIZE) __global__
   __shared__ double sdata[BLOCKSIZE /*BLOCKSIZE*/];
   sdata[tid] = sum;
 
-  reduce_sum(tid, sdata);
+  kernelDeviceReduceSum(tid, sdata);
 
   if (tid == 0) {
     workspace[blockIdx.x] = sdata[0];
@@ -126,7 +126,7 @@ __launch_bounds__(BLOCKSIZE) __global__
   __shared__ double sdata[BLOCKSIZE /*BLOCKSIZE*/];
   sdata[threadIdx.x] = workspace[threadIdx.x];
 
-  reduce_sum(threadIdx.x, sdata);
+  kernelDeviceReduceSum(threadIdx.x, sdata);
 
   if (threadIdx.x == 0) {
     workspace[0] = sdata[0];

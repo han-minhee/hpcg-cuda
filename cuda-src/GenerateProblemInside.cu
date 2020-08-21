@@ -9,17 +9,19 @@
 
 // sizeof(bool) * blocksizey + sizeof(int) * blocksizex * blocksizey, 0,
 #define LAUNCH_GENERATE_PROBLEM(blocksizex, blocksizey)                        \
-  kernel_generate_problem<blocksizex, blocksizey>                              \
+  kernelGenerateProblem<blocksizex, blocksizey>                                \
       <<<dim3((localNumberOfRows - 1) / blocksizey + 1),                       \
-         dim3(blocksizex, blocksizey)>>>(                                      \
-          localNumberOfRows, nx, ny, nz, nx * ny, gnx, gny, gnz, gnx * gny,    \
-          gix0, giy0, giz0, numberOfNonzerosPerRow, A.d_nonzerosInRow,         \
-          A.d_mtxIndG, A.d_matrixValues, A.d_matrixDiagonal,                   \
-          A.d_localToGlobalMap, A.d_rowHash, (b != NULL) ? b->d_values : NULL)
+         dim3(blocksizex, blocksizey),                                         \
+         sizeof(bool) * blocksizey + sizeof(int) * blocksizex * blocksizey,    \
+         0>>>(localNumberOfRows, nx, ny, nz, nx * ny, gnx, gny, gnz,           \
+              gnx * gny, gix0, giy0, giz0, numberOfNonzerosPerRow,             \
+              A.d_nonzerosInRow, A.d_mtxIndG, A.d_matrixValues,                \
+              A.d_matrixDiagonal, A.d_localToGlobalMap, A.d_rowHash,           \
+              (b != NULL) ? b->d_values : NULL)
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_set_one(local_int_t size, double *__restrict__ array) {
+    void kernel_set_one(local_int_t size, double *array) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {
@@ -35,17 +37,13 @@ __device__ local_int_t get_hash(local_int_t ix, local_int_t iy,
 }
 
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
-__launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
-    void kernel_generate_problem(
-        local_int_t m, local_int_t nx, local_int_t ny, local_int_t nz,
-        local_int_t nx_ny, global_int_t gnx, global_int_t gny, global_int_t gnz,
-        global_int_t gnx_gny, global_int_t gix0, global_int_t giy0,
-        global_int_t giz0, local_int_t numberOfNonzerosPerRow,
-        char *__restrict__ nonzerosInRow, global_int_t *__restrict__ mtxIndG,
-        double *__restrict__ matrixValues,
-        local_int_t *__restrict__ matrixDiagonal,
-        global_int_t *__restrict__ localToGlobalMap,
-        local_int_t *__restrict__ rowHash, double *__restrict__ b) {
+__launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__ void kernelGenerateProblem(
+    local_int_t m, local_int_t nx, local_int_t ny, local_int_t nz,
+    local_int_t nx_ny, global_int_t gnx, global_int_t gny, global_int_t gnz,
+    global_int_t gnx_gny, global_int_t gix0, global_int_t giy0,
+    global_int_t giz0, local_int_t numberOfNonzerosPerRow, char *nonzerosInRow,
+    global_int_t *mtxIndG, double *matrixValues, local_int_t *matrixDiagonal,
+    global_int_t *localToGlobalMap, local_int_t *rowHash, double *b) {
   // Current local row
   local_int_t currentLocalRow = blockIdx.x * BLOCKSIZEY + threadIdx.y;
 
@@ -253,7 +251,7 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
 
 // Block reduce sum using LDS
 template <unsigned int BLOCKSIZE>
-__device__ void reduce_sum(local_int_t tid, local_int_t *data) {
+__device__ void kernelDeviceReduceSum(local_int_t tid, local_int_t *data) {
   __syncthreads();
 
   if (BLOCKSIZE > 512) {
@@ -320,9 +318,8 @@ __device__ void reduce_sum(local_int_t tid, local_int_t *data) {
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_local_nnz_part1(local_int_t size,
-                                const char *__restrict__ nonzerosInRow,
-                                local_int_t *__restrict__ workspace) {
+    void kernelComputeLocalNNZPart1(local_int_t size, const char *nonzerosInRow,
+                                    local_int_t *workspace) {
   local_int_t tid = threadIdx.x;
   local_int_t gid = blockIdx.x * BLOCKSIZE + tid;
   local_int_t inc = gridDim.x * BLOCKSIZE;
@@ -334,7 +331,7 @@ __launch_bounds__(BLOCKSIZE) __global__
     sdata[tid] += nonzerosInRow[idx];
   }
 
-  reduce_sum<BLOCKSIZE>(tid, sdata);
+  kernelDeviceReduceSum<BLOCKSIZE>(tid, sdata);
 
   if (tid == 0) {
     workspace[blockIdx.x] = sdata[0];
@@ -343,8 +340,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_local_nnz_part2(local_int_t size,
-                                local_int_t *__restrict__ workspace) {
+    void kernel_local_nnz_part2(local_int_t size, local_int_t *workspace) {
   local_int_t tid = threadIdx.x;
 
   __shared__ local_int_t sdata[BLOCKSIZE];
@@ -354,7 +350,7 @@ __launch_bounds__(BLOCKSIZE) __global__
     sdata[tid] += workspace[idx];
   }
 
-  reduce_sum<BLOCKSIZE>(tid, sdata);
+  kernelDeviceReduceSum<BLOCKSIZE>(tid, sdata);
 
   if (tid == 0) {
     workspace[0] = sdata[0];
@@ -376,7 +372,8 @@ __launch_bounds__(BLOCKSIZE) __global__
   @see GenerateGeometry
 */
 
-void GenerateProblem(SparseMatrix &A, Vector *b, Vector *x, Vector *xexact) {
+void GenerateProblemInside(SparseMatrix &A, Vector *b, Vector *x,
+                           Vector *xexact) {
   // Local dimension in x, y and z direction
   local_int_t nx = A.geom->nx;
   local_int_t ny = A.geom->ny;
@@ -412,23 +409,24 @@ void GenerateProblem(SparseMatrix &A, Vector *b, Vector *x, Vector *xexact) {
     CudaInitializeVector(*xexact, localNumberOfRows);
 
   // Allocate structures
-  CUDA_CHECK_COMMAND(cudaMalloc(
+  CUDA_RETURN_VOID_IF_ERROR(cudaMalloc(
       (void **)&A.d_mtxIndG, std::max(sizeof(double), sizeof(global_int_t)) *
                                  localNumberOfRows * numberOfNonzerosPerRow));
-  CUDA_CHECK_COMMAND(
+  CUDA_RETURN_VOID_IF_ERROR(
       cudaMalloc((void **)&A.d_matrixValues,
                  sizeof(double) * localNumberOfRows * numberOfNonzerosPerRow));
-  CUDA_CHECK_COMMAND(cudaMalloc((void **)&A.d_mtxIndL,
-                                sizeof(local_int_t) * localNumberOfRows *
-                                    numberOfNonzerosPerRow));
-  CUDA_CHECK_COMMAND(cudaMalloc((void **)&A.d_nonzerosInRow,
-                                sizeof(char) * localNumberOfRows));
-  CUDA_CHECK_COMMAND(cudaMalloc((void **)&A.d_matrixDiagonal,
-                                sizeof(local_int_t) * localNumberOfRows));
-  CUDA_CHECK_COMMAND(cudaMalloc((void **)&A.d_rowHash,
-                                sizeof(local_int_t) * localNumberOfRows));
-  CUDA_CHECK_COMMAND(cudaMalloc((void **)&A.d_localToGlobalMap,
-                                sizeof(global_int_t) * localNumberOfRows));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMalloc((void **)&A.d_mtxIndL,
+                                       sizeof(local_int_t) * localNumberOfRows *
+                                           numberOfNonzerosPerRow));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMalloc((void **)&A.d_nonzerosInRow,
+                                       sizeof(char) * localNumberOfRows));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMalloc(
+      (void **)&A.d_matrixDiagonal, sizeof(local_int_t) * localNumberOfRows));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMalloc(
+      (void **)&A.d_rowHash, sizeof(local_int_t) * localNumberOfRows));
+  CUDA_RETURN_VOID_IF_ERROR(
+      cudaMalloc((void **)&A.d_localToGlobalMap,
+                 sizeof(global_int_t) * localNumberOfRows));
 
   // Determine blocksize
   unsigned int blocksize = 512 / numberOfNonzerosPerRow;
@@ -458,31 +456,40 @@ void GenerateProblem(SparseMatrix &A, Vector *b, Vector *x, Vector *xexact) {
 
   // Initialize x vector, if not NULL
   if (x != NULL) {
-    CUDA_CHECK_COMMAND(
+    CUDA_RETURN_VOID_IF_ERROR(
         cudaMemset(x->d_values, 0, sizeof(double) * localNumberOfRows));
   }
 
   // Initialize exact solution, if not NULL
   if (xexact != NULL) {
+
     kernel_set_one<1024>
         <<<dim3((localNumberOfRows - 1) / 1024 + 1), dim3(1024)>>>(
             localNumberOfRows, xexact->d_values);
   }
 
+  printf("entering kernel\n");
+
   local_int_t *tmp = reinterpret_cast<local_int_t *>(workspace);
 
   // Compute number of local non-zero entries using two step reduction
-  kernel_local_nnz_part1<256>
+  kernelComputeLocalNNZPart1<256>
       <<<dim3(256), dim3(256)>>>(localNumberOfRows, A.d_nonzerosInRow, tmp);
+  printf("passed part 1\n");
 
   kernel_local_nnz_part2<256><<<dim3(1), dim3(256)>>>(256, tmp);
 
+  printf("passed nnz part2\n");
+
   // Copy number of local non-zero entries to host
   local_int_t localNumberOfNonzeros;
-  CUDA_CHECK_COMMAND(cudaMemcpy(&localNumberOfNonzeros, tmp,
-                                sizeof(local_int_t), cudaMemcpyDeviceToHost));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(&localNumberOfNonzeros, tmp,
+                                       sizeof(local_int_t),
+                                       cudaMemcpyDeviceToHost));
+  printf("passed memcpy");
 
   global_int_t totalNumberOfNonzeros = 0;
+
 #ifndef HPCG_NO_MPI
   // Use MPI's reduce function to sum all nonzeros
 #ifdef HPCG_NO_LONG_LONG
@@ -510,7 +517,8 @@ void GenerateProblem(SparseMatrix &A, Vector *b, Vector *x, Vector *xexact) {
   A.numberOfNonzerosPerRow = numberOfNonzerosPerRow;
 }
 
-void CopyProblemToHost(SparseMatrix &A, Vector *b, Vector *x, Vector *xexact) {
+void CopyProblemToHostInside(SparseMatrix &A, Vector *b, Vector *x,
+                             Vector *xexact) {
   // Allocate host structures
   A.nonzerosInRow = new char[A.localNumberOfRows];
   A.mtxIndG = new global_int_t *[A.localNumberOfRows];
@@ -529,26 +537,26 @@ void CopyProblemToHost(SparseMatrix &A, Vector *b, Vector *x, Vector *xexact) {
       new global_int_t[A.localNumberOfRows * A.numberOfNonzerosPerRow];
 
   // Copy GPU data to host
-  CUDA_CHECK_COMMAND(cudaMemcpy(A.nonzerosInRow, A.d_nonzerosInRow,
-                                sizeof(char) * A.localNumberOfRows,
-                                cudaMemcpyDeviceToHost));
-  CUDA_CHECK_COMMAND(cudaMemcpy(A.mtxIndG[0], A.d_mtxIndG,
-                                sizeof(global_int_t) * A.localNumberOfRows *
-                                    A.numberOfNonzerosPerRow,
-                                cudaMemcpyDeviceToHost));
-  CUDA_CHECK_COMMAND(cudaMemcpy(A.matrixValues[0], A.d_matrixValues,
-                                sizeof(double) * A.localNumberOfRows *
-                                    A.numberOfNonzerosPerRow,
-                                cudaMemcpyDeviceToHost));
-  CUDA_CHECK_COMMAND(cudaMemcpy(mtxDiag, A.d_matrixDiagonal,
-                                sizeof(local_int_t) * A.localNumberOfRows,
-                                cudaMemcpyDeviceToHost));
-  CUDA_CHECK_COMMAND(cudaMemcpy(A.localToGlobalMap.data(), A.d_localToGlobalMap,
-                                sizeof(global_int_t) * A.localNumberOfRows,
-                                cudaMemcpyDeviceToHost));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(A.nonzerosInRow, A.d_nonzerosInRow,
+                                       sizeof(char) * A.localNumberOfRows,
+                                       cudaMemcpyDeviceToHost));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(
+      A.mtxIndG[0], A.d_mtxIndG,
+      sizeof(global_int_t) * A.localNumberOfRows * A.numberOfNonzerosPerRow,
+      cudaMemcpyDeviceToHost));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(A.matrixValues[0], A.d_matrixValues,
+                                       sizeof(double) * A.localNumberOfRows *
+                                           A.numberOfNonzerosPerRow,
+                                       cudaMemcpyDeviceToHost));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(
+      mtxDiag, A.d_matrixDiagonal, sizeof(local_int_t) * A.localNumberOfRows,
+      cudaMemcpyDeviceToHost));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(
+      A.localToGlobalMap.data(), A.d_localToGlobalMap,
+      sizeof(global_int_t) * A.localNumberOfRows, cudaMemcpyDeviceToHost));
 
-  CUDA_CHECK_COMMAND(cudaFree(A.d_nonzerosInRow));
-  CUDA_CHECK_COMMAND(cudaFree(A.d_matrixDiagonal));
+  CUDA_RETURN_VOID_IF_ERROR(cudaFree(A.d_nonzerosInRow));
+  CUDA_RETURN_VOID_IF_ERROR(cudaFree(A.d_matrixDiagonal));
 
   // Initialize pointers
   A.matrixDiagonal[0] = A.matrixValues[0] + mtxDiag[0];
@@ -569,22 +577,22 @@ void CopyProblemToHost(SparseMatrix &A, Vector *b, Vector *x, Vector *xexact) {
   // Allocate and copy vectors, if available
   if (b != NULL) {
     InitializeVector(*b, A.localNumberOfRows);
-    CUDA_CHECK_COMMAND(cudaMemcpy(b->values, b->d_values,
-                                  sizeof(double) * b->localLength,
-                                  cudaMemcpyDeviceToHost));
+    CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(b->values, b->d_values,
+                                         sizeof(double) * b->localLength,
+                                         cudaMemcpyDeviceToHost));
   }
 
   if (x != NULL) {
     InitializeVector(*x, A.localNumberOfRows);
-    CUDA_CHECK_COMMAND(cudaMemcpy(x->values, x->d_values,
-                                  sizeof(double) * x->localLength,
-                                  cudaMemcpyDeviceToHost));
+    CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(x->values, x->d_values,
+                                         sizeof(double) * x->localLength,
+                                         cudaMemcpyDeviceToHost));
   }
 
   if (xexact != NULL) {
     InitializeVector(*xexact, A.localNumberOfRows);
-    CUDA_CHECK_COMMAND(cudaMemcpy(xexact->values, xexact->d_values,
-                                  sizeof(double) * xexact->localLength,
-                                  cudaMemcpyDeviceToHost));
+    CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(xexact->values, xexact->d_values,
+                                         sizeof(double) * xexact->localLength,
+                                         cudaMemcpyDeviceToHost));
   }
 }

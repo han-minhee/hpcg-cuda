@@ -1,4 +1,4 @@
-#include "ComputeProlongation.hpp"
+#include "ComputeProlongationInside.cuh"
 #include <cuda_runtime.h>
 
 template <unsigned int BLOCKSIZE>

@@ -29,7 +29,7 @@ extern void *workspace;
     if (debug_message) {                                                       \
       printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),                    \
              cudaGetErrorString(cudaPeekAtLastError()));                       \
-      printf("at line%s %d \n", __FILE__, __LINE__);                           \
+      printf("at file, line %s %d \n", __FILE__, __LINE__);                    \
     }                                                                          \
   } else {                                                                     \
     if (debug_message)                                                         \
@@ -41,9 +41,22 @@ extern void *workspace;
     if (debug_message) {                                                       \
       printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),                    \
              cudaGetErrorString(cudaPeekAtLastError()));                       \
-      printf("at line%s %d \n", __FILE__, __LINE__);                           \
+      printf("at file, line %s %d \n", __FILE__, __LINE__);                    \
     }                                                                          \
     return -1;                                                                 \
+  } else {                                                                     \
+    if (debug_message)                                                         \
+      printf("line passed %s %d \n", __FILE__, __LINE__);                      \
+  }
+
+#define CUDA_RETURN_VOID_IF_ERROR(command)                                     \
+  if (command != cudaSuccess) {                                                \
+    if (debug_message) {                                                       \
+      printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),                    \
+             cudaGetErrorString(cudaPeekAtLastError()));                       \
+      printf("at file, line %s %d \n", __FILE__, __LINE__);                    \
+    }                                                                          \
+    return;                                                                    \
   } else {                                                                     \
     if (debug_message)                                                         \
       printf("line passed %s %d \n", __FILE__, __LINE__);                      \
@@ -54,7 +67,19 @@ extern void *workspace;
     if (cudaPeekAtLastError() != cudaSuccess) {                                \
       printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),                    \
              cudaGetErrorString(cudaPeekAtLastError()));                       \
-      printf("at line%s %d \n", __FILE__, __LINE__);                           \
+      printf("at file, line %s %d \n", __FILE__, __LINE__);                    \
+    } else {                                                                   \
+      printf("line passed %s %d \n", __FILE__, __LINE__);                      \
+    }                                                                          \
+  }
+
+#define CUDA_CHECK_ERROR_AND_RETURN_VOID                                       \
+  if (debug_message) {                                                         \
+    if (cudaPeekAtLastError() != cudaSuccess) {                                \
+      printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),                    \
+             cudaGetErrorString(cudaPeekAtLastError()));                       \
+      printf("at file, line %s %d \n", __FILE__, __LINE__);                    \
+      return;                                                                  \
     } else {                                                                   \
       printf("line passed %s %d \n", __FILE__, __LINE__);                      \
     }                                                                          \

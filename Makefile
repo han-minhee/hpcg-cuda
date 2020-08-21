@@ -65,11 +65,13 @@ CUDA_DEPS = cuda-src/ComputeDotProductInside.o \
 			cuda-src/TestCGInside.o \
 			cuda-src/TestSymmetryInside.o \
 			cuda-src/Utils.o \
-			cuda-src/VectorInside.o
+			cuda-src/VectorInside.o \
+			cuda-src/ComputeSYMGSInside.o
 
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
 PRIMARY_HEADERS = ./src/Geometry.hpp ./src/SparseMatrix.hpp ./src/Vector.hpp ./src/CGData.hpp \
-                  ./src/MGData.hpp ./src/hpcg.hpp
+                  ./src/MGData.hpp ./src/hpcg.hpp 
+				  # ./src/SparseMatrixOp.hpp
 
 all: bin/xhpcg
 
@@ -201,7 +203,7 @@ src/CheckAspectRatio.o: ./src/CheckAspectRatio.cpp ./src/CheckAspectRatio.hpp $(
 src/OutputFile.o: ./src/OutputFile.cpp ./src/OutputFile.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
-src/SparseMatrix.o: ./src/SparseMatrix.cpp ./src/SparseMatrix.hpp $(PRIMARY_HEADERS)
+src/SparseMatrixOp.o: ./src/SparseMatrixOp.cpp ./src/SparseMatrixOp.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
 
 # CUDA Implementation from Here
@@ -236,6 +238,9 @@ cuda-src/ComputeRestrictionInside.o: ./cuda-src/ComputeRestrictionInside.cu ./cu
 cuda-src/ComputeSPMVInside.o: ./cuda-src/ComputeSPMVInside.cu ./cuda-src/ComputeSPMVInside.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
 
+cuda-src/ComputeSYMGSInside.o: ./cuda-src/ComputeSYMGSInside.cu ./cuda-src/ComputeSYMGSInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
 cuda-src/ComputeWAXPBYInside.o: ./cuda-src/ComputeWAXPBYInside.cu ./cuda-src/ComputeWAXPBYInside.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
 
@@ -265,4 +270,3 @@ cuda-src/TestSymmetryInside.o: ./cuda-src/TestSymmetryInside.cu ./cuda-src/TestS
 
 cuda-src/VectorInside.o: ./cuda-src/VectorInside.cu ./cuda-src/VectorInside.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
-

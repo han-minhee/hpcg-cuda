@@ -8,6 +8,7 @@ using std::endl;
 #include "../src/CG.hpp"
 #include "TestCGInside.cuh"
 #include "../src/SparseMatrix.hpp"
+#include "../src/SparseMatrixOp.hpp"
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__ void kernel_scale_vector_values(

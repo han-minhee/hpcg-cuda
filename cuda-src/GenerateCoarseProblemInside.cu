@@ -5,6 +5,7 @@
 #include "../src/GenerateProblem.hpp"
 #include "../src/SetupHalo.hpp"
 #include "GenerateCoarseProblemInside.cuh"
+#include "../src/SparseMatrixOp.hpp"
 
 __global__ void kernel_f2c_operator(local_int_t nxc, local_int_t nyc,
                                     local_int_t nzc, global_int_t nxf,

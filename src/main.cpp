@@ -37,6 +37,7 @@ using std::endl;
 #include "Vector.hpp"
 #include "WriteProblem.hpp"
 #include "mytimer.hpp"
+#include "SparseMatrixOp.hpp"
 
 /*!
   Main driver program: Construct synthetic problem, run V&V tests, compute

@@ -1,4 +1,6 @@
 #include "SparseMatrixInside.cuh"
+#include "Utils.cuh"
+#include <cub/cub.cuh>
 
 #define LAUNCH_TO_ELL_COL(blocksizex, blocksizey)                              \
   kernel_to_ell_col<blocksizex, blocksizey>                                    \
@@ -309,4 +311,97 @@ void ExtractDiagonalInside(SparseMatrix &A) {
   // Extract diagonal entries
   kernel_extract_diag_index<1024><<<dim3((m - 1) / 1024 + 1), dim3(1024)>>>(
       m, A.ell_width, A.ell_col_ind, A.ell_val, A.diag_idx, A.inv_diag);
+}
+
+void DeleteMatrixInside(SparseMatrix &A) {
+
+#ifndef HPCG_CONTIGUOUS_ARRAYS
+  for (local_int_t i = 0; i < A.localNumberOfRows; ++i) {
+    delete[] A.matrixValues[i];
+    delete[] A.mtxIndG[i];
+    delete[] A.mtxIndL[i];
+  }
+#else
+  delete[] A.matrixValues[0];
+  delete[] A.mtxIndG[0];
+  delete[] A.mtxIndL[0];
+#endif
+  if (A.title)
+    delete[] A.title;
+  if (A.nonzerosInRow)
+    delete[] A.nonzerosInRow;
+  if (A.mtxIndG)
+    delete[] A.mtxIndG;
+  if (A.mtxIndL)
+    delete[] A.mtxIndL;
+  if (A.matrixValues)
+    delete[] A.matrixValues;
+  if (A.matrixDiagonal)
+    delete[] A.matrixDiagonal;
+
+#ifndef HPCG_NO_MPI
+  if (A.elementsToSend)
+    delete[] A.elementsToSend;
+  if (A.neighbors)
+    delete[] A.neighbors;
+  if (A.receiveLength)
+    delete[] A.receiveLength;
+  if (A.sendLength)
+    delete[] A.sendLength;
+  if (A.sendBuffer)
+    delete[] A.sendBuffer;
+
+  if (A.recv_request)
+    delete[] A.recv_request;
+  if (A.send_request)
+    delete[] A.send_request;
+  if (A.d_elementsToSend)
+    CUDA_CHECK_COMMAND(cudaFree(A.d_elementsToSend));
+
+  if (A.recv_buffer) {
+    CUDA_CHECK_COMMAND(cudaHostUnregister(A.recv_buffer));
+    numa_free(A.recv_buffer, sizeof(double) * A.totalToBeSent);
+  }
+  if (A.send_buffer) {
+    CUDA_CHECK_COMMAND(cudaHostUnregister(A.send_buffer));
+    numa_free(A.send_buffer, sizeof(double) * A.totalToBeSent);
+  }
+  if (A.d_send_buffer)
+    CUDA_CHECK_COMMAND(cudaFree(A.d_send_buffer));
+
+  if (A.halo_row_ind)
+    CUDA_CHECK_COMMAND(cudaFree(A.halo_row_ind));
+  if (A.halo_col_ind)
+    CUDA_CHECK_COMMAND(cudaFree(A.halo_col_ind));
+  if (A.halo_val)
+    CUDA_CHECK_COMMAND(cudaFree(A.halo_val));
+#endif
+
+  if (A.geom != 0) {
+    DeleteGeometry(*A.geom);
+    delete A.geom;
+    A.geom = 0;
+  }
+  if (A.Ac != 0) {
+    DeleteMatrixInside(*A.Ac);
+    delete A.Ac;
+    A.Ac = 0;
+  } // Delete coarse matrix
+  if (A.mgData != 0) {
+    DeleteMGData(*A.mgData);
+    delete A.mgData;
+    A.mgData = 0;
+  } // Delete MG data
+
+  CUDA_CHECK_COMMAND(cudaFree(A.ell_col_ind));
+  CUDA_CHECK_COMMAND(cudaFree(A.ell_val));
+  CUDA_CHECK_COMMAND(cudaFree(A.diag_idx));
+  CUDA_CHECK_COMMAND(cudaFree(A.inv_diag));
+  CUDA_CHECK_COMMAND(cudaFree(A.perm));
+  CUDA_CHECK_COMMAND(cudaFree(A.d_localToGlobalMap));
+
+  delete[] A.sizes;
+  delete[] A.offsets;
+
+  return;
 }

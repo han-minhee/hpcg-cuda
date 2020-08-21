@@ -1,11 +1,12 @@
 #include "../cuda-src/SparseMatrixInside.cuh"
 
 void CudaCopyMatrixDiagonal(const SparseMatrix &A, Vector &diagonal) {
-  CudaCopyMatrixDiagonalInside(A, diagonal);
+  return CudaCopyMatrixDiagonalInside(A, diagonal);
 }
 
 void CudaReplaceMatrixDiagonal(SparseMatrix &A, const Vector &diagonal) {
-  CudaReplaceMatrixDiagonalInside(A, diagonal);
+  return CudaReplaceMatrixDiagonalInside(A, diagonal);
 }
-void ConvertToELL(SparseMatrix &A) { ConvertToELLInside(A); }
-void ExtractDiagonal(SparseMatrix &A) { ExtractDiagonalInside(A); }
+// void ConvertToELL(SparseMatrix &A) { return ConvertToELLInside(A); }
+
+void DeleteMatrix(SparseMatrix &A) { return DeleteMatrixInside(A); }

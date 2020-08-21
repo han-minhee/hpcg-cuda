@@ -65,11 +65,13 @@ CUDA_DEPS = cuda-src/ComputeDotProductInside.o \
 			cuda-src/TestCGInside.o \
 			cuda-src/TestSymmetryInside.o \
 			cuda-src/Utils.o \
-			cuda-src/VectorInside.o
+			cuda-src/VectorInside.o \
+			cuda-src/ComputeSYMGSInside.o
 
 # These header files are included in many source files, so we recompile every file if one or more of these header is modified.
 PRIMARY_HEADERS = HPCG_SRC_PATH/src/Geometry.hpp HPCG_SRC_PATH/src/SparseMatrix.hpp HPCG_SRC_PATH/src/Vector.hpp HPCG_SRC_PATH/src/CGData.hpp \
-                  HPCG_SRC_PATH/src/MGData.hpp HPCG_SRC_PATH/src/hpcg.hpp
+                  HPCG_SRC_PATH/src/MGData.hpp HPCG_SRC_PATH/src/hpcg.hpp 
+				  # HPCG_SRC_PATH/src/SparseMatrixOp.hpp
 
 all: bin/xhpcg
 
@@ -201,7 +203,7 @@ src/CheckAspectRatio.o: HPCG_SRC_PATH/src/CheckAspectRatio.cpp HPCG_SRC_PATH/src
 src/OutputFile.o: HPCG_SRC_PATH/src/OutputFile.cpp HPCG_SRC_PATH/src/OutputFile.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-src/SparseMatrix.o: HPCG_SRC_PATH/src/SparseMatrix.cpp HPCG_SRC_PATH/src/SparseMatrix.hpp $(PRIMARY_HEADERS)
+src/SparseMatrixOp.o: HPCG_SRC_PATH/src/SparseMatrixOp.cpp HPCG_SRC_PATH/src/SparseMatrixOp.hpp $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
 
 # CUDA Implementation from Here
@@ -236,6 +238,9 @@ cuda-src/ComputeRestrictionInside.o: HPCG_SRC_PATH/cuda-src/ComputeRestrictionIn
 cuda-src/ComputeSPMVInside.o: HPCG_SRC_PATH/cuda-src/ComputeSPMVInside.cu HPCG_SRC_PATH/cuda-src/ComputeSPMVInside.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
 
+cuda-src/ComputeSYMGSInside.o: HPCG_SRC_PATH/cuda-src/ComputeSYMGSInside.cu HPCG_SRC_PATH/cuda-src/ComputeSYMGSInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
 cuda-src/ComputeWAXPBYInside.o: HPCG_SRC_PATH/cuda-src/ComputeWAXPBYInside.cu HPCG_SRC_PATH/cuda-src/ComputeWAXPBYInside.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
 
@@ -265,4 +270,3 @@ cuda-src/TestSymmetryInside.o: HPCG_SRC_PATH/cuda-src/TestSymmetryInside.cu HPCG
 
 cuda-src/VectorInside.o: HPCG_SRC_PATH/cuda-src/VectorInside.cu HPCG_SRC_PATH/cuda-src/VectorInside.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
-

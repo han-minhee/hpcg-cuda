@@ -4,6 +4,7 @@
 #include "SparseMatrix.hpp"
 #include "Vector.hpp"
 #include <cassert>
+#include <cuda_runtime.h>
 
 struct MGData_STRUCT {
   int numberOfPresmootherSteps;  // Call ComputeSYMGS this many times prior to
@@ -66,7 +67,7 @@ inline void DeleteMGData(MGData &data) {
   CudaDeleteVector(*data.rc);
   CudaDeleteVector(*data.xc);
 
-  // cudaFree(data.d_f2cOperator);
+  cudaFree(data.d_f2cOperator);
   return;
 }
 

@@ -1,7 +1,7 @@
 #include "OptimizeProblem.hpp"
 #include "../cuda-src/MultiColoring.cuh"
 #include "../cuda-src/Permute.cuh"
-#include "SparseMatrix.hpp"
+#include "SparseMatrixOp.hpp"
 
 int OptimizeProblem(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
                     Vector &xexact) {
