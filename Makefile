@@ -44,10 +44,7 @@ HPCG_DEPS = src/CG.o \
 	    src/OutputFile.o \
 	    src/GenerateCoarseProblem.o \
 	    src/init.o \
-	    src/finalize.o \
-		src/Utils.o \
-		src/MultiColoring.o \
-		src/Permute.o 
+	    src/finalize.o
 
 CUDA_DEPS = cuda-src/ComputeDotProductInside.o \
 			cuda-src/ComputeMGInside.o \
@@ -209,16 +206,63 @@ src/SparseMatrix.o: ./src/SparseMatrix.cpp ./src/SparseMatrix.hpp $(PRIMARY_HEAD
 
 # CUDA Implementation from Here
 
-
-src/Utils.o: ./src/Utils.cu ./src/Utils.cuh $(PRIMARY_HEADERS)
+cuda-src/Utils.o: ./cuda-src/Utils.cu ./cuda-src/Utils.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
-cuda-src/MultiColoring.o: ./src/MultiColoring.cu ./src/MultiColoring.cuh $(PRIMARY_HEADERS)
+cuda-src/MultiColoring.o: ./cuda-src/MultiColoring.cu ./cuda-src/MultiColoring.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
-cuda-src/Permute.o: ./src/Permute.cu ./src/Permute.cuh $(PRIMARY_HEADERS)
+cuda-src/Permute.o: ./cuda-src/Permute.cu ./cuda-src/Permute.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src $< -o $@
 
 cuda-src/SparseMatrixInside.o: ./cuda-src/SparseMatrixInside.cu ./cuda-src/SparseMatrixInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ComputeDotProductInside.o: ./cuda-src/ComputeDotProductInside.cu ./cuda-src/ComputeDotProductInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ComputeMGInside.o: ./cuda-src/ComputeMGInside.cu ./cuda-src/ComputeMGInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ComputeProlongationInside.o: ./cuda-src/ComputeProlongationInside.cu ./cuda-src/ComputeProlongationInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ComputeResidualInside.o: ./cuda-src/ComputeResidualInside.cu ./cuda-src/ComputeResidualInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ComputeRestrictionInside.o: ./cuda-src/ComputeRestrictionInside.cu ./cuda-src/ComputeRestrictionInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ComputeSPMVInside.o: ./cuda-src/ComputeSPMVInside.cu ./cuda-src/ComputeSPMVInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ComputeWAXPBYInside.o: ./cuda-src/ComputeWAXPBYInside.cu ./cuda-src/ComputeWAXPBYInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/ExchangeHaloInside.o: ./cuda-src/ExchangeHaloInside.cu ./cuda-src/ExchangeHaloInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/finalizeInside.o: ./cuda-src/finalizeInside.cu ./cuda-src/finalizeInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/GenerateCoarseProblemInside.o: ./cuda-src/GenerateCoarseProblemInside.cu ./cuda-src/GenerateCoarseProblemInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/GenerateProblemInside.o: ./cuda-src/GenerateProblemInside.cu ./cuda-src/GenerateProblemInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/InitInside.o: ./cuda-src/InitInside.cu ./cuda-src/InitInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/SetupHaloInside.o: ./cuda-src/SetupHaloInside.cu ./cuda-src/SetupHaloInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/TestCGInside.o: ./cuda-src/TestCGInside.cu ./cuda-src/TestCGInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/TestSymmetryInside.o: ./cuda-src/TestSymmetryInside.cu ./cuda-src/TestSymmetryInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
+
+cuda-src/VectorInside.o: ./cuda-src/VectorInside.cu ./cuda-src/VectorInside.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -I./src -I./cuda-src $< -o $@
 

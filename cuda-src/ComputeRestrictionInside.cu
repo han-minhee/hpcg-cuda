@@ -1,6 +1,6 @@
 
-#include "ComputeRestrictionInside.cuh"
 #include "../src/ExchangeHalo.hpp"
+#include "ComputeRestrictionInside.cuh"
 
 #include <cuda_runtime.h>
 
@@ -38,42 +38,27 @@ __launch_bounds__(BLOCKSIZE) __global__ void kernel_fused_restrict_spmv(
     return;
   }
 
-  local_int_t idx_f2c = __builtin_nontemporal_load(f2cOperator + idx_coarse);
-  local_int_t idx_fine = __builtin_nontemporal_load(perm_fine + idx_f2c);
+  local_int_t idx_f2c = f2cOperator[idx_coarse];
+  local_int_t idx_fine = perm_fine[idx_f2c];
 
   double sum = 0.0;
 
   for (local_int_t p = 0; p < ell_width; ++p) {
     local_int_t idx = p * m + idx_fine;
-    local_int_t col = __builtin_nontemporal_load(ell_col_ind + idx);
+    local_int_t col = ell_col_ind[idx];
 
     if (col >= 0 && col < n) {
-      sum =
-          fma(__builtin_nontemporal_load(ell_val + idx), __ldg(xf + col), sum);
+      sum = fma(ell_val[idx], __ldg(xf + col), sum);
     } else {
       break;
     }
   }
 
-  local_int_t idx_perm = __builtin_nontemporal_load(perm_coarse + idx_coarse);
-  double val_fine = __builtin_nontemporal_load(fine + idx_fine);
-  __builtin_nontemporal_store(val_fine - sum, coarse + idx_perm);
+  local_int_t idx_perm = perm_coarse[idx_coarse];
+  double val_fine = fine[idx_fine];
+  coarse[idx_perm] = val_fine - sum;
 }
 
-/*!
-  Routine to compute the coarse residual vector.
-
-  @param[inout]  A - Sparse matrix object containing pointers to mgData->Axf,
-  the fine grid matrix-vector product and mgData->rc the coarse residual vector.
-  @param[in]    rf - Fine grid RHS.
-
-
-  Note that the fine grid residual is never explicitly constructed.
-  We only compute it for the fine grid points that will be injected into
-  corresponding coarse grid points.
-
-  @return Returns zero on success and a non-zero value otherwise.
-*/
 int ComputeRestriction(const SparseMatrix &A, const Vector &rf) {
   kernel_restrict<128>
       <<<dim3((A.mgData->rc->localLength - 1) / 128 + 1), dim3(128)>>>(

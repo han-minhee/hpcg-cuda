@@ -137,11 +137,11 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
   // Single GPU device can be selected via cli
   // Multi GPU devices are selected automatically
   if (params.comm_size == 1) {
-    if (ndevs <= params) {
-      fprintf(stderr, "Error: invalid device ID\n");
-      cudaDeviceReset();
-      exit(1);
-    }
+    // if (ndevs <= params) {
+    //   fprintf(stderr, "Error: invalid device ID\n");
+    //   cudaDeviceReset();
+    //   exit(1);
+    // }
   } else {
     params.device = params.comm_rank % ndevs;
   }

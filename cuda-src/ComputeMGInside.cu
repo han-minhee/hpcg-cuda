@@ -26,7 +26,7 @@ int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
     CUDA_RETURN_IFF_ERROR(ComputeRestriction(A, r));
 #endif
 
-    CUDA_RETURN_IFF_ERROR(ComputeMG(*A.Ac, *A.mgData->rc, *A.mgData->xc));
+    CUDA_RETURN_IFF_ERROR(ComputeMGInside(*A.Ac, *A.mgData->rc, *A.mgData->xc));
     CUDA_RETURN_IFF_ERROR(ComputeProlongation(A, x));
 
     int numberOfPostsmootherSteps = A.mgData->numberOfPostsmootherSteps;

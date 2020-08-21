@@ -44,10 +44,7 @@ HPCG_DEPS = src/CG.o \
 	    src/OutputFile.o \
 	    src/GenerateCoarseProblem.o \
 	    src/init.o \
-	    src/finalize.o \
-		src/Utils.o \
-		src/MultiColoring.o \
-		src/Permute.o 
+	    src/finalize.o
 
 CUDA_DEPS = cuda-src/ComputeDotProductInside.o \
 			cuda-src/ComputeMGInside.o \
@@ -209,16 +206,63 @@ src/SparseMatrix.o: HPCG_SRC_PATH/src/SparseMatrix.cpp HPCG_SRC_PATH/src/SparseM
 
 # CUDA Implementation from Here
 
-
-src/Utils.o: HPCG_SRC_PATH/src/Utils.cu HPCG_SRC_PATH/src/Utils.cuh $(PRIMARY_HEADERS)
+cuda-src/Utils.o: HPCG_SRC_PATH/cuda-src/Utils.cu HPCG_SRC_PATH/cuda-src/Utils.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-cuda-src/MultiColoring.o: HPCG_SRC_PATH/src/MultiColoring.cu HPCG_SRC_PATH/src/MultiColoring.cuh $(PRIMARY_HEADERS)
+cuda-src/MultiColoring.o: HPCG_SRC_PATH/cuda-src/MultiColoring.cu HPCG_SRC_PATH/cuda-src/MultiColoring.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
-cuda-src/Permute.o: HPCG_SRC_PATH/src/Permute.cu HPCG_SRC_PATH/src/Permute.cuh $(PRIMARY_HEADERS)
+cuda-src/Permute.o: HPCG_SRC_PATH/cuda-src/Permute.cu HPCG_SRC_PATH/cuda-src/Permute.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src $< -o $@
 
 cuda-src/SparseMatrixInside.o: HPCG_SRC_PATH/cuda-src/SparseMatrixInside.cu HPCG_SRC_PATH/cuda-src/SparseMatrixInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeDotProductInside.o: HPCG_SRC_PATH/cuda-src/ComputeDotProductInside.cu HPCG_SRC_PATH/cuda-src/ComputeDotProductInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeMGInside.o: HPCG_SRC_PATH/cuda-src/ComputeMGInside.cu HPCG_SRC_PATH/cuda-src/ComputeMGInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeProlongationInside.o: HPCG_SRC_PATH/cuda-src/ComputeProlongationInside.cu HPCG_SRC_PATH/cuda-src/ComputeProlongationInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeResidualInside.o: HPCG_SRC_PATH/cuda-src/ComputeResidualInside.cu HPCG_SRC_PATH/cuda-src/ComputeResidualInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeRestrictionInside.o: HPCG_SRC_PATH/cuda-src/ComputeRestrictionInside.cu HPCG_SRC_PATH/cuda-src/ComputeRestrictionInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeSPMVInside.o: HPCG_SRC_PATH/cuda-src/ComputeSPMVInside.cu HPCG_SRC_PATH/cuda-src/ComputeSPMVInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ComputeWAXPBYInside.o: HPCG_SRC_PATH/cuda-src/ComputeWAXPBYInside.cu HPCG_SRC_PATH/cuda-src/ComputeWAXPBYInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/ExchangeHaloInside.o: HPCG_SRC_PATH/cuda-src/ExchangeHaloInside.cu HPCG_SRC_PATH/cuda-src/ExchangeHaloInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/finalizeInside.o: HPCG_SRC_PATH/cuda-src/finalizeInside.cu HPCG_SRC_PATH/cuda-src/finalizeInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/GenerateCoarseProblemInside.o: HPCG_SRC_PATH/cuda-src/GenerateCoarseProblemInside.cu HPCG_SRC_PATH/cuda-src/GenerateCoarseProblemInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/GenerateProblemInside.o: HPCG_SRC_PATH/cuda-src/GenerateProblemInside.cu HPCG_SRC_PATH/cuda-src/GenerateProblemInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/InitInside.o: HPCG_SRC_PATH/cuda-src/InitInside.cu HPCG_SRC_PATH/cuda-src/InitInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/SetupHaloInside.o: HPCG_SRC_PATH/cuda-src/SetupHaloInside.cu HPCG_SRC_PATH/cuda-src/SetupHaloInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/TestCGInside.o: HPCG_SRC_PATH/cuda-src/TestCGInside.cu HPCG_SRC_PATH/cuda-src/TestCGInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/TestSymmetryInside.o: HPCG_SRC_PATH/cuda-src/TestSymmetryInside.cu HPCG_SRC_PATH/cuda-src/TestSymmetryInside.cuh $(PRIMARY_HEADERS)
+	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
+
+cuda-src/VectorInside.o: HPCG_SRC_PATH/cuda-src/VectorInside.cu HPCG_SRC_PATH/cuda-src/VectorInside.cuh $(PRIMARY_HEADERS)
 	$(CXX) -c $(CXXFLAGS) -IHPCG_SRC_PATH/src -IHPCG_SRC_PATH/cuda-src $< -o $@
 

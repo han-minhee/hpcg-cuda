@@ -7,7 +7,6 @@
 #endif
 
 #include <cassert>
-#include <cuda_runtime.h>
 #include <vector>
 
 #include "Geometry.hpp"

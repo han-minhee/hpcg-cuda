@@ -1,5 +1,5 @@
-#include "../src/Vector.hpp"
 
+#include "../src/Vector.hpp"
 int ComputeWAXPBYInside(local_int_t n, double alpha, const Vector &x,
                         double beta, const Vector &y, Vector &w,
                         bool &isOptimized);

@@ -1,5 +1,5 @@
 #include "../src/SparseMatrix.hpp"
-#include "../src/Utils.cuh"
+#include "Utils.cuh"
 #include <cub/cub.cuh>
 #include <cuda_runtime.h>
 

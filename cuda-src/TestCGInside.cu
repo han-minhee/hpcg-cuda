@@ -1,9 +1,11 @@
 
+#include "../src/hpcg.hpp"
 #include <fstream>
 #include <iostream>
-#include "../src/hpcg.hpp"
 #include <vector>
+using std::endl;
 #include "../src/Vector.hpp"
+#include "../src/CG.hpp"
 #include "TestCGInside.cuh"
 
 template <unsigned int BLOCKSIZE>

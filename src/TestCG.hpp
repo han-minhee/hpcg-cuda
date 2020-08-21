@@ -1,8 +1,10 @@
 #ifndef TESTCG_HPP
 #define TESTCG_HPP
 
-#include "CG.hpp"
 #include "hpcg.hpp"
+#include "SparseMatrix.hpp"
+#include "CGData.hpp"
+#include "Vector.hpp"
 
 struct TestCGData_STRUCT {
   int count_pass;              //!< number of succesful tests

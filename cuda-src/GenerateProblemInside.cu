@@ -7,8 +7,7 @@
 #include "GenerateProblemInside.cuh"
 #include "Utils.cuh"
 
-// sizeof(bool) * blocksizey + sizeof(int) * blocksizex * blocksizey,   \
-                        0,
+// sizeof(bool) * blocksizey + sizeof(int) * blocksizex * blocksizey, 0,
 #define LAUNCH_GENERATE_PROBLEM(blocksizex, blocksizey)                        \
   kernel_generate_problem<blocksizex, blocksizey>                              \
       <<<dim3((localNumberOfRows - 1) / blocksizey + 1),                       \

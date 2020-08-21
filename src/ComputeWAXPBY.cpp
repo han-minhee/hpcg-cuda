@@ -1,13 +1,5 @@
-
-#ifndef HPCG_NO_MPI
-#include "mytimer.hpp"
-#include <mpi.h>
-#endif
-
-#include <cassert>
-
-#include "../cuda-src/ComputeWAXPBYInside.cuh"
 #include "ComputeWAXPBY.hpp"
+#include "../cuda-src/ComputeWAXPBYInside.cuh"
 
 int ComputeWAXPBY(local_int_t n, double alpha, const Vector &x, double beta,
                   const Vector &y, Vector &w, bool &isOptimized) {
