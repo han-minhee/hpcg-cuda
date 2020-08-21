@@ -180,8 +180,8 @@ inline void InitializeSparseMatrix(SparseMatrix &A, Geometry *geom) {
   return;
 }
 
-void ConvertToELL(SparseMatrix &A);
-void ExtractDiagonal(SparseMatrix &A);
+inline void ConvertToELL(SparseMatrix &A);
+inline void ExtractDiagonal(SparseMatrix &A);
 
 /*!
   Copy values from matrix diagonal into user-provided vector.
@@ -190,7 +190,7 @@ void ExtractDiagonal(SparseMatrix &A);
   @param[inout] diagonal  Vector of diagonal values (must be allocated before
   call to this function).
  */
-void CudaCopyMatrixDiagonal(const SparseMatrix &A, Vector &diagonal);
+inline void CudaCopyMatrixDiagonal(const SparseMatrix &A, Vector &diagonal);
 inline void CopyMatrixDiagonal(SparseMatrix &A, Vector &diagonal) {
   double **curDiagA = A.matrixDiagonal;
   double *dv = diagonal.values;

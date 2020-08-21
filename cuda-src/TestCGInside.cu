@@ -7,6 +7,7 @@ using std::endl;
 #include "../src/Vector.hpp"
 #include "../src/CG.hpp"
 #include "TestCGInside.cuh"
+#include "../src/SparseMatrix.hpp"
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__ void kernel_scale_vector_values(
@@ -31,7 +32,7 @@ __launch_bounds__(BLOCKSIZE) __global__ void kernel_scale_vector_values(
   }
 }
 
-int TestCG(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
+int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
            TestCGData &testcg_data) {
 
   // Use this array for collecting timing information
