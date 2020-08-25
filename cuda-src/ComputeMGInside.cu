@@ -1,13 +1,14 @@
 
-#include "ComputeMGInside.cuh"
 #include "../src/ComputeProlongation.hpp"
 #include "../src/ComputeRestriction.hpp"
 #include "../src/ComputeSPMV.hpp"
 #include "../src/ComputeSYMGS.hpp"
+#include "ComputeMGInside.cuh"
 #include "Utils.cuh"
 
-
 int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
+
+  printf("===entering MG Inside ===\n");
   assert(x.localLength == A.localNumberOfColumns);
 
   if (A.mgData != 0) {

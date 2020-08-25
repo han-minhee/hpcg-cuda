@@ -4,16 +4,17 @@
 #include <iostream>
 #include <vector>
 using std::endl;
-#include "../src/Vector.hpp"
 #include "../src/CG.hpp"
-#include "TestCGInside.cuh"
 #include "../src/SparseMatrix.hpp"
 #include "../src/SparseMatrixOp.hpp"
+#include "../src/Vector.hpp"
+#include "TestCGInside.cuh"
 
 template <unsigned int BLOCKSIZE>
-__launch_bounds__(BLOCKSIZE) __global__ void kernel_scale_vector_values(
-    local_int_t m, const global_int_t * localToGlobalMap,
-    double * exaggeratedDiagA, double * b) {
+__launch_bounds__(BLOCKSIZE) __global__
+    void kernel_scale_vector_values(local_int_t m,
+                                    const global_int_t *localToGlobalMap,
+                                    double *exaggeratedDiagA, double *b) {
   local_int_t i = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (i >= m) {
@@ -34,7 +35,7 @@ __launch_bounds__(BLOCKSIZE) __global__ void kernel_scale_vector_values(
 }
 
 int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
-           TestCGData &testcg_data) {
+                 TestCGData &testcg_data) {
 
   // Use this array for collecting timing information
   std::vector<double> times(8, 0.0);
@@ -47,6 +48,8 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
   CudaCopyVector(origDiagA, exaggeratedDiagA);
   CudaCopyVector(b, origB);
 
+  printf("==== TestCGInside Copying finished ====\n");
+
   // Modify the matrix diagonal to greatly exaggerate diagonal values.
   // CG should converge in about 10 iterations for this problem, regardless of
   // problem size
@@ -54,6 +57,8 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
       <<<dim3((A.localNumberOfRows - 1) / 1024 + 1), dim3(1024)>>>(
           A.localNumberOfRows, A.d_localToGlobalMap, exaggeratedDiagA.d_values,
           b.d_values);
+
+  printf("==== TestCGInside Scaling finished ====\n");
 
   CudaReplaceMatrixDiagonal(A, exaggeratedDiagA);
 
@@ -111,6 +116,7 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
   CudaDeleteVector(exaggeratedDiagA);
   CudaDeleteVector(origB);
   testcg_data.normr = normr;
+  printf("exiting TestCGInside\n");
 
   return 0;
 }

@@ -6,17 +6,15 @@
 int OptimizeProblem(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
                     Vector &xexact) {
   // Perform matrix coloring
-  // JPLColoring(A);
+  JPLColoring(A);
+  printf("finished JPLCoring @ opt\n");
 
   // Permute matrix columns
   PermuteColumns(A);
+  printf("finished PermuteColumns @ opt\n");
 
   // Convert matrix to ELL format
   ConvertToELL(A);
-
-  // Defrag permutation vector
-  // CUDA_CHECK_COMMAND(deviceDefrag((void**)&A.perm, sizeof(local_int_t) *
-  // A.localNumberOfRows));
 
   // Permute matrix rows
   PermuteRows(A);

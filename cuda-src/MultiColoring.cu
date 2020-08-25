@@ -224,9 +224,11 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
 void JPLColoring(SparseMatrix &A) {
   local_int_t m = A.localNumberOfRows;
 
-  CUDA_CHECK_COMMAND(cudaMalloc((void **)&A.perm, sizeof(local_int_t) * m));
-  CUDA_CHECK_COMMAND(cudaMemset(A.perm, -1, sizeof(local_int_t) * m));
+  CUDA_RETURN_VOID_IF_ERROR(
+      cudaMalloc((void **)&A.perm, sizeof(local_int_t) * m));
+  CUDA_RETURN_VOID_IF_ERROR(cudaMemset(A.perm, -1, sizeof(local_int_t) * m));
 
+  printf("initial memset @ Coloring\n");
   A.nblocks = 0;
 
   // Color seed
@@ -246,20 +248,7 @@ void JPLColoring(SparseMatrix &A) {
   A.offsets[0] = 0;
 
   // Determine blocksize
-  unsigned int blocksize = 512 / A.numberOfNonzerosPerRow;
-
-  // Compute next power of two
-  blocksize |= blocksize >> 1;
-  blocksize |= blocksize >> 2;
-  blocksize |= blocksize >> 4;
-  blocksize |= blocksize >> 8;
-  blocksize |= blocksize >> 16;
-  ++blocksize;
-
-  // Shift right until we obtain a valid blocksize
-  while (blocksize * A.numberOfNonzerosPerRow > 512) {
-    blocksize >>= 1;
-  }
+  unsigned int blocksize = 16;
 
   // Run Jones-Plassmann Luby algorithm until all vertices have been colored
   while (colored != m) {
@@ -267,24 +256,40 @@ void JPLColoring(SparseMatrix &A) {
     int color1 = (A.nblocks < 8) ? rand() % 8 : A.nblocks;
     int color2 = (A.nblocks < 8) ? rand() % 8 : A.nblocks + 1;
 
-    if (blocksize == 32)
-      LAUNCH_JPL(27, 32);
-    else if (blocksize == 16)
-      LAUNCH_JPL(27, 16);
-    else if (blocksize == 8)
-      LAUNCH_JPL(27, 8);
-    else
-      LAUNCH_JPL(27, 4);
+    LAUNCH_JPL(27, 16);
 
+    printf("entering coloring 1\n");
     // Count colored vertices
     kernelCountColorsPart1<256>
         <<<dim3(256), dim3(256)>>>(m, color1, A.perm, tmp);
 
+    if (debug_message) {
+      if (cudaPeekAtLastError() != cudaSuccess) {
+        printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+               cudaGetErrorString(cudaPeekAtLastError()));
+        printf("at file, line %s %d \n", __FILE__, __LINE__);
+        return;
+      } else {
+        printf("line passed %s %d \n", __FILE__, __LINE__);
+      }
+    }
+    printf("entering coloring 2\n");
     kernel_count_color_part2<256><<<dim3(1), dim3(256)>>>(256, tmp);
 
+    if (debug_message) {
+      if (cudaPeekAtLastError() != cudaSuccess) {
+        printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+               cudaGetErrorString(cudaPeekAtLastError()));
+        printf("at file, line %s %d \n", __FILE__, __LINE__);
+        return;
+      } else {
+        printf("line passed %s %d \n", __FILE__, __LINE__);
+      }
+    }
+
     // Copy colored max vertices for current iteration to host
-    CUDA_CHECK_COMMAND(cudaMemcpy(&A.sizes[A.nblocks], tmp, sizeof(local_int_t),
-                                  cudaMemcpyDeviceToHost));
+    CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(
+        &A.sizes[A.nblocks], tmp, sizeof(local_int_t), cudaMemcpyDeviceToHost));
 
     kernelCountColorsPart1<256>
         <<<dim3(256), dim3(256)>>>(m, color2, A.perm, tmp);
@@ -292,8 +297,9 @@ void JPLColoring(SparseMatrix &A) {
     kernel_count_color_part2<256><<<dim3(1), dim3(256)>>>(256, tmp);
 
     // Copy colored min vertices for current iteration to host
-    CUDA_CHECK_COMMAND(cudaMemcpy(&A.sizes[A.nblocks + 1], tmp,
-                                  sizeof(local_int_t), cudaMemcpyDeviceToHost));
+    CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(&A.sizes[A.nblocks + 1], tmp,
+                                         sizeof(local_int_t),
+                                         cudaMemcpyDeviceToHost));
 
     // Total number of colored vertices after max
     colored += A.sizes[A.nblocks];

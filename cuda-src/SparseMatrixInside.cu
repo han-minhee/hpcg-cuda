@@ -20,9 +20,8 @@ template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_copy_diagonal(local_int_t m, local_int_t n,
                               local_int_t ell_width,
-                              const local_int_t * ell_col_ind,
-                              const double * ell_val,
-                              double * diagonal) {
+                              const local_int_t *ell_col_ind,
+                              const double *ell_val, double *diagonal) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= m) {
@@ -54,11 +53,9 @@ void CudaCopyMatrixDiagonalInside(const SparseMatrix &A, Vector &diagonal) {
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_replace_diagonal(local_int_t m, local_int_t n,
-                                 const double * diagonal,
-                                 local_int_t ell_width,
-                                 const local_int_t * ell_col_ind,
-                                 double * ell_val,
-                                 double * inv_diag) {
+                                 const double *diagonal, local_int_t ell_width,
+                                 const local_int_t *ell_col_ind,
+                                 double *ell_val, double *inv_diag) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= m) {
@@ -94,10 +91,8 @@ void CudaReplaceMatrixDiagonalInside(SparseMatrix &A, const Vector &diagonal) {
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
     void kernel_to_ell_col(local_int_t m, local_int_t nonzerosPerRow,
-                           const local_int_t * mtxIndL,
-                           local_int_t * ell_col_ind,
-                           local_int_t * halo_rows,
-                           local_int_t * halo_row_ind) {
+                           const local_int_t *mtxIndL, local_int_t *ell_col_ind,
+                           local_int_t *halo_rows, local_int_t *halo_row_ind) {
   local_int_t row = blockIdx.x * BLOCKSIZEY + threadIdx.y;
 
 #ifndef HPCG_NO_MPI
@@ -132,8 +127,7 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
     void kernel_to_ell_val(local_int_t m, local_int_t nnz_per_row,
-                           const double * matrixValues,
-                           double * ell_val) {
+                           const double *matrixValues, double *ell_val) {
   local_int_t row = blockIdx.x * BLOCKSIZEY + threadIdx.y;
 
   if (row >= m) {
@@ -147,12 +141,9 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_to_halo(local_int_t halo_rows, local_int_t m, local_int_t n,
-                        local_int_t ell_width,
-                        const local_int_t * ell_col_ind,
-                        const double * ell_val,
-                        const local_int_t * halo_row_ind,
-                        local_int_t * halo_col_ind,
-                        double * halo_val) {
+                        local_int_t ell_width, const local_int_t *ell_col_ind,
+                        const double *ell_val, const local_int_t *halo_row_ind,
+                        local_int_t *halo_col_ind, double *halo_val) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= halo_rows) {
@@ -281,10 +272,9 @@ void ConvertToELLInside(SparseMatrix &A) {
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_extract_diag_index(local_int_t m, local_int_t ell_width,
-                                   const local_int_t * ell_col_ind,
-                                   const double * ell_val,
-                                   local_int_t * diag_idx,
-                                   double * inv_diag) {
+                                   const local_int_t *ell_col_ind,
+                                   const double *ell_val, local_int_t *diag_idx,
+                                   double *inv_diag) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= m) {

@@ -49,15 +49,17 @@
 int CG(const SparseMatrix &A, CGData &data, const Vector &b, Vector &x,
        const int max_iter, const double tolerance, int &niters, double &normr,
        double &normr0, double *times, bool doPreconditioning) {
-
+  printf("====entering CG====\n");
   double t_begin = mytimer(); // Start timing right away
   normr = 0.0;
   double rtz = 0.0, oldrtz = 0.0, alpha = 0.0, beta = 0.0, pAp = 0.0;
 
   double t0 = 0.0, t1 = 0.0, t2 = 0.0, t3 = 0.0, t4 = 0.0, t5 = 0.0;
+
   //#ifndef HPCG_NO_MPI
   //  double t6 = 0.0;
   //#endif
+
   local_int_t nrow = A.localNumberOfRows;
   Vector &r = data.r; // Residual vector
   Vector &z = data.z; // Preconditioned residual vector
@@ -95,7 +97,7 @@ int CG(const SparseMatrix &A, CGData &data, const Vector &b, Vector &x,
   normr0 = normr;
 
   // Start iterations
-
+  printf("=== entering CG iterations\n");
   for (int k = 1; k <= max_iter && normr / normr0 > tolerance; k++) {
     TICK();
     if (doPreconditioning)
@@ -132,6 +134,7 @@ int CG(const SparseMatrix &A, CGData &data, const Vector &b, Vector &x,
 #ifndef HPCG_REFERENCE
     TICK();
     ComputeFusedWAXPBYDot(nrow, -alpha, Ap, r, normr, t4);
+    printf("normr, normr0 at %d iter: %f, %f \n", k, normr, normr0);
     ComputeWAXPBY(nrow, 1.0, x, alpha, p, x, A.isWaxpbyOptimized);
     TOCK(t2); // x = x + alpha*p
 #else

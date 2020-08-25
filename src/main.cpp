@@ -307,9 +307,11 @@ int main(int argc, char *argv[]) {
   TestCGData testcg_data;
   testcg_data.count_pass = testcg_data.count_fail = 0;
   TestCG(A, data, b, x, testcg_data);
+  printf("TestCG @ validation phase finished\n");
 
   TestSymmetryData testsymmetry_data;
   TestSymmetry(A, b, xexact, testsymmetry_data);
+  printf("Test Symmetry @ validation phase finished\n");
 
 #ifdef HPCG_DEBUG
   if (rank == 0)
