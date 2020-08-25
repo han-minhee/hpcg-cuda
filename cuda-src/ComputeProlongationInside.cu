@@ -4,11 +4,11 @@
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_prolongation(local_int_t size,
-                             const local_int_t *__restrict__ f2cOperator,
-                             const double *__restrict__ coarse,
-                             double *__restrict__ fine,
-                             const local_int_t *__restrict__ perm_fine,
-                             const local_int_t *__restrict__ perm_coarse) {
+                             const local_int_t * f2cOperator,
+                             const double * coarse,
+                             double * fine,
+                             const local_int_t * perm_fine,
+                             const local_int_t * perm_coarse) {
   local_int_t idx_coarse = blockIdx.x * 1024 + threadIdx.x;
 
   if (idx_coarse >= size) {

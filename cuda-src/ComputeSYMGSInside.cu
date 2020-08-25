@@ -6,9 +6,9 @@
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__ void kernel_symgs_sweep(
     local_int_t m, local_int_t n, local_int_t block_nrow, local_int_t offset,
-    local_int_t ell_width, const local_int_t *__restrict__ ell_col_ind,
-    const double *__restrict__ ell_val, const double *__restrict__ inv_diag,
-    const double *__restrict__ x, double *__restrict__ y) {
+    local_int_t ell_width, const local_int_t * ell_col_ind,
+    const double * ell_val, const double * inv_diag,
+    const double * x, double * y) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= block_nrow) {
@@ -37,11 +37,11 @@ template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_symgs_interior(local_int_t m, local_int_t block_nrow,
                                local_int_t ell_width,
-                               const local_int_t *__restrict__ ell_col_ind,
-                               const double *__restrict__ ell_val,
-                               const double *__restrict__ inv_diag,
-                               const double *__restrict__ x,
-                               double *__restrict__ y) {
+                               const local_int_t * ell_col_ind,
+                               const double * ell_val,
+                               const double * inv_diag,
+                               const double * x,
+                               double * y) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= block_nrow) {
@@ -71,13 +71,13 @@ template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_symgs_halo(local_int_t m, local_int_t n, local_int_t block_nrow,
                            local_int_t halo_width,
-                           const local_int_t *__restrict__ halo_row_ind,
-                           const local_int_t *__restrict__ halo_col_ind,
-                           const double *__restrict__ halo_val,
-                           const double *__restrict__ inv_diag,
-                           const local_int_t *__restrict__ perm,
-                           const double *__restrict__ x,
-                           double *__restrict__ y) {
+                           const local_int_t * halo_row_ind,
+                           const local_int_t * halo_col_ind,
+                           const double * halo_val,
+                           const double * inv_diag,
+                           const local_int_t * perm,
+                           const double * x,
+                           double * y) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= m) {
@@ -107,9 +107,9 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_pointwise_mult(local_int_t size, const double *__restrict__ x,
-                               const double *__restrict__ y,
-                               double *__restrict__ out) {
+    void kernel_pointwise_mult(local_int_t size, const double * x,
+                               const double * y,
+                               double * out) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {
@@ -123,11 +123,11 @@ template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_forward_sweep_0(local_int_t m, local_int_t block_nrow,
                                 local_int_t offset, local_int_t ell_width,
-                                const local_int_t *__restrict__ ell_col_ind,
-                                const double *__restrict__ ell_val,
-                                const local_int_t *__restrict__ diag_idx,
-                                const double *__restrict__ x,
-                                double *__restrict__ y) {
+                                const local_int_t * ell_col_ind,
+                                const double * ell_val,
+                                const local_int_t * diag_idx,
+                                const double * x,
+                                double * y) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= block_nrow) {
@@ -162,10 +162,10 @@ template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_backward_sweep_0(local_int_t m, local_int_t block_nrow,
                                  local_int_t offset, local_int_t ell_width,
-                                 const local_int_t *__restrict__ ell_col_ind,
-                                 const double *__restrict__ ell_val,
-                                 const local_int_t *__restrict__ diag_idx,
-                                 double *__restrict__ x) {
+                                 const local_int_t * ell_col_ind,
+                                 const double * ell_val,
+                                 const local_int_t * diag_idx,
+                                 double * x) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= block_nrow) {

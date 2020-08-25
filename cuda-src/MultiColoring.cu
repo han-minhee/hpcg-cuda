@@ -14,7 +14,7 @@
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_identity(local_int_t size, local_int_t *__restrict__ data) {
+    void kernel_identity(local_int_t size, local_int_t *data) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {
@@ -26,9 +26,8 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_create_perm(local_int_t size,
-                            const local_int_t *__restrict__ in,
-                            local_int_t *__restrict__ out) {
+    void kernel_create_perm(local_int_t size, const local_int_t *in,
+                            local_int_t *out) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {
@@ -107,8 +106,8 @@ __device__ void kernelDeviceReduceSum(local_int_t tid, local_int_t *data) {
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernelCountColorsPart1(local_int_t size, local_int_t color,
-                                const local_int_t *__restrict__ colors,
-                                local_int_t *__restrict__ workspace) {
+                                const local_int_t *colors,
+                                local_int_t *workspace) {
   local_int_t tid = threadIdx.x;
   local_int_t gid = blockIdx.x * BLOCKSIZE + tid;
   local_int_t inc = gridDim.x * BLOCKSIZE;
@@ -133,8 +132,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_count_color_part2(local_int_t size,
-                                  local_int_t *__restrict__ workspace) {
+    void kernel_count_color_part2(local_int_t size, local_int_t *workspace) {
   local_int_t tid = threadIdx.x;
 
   __shared__ local_int_t sdata[BLOCKSIZE];
@@ -155,11 +153,9 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
-    void kernelJPL(local_int_t m, const local_int_t *__restrict__ hash,
-                   int color1, int color2,
-                   const char *__restrict__ nonzerosInRow,
-                   const local_int_t *__restrict__ mtxIndL,
-                   local_int_t *__restrict__ colors) {
+    void kernelJPL(local_int_t m, const local_int_t *hash, int color1,
+                   int color2, const char *nonzerosInRow,
+                   const local_int_t *mtxIndL, local_int_t *colors) {
   local_int_t row = blockIdx.x * BLOCKSIZEY + threadIdx.y;
 
   extern __shared__ bool sdata[];

@@ -75,9 +75,9 @@ __device__ void reduce_max(local_int_t tid, double *data) {
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_residual_part1(local_int_t n, const double *__restrict__ v1,
-                               const double *__restrict__ v2,
-                               double *__restrict__ workspace) {
+    void kernel_residual_part1(local_int_t n, const double * v1,
+                               const double * v2,
+                               double * workspace) {
   local_int_t tid = threadIdx.x;
   local_int_t gid = blockIdx.x * BLOCKSIZE + tid;
   local_int_t inc = gridDim.x * BLOCKSIZE;
@@ -98,7 +98,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_residual_part2(local_int_t n, double *__restrict__ workspace) {
+    void kernel_residual_part2(local_int_t n, double * workspace) {
   local_int_t tid = threadIdx.x;
 
   __shared__ double sdata[BLOCKSIZE];

@@ -31,26 +31,16 @@ using std::endl;
 #include "ReportResults.hpp"
 #include "SetupHalo.hpp"
 #include "SparseMatrix.hpp"
+#include "SparseMatrixOp.hpp"
 #include "TestCG.hpp"
 #include "TestNorms.hpp"
 #include "TestSymmetry.hpp"
 #include "Vector.hpp"
 #include "WriteProblem.hpp"
 #include "mytimer.hpp"
-#include "SparseMatrixOp.hpp"
 
-/*!
-  Main driver program: Construct synthetic problem, run V&V tests, compute
-  benchmark parameters, run benchmark, report results.
+#define debug_flag true
 
-  @param[in]  argc Standard argument count.  Should equal 1 (no arguments passed
-  in) or 4 (nx, ny, nz passed in)
-  @param[in]  argv Standard argument array.  If argc==1, argv is unused.  If
-  argc==4, argv[1], argv[2], argv[3] will be interpreted as nx, ny, nz, resp.
-
-  @return Returns zero on success and a non-zero value otherwise.
-
-*/
 int main(int argc, char *argv[]) {
 
 #ifndef HPCG_NO_MPI
@@ -61,20 +51,9 @@ int main(int argc, char *argv[]) {
 
   HPCG_Init(&argc, &argv, params);
 
-  // Check if QuickPath option is enabled.
-  // If the running time is set to zero, we minimize all paths through the
-  // program
   bool quickPath = (params.runningTime == 0);
 
-  int size = params.comm_size,
-      rank = params.comm_rank; // Number of MPI processes, My process ID
-
-  // // Print rocHPCG version and device
-  // if (rank == 0) {
-  //   printf("rocHPCG version: %d.%d.%d-%s (based on hpcg-3.1)\n",
-  //          __ROCHPCG_VER_MAJOR, __ROCHPCG_VER_MINOR, __ROCHPCG_VER_PATCH,
-  //          TO_STR(__ROCHPCG_VER_TWEAK));
-  // }
+  int size = params.comm_size, rank = params.comm_rank;
 
 #ifndef HPCG_NO_MPI
   MPI_Barrier(MPI_COMM_WORLD);
@@ -104,7 +83,7 @@ int main(int argc, char *argv[]) {
   nx = (local_int_t)params.nx;
   ny = (local_int_t)params.ny;
   nz = (local_int_t)params.nz;
-  int ierr = 0; // Used to check return codes on function calls
+  int ierr = 0;
 
   ierr = CheckAspectRatio(0.125, nx, ny, nz, "local problem", rank == 0);
   if (ierr)
@@ -129,25 +108,26 @@ int main(int argc, char *argv[]) {
   if (ierr)
     return ierr;
 
-  // Use this array for collecting timing information
   std::vector<double> times(10, 0.0);
-
   double setup_time = mytimer();
 
   SparseMatrix A;
   InitializeSparseMatrix(A, geom);
-
   Vector b, x, xexact;
-  GenerateProblem(A, &b, &x, &xexact);
-  SetupHalo(A);
+  printf("entering Generation\n");
 
-  int numberOfMgLevels = 4; // Number of levels including first
+  GenerateProblem(A, &b, &x, &xexact);
+  printf("entering SetupHalo\n");
+
+  SetupHalo(A);
+  printf("haloSetup Done\n");
+
+  int numberOfMgLevels = 4;
   SparseMatrix *curLevelMatrix = &A;
   for (int level = 1; level < numberOfMgLevels; ++level) {
+    printf("Generating Coarse Problem for level %d\n", level);
     GenerateCoarseProblem(*curLevelMatrix);
-    curLevelMatrix =
-        curLevelMatrix
-            ->Ac; // Make the just-constructed coarse grid the next level
+    curLevelMatrix = curLevelMatrix->Ac;
   }
 
   setup_time = mytimer() - setup_time; // Capture total time of setup
@@ -160,11 +140,40 @@ int main(int argc, char *argv[]) {
   if (rank == 0)
     printf("\nCopying GPU assembled data to host for reference computations\n");
 
+  if (cudaPeekAtLastError() != cudaSuccess) {
+    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+           cudaGetErrorString(cudaPeekAtLastError()));
+    printf("at file, line %s %d \n", __FILE__, __LINE__);
+    return -1;
+  } else {
+    printf("line passed %s %d \n", __FILE__, __LINE__);
+  }
+
   CopyProblemToHost(A, &b, &x, &xexact);
+
+  if (cudaPeekAtLastError() != cudaSuccess) {
+    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+           cudaGetErrorString(cudaPeekAtLastError()));
+    printf("at file, line %s %d \n", __FILE__, __LINE__);
+    return -1;
+  } else {
+    printf("line passed %s %d \n", __FILE__, __LINE__);
+  }
+
   CopyHaloToHost(A);
+
+  if (cudaPeekAtLastError() != cudaSuccess) {
+    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+           cudaGetErrorString(cudaPeekAtLastError()));
+    printf("at file, line %s %d \n", __FILE__, __LINE__);
+    return -1;
+  } else {
+    printf("line passed %s %d \n", __FILE__, __LINE__);
+  }
 
   curLevelMatrix = &A;
   for (int level = 1; level < numberOfMgLevels; ++level) {
+    printf("Opying Coarse Problem to Host, level %d\n", level);
     CopyCoarseProblemToHost(*curLevelMatrix);
     curLevelMatrix = curLevelMatrix->Ac;
   }

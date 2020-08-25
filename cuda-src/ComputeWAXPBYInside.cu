@@ -11,8 +11,8 @@
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_waxpby(local_int_t size, double alpha,
-                       const double *__restrict__ x, double beta,
-                       const double *__restrict__ y, double *__restrict__ w) {
+                       const double * x, double beta,
+                       const double * y, double * w) {
   local_int_t gid = blockIdx.x * blockDim.x + threadIdx.x;
 
   if (gid >= size) {
@@ -109,9 +109,9 @@ __device__ void kernelDeviceReduceSum(local_int_t tid, double *data) {
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_fused_waxpby_dot_part1(local_int_t size, double alpha,
-                                       const double *__restrict__ x,
-                                       double *__restrict__ y,
-                                       double *__restrict__ workspace) {
+                                       const double * x,
+                                       double * y,
+                                       double * workspace) {
   local_int_t tid = threadIdx.x;
   local_int_t gid = blockIdx.x * blockDim.x + tid;
 
@@ -135,7 +135,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_fused_waxpby_dot_part2(local_int_t size,
-                                       double *__restrict__ workspace) {
+                                       double * workspace) {
   local_int_t tid = threadIdx.x;
 
   __shared__ double sdata[BLOCKSIZE];

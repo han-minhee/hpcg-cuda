@@ -97,10 +97,10 @@ void ExchangeHaloInside(const SparseMatrix &A, Vector &x) {
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_gather(local_int_t size, const double *__restrict__ in,
-                       const local_int_t *__restrict__ map,
-                       const local_int_t *__restrict__ perm,
-                       double *__restrict__ out) {
+    void kernel_gather(local_int_t size, const double * in,
+                       const local_int_t * map,
+                       const local_int_t * perm,
+                       double * out) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {

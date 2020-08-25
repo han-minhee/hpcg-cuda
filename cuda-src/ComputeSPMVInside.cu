@@ -14,12 +14,12 @@ template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_spmv_ell_coarse(local_int_t size, local_int_t m, local_int_t n,
                                 local_int_t ell_width,
-                                const local_int_t *__restrict__ ell_col_ind,
-                                const double *__restrict__ ell_val,
-                                const local_int_t *__restrict__ perm,
-                                const local_int_t *__restrict__ f2cOperator,
-                                const double *__restrict__ x,
-                                double *__restrict__ y) {
+                                const local_int_t * ell_col_ind,
+                                const double * ell_val,
+                                const local_int_t * perm,
+                                const local_int_t * f2cOperator,
+                                const double * x,
+                                double * y) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {
@@ -49,9 +49,9 @@ template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_spmv_ell(local_int_t m, int nblocks, local_int_t rows_per_block,
                          local_int_t ell_width,
-                         const local_int_t *__restrict__ ell_col_ind,
-                         const double *__restrict__ ell_val,
-                         const double *__restrict__ x, double *__restrict__ y) {
+                         const local_int_t * ell_col_ind,
+                         const double * ell_val,
+                         const double * x, double * y) {
   // Applies for chunks of blockDim.x * nblocks
   local_int_t color_block_offset = BLOCKSIZE * (blockIdx.x / nblocks);
 
@@ -86,12 +86,12 @@ __launch_bounds__(BLOCKSIZE) __global__
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_spmv_halo(local_int_t m, local_int_t n, local_int_t halo_width,
-                          const local_int_t *__restrict__ halo_row_ind,
-                          const local_int_t *__restrict__ halo_col_ind,
-                          const double *__restrict__ halo_val,
-                          const local_int_t *__restrict__ perm,
-                          const double *__restrict__ x,
-                          double *__restrict__ y) {
+                          const local_int_t * halo_row_ind,
+                          const local_int_t * halo_col_ind,
+                          const double * halo_val,
+                          const local_int_t * perm,
+                          const double * x,
+                          double * y) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= m) {

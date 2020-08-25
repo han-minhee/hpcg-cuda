@@ -12,8 +12,8 @@ using std::endl;
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__ void kernel_scale_vector_values(
-    local_int_t m, const global_int_t *__restrict__ localToGlobalMap,
-    double *__restrict__ exaggeratedDiagA, double *__restrict__ b) {
+    local_int_t m, const global_int_t * localToGlobalMap,
+    double * exaggeratedDiagA, double * b) {
   local_int_t i = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (i >= m) {

@@ -7,12 +7,12 @@
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_restrict(local_int_t size,
-                         const local_int_t *__restrict__ f2cOperator,
-                         const double *__restrict__ fine,
-                         const double *__restrict__ data,
-                         double *__restrict__ coarse,
-                         const local_int_t *__restrict__ perm_fine,
-                         const local_int_t *__restrict__ perm_coarse) {
+                         const local_int_t * f2cOperator,
+                         const double * fine,
+                         const double * data,
+                         double * coarse,
+                         const local_int_t * perm_fine,
+                         const local_int_t * perm_coarse) {
   local_int_t idx_coarse = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (idx_coarse >= size) {
@@ -26,12 +26,12 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__ void kernel_fused_restrict_spmv(
-    local_int_t size, const local_int_t *__restrict__ f2cOperator,
-    const double *__restrict__ fine, local_int_t m, local_int_t n,
-    local_int_t ell_width, const local_int_t *__restrict__ ell_col_ind,
-    const double *__restrict__ ell_val, const double *__restrict__ xf,
-    double *__restrict__ coarse, const local_int_t *__restrict__ perm_fine,
-    const local_int_t *__restrict__ perm_coarse) {
+    local_int_t size, const local_int_t * f2cOperator,
+    const double * fine, local_int_t m, local_int_t n,
+    local_int_t ell_width, const local_int_t * ell_col_ind,
+    const double * ell_val, const double * xf,
+    double * coarse, const local_int_t * perm_fine,
+    const local_int_t * perm_coarse) {
   local_int_t idx_coarse = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (idx_coarse >= size) {

@@ -13,11 +13,11 @@
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_permute_ell_rows(local_int_t m, local_int_t p,
-                                 const local_int_t *__restrict__ tmp_cols,
-                                 const double *__restrict__ tmp_vals,
-                                 const local_int_t *__restrict__ perm,
-                                 local_int_t *__restrict__ ell_col_ind,
-                                 double *__restrict__ ell_val) {
+                                 const local_int_t * tmp_cols,
+                                 const double * tmp_vals,
+                                 const local_int_t * perm,
+                                 local_int_t * ell_col_ind,
+                                 double * ell_val) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= m) {
@@ -51,9 +51,9 @@ template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
     void kernel_perm_cols(local_int_t m, local_int_t n,
                           local_int_t nonzerosPerRow,
-                          const local_int_t *__restrict__ perm,
-                          local_int_t *__restrict__ mtxIndL,
-                          double *__restrict__ matrixValues) {
+                          const local_int_t * perm,
+                          local_int_t * mtxIndL,
+                          double * matrixValues) {
   local_int_t row = blockIdx.x * BLOCKSIZEY + threadIdx.y;
   local_int_t idx = row * nonzerosPerRow + threadIdx.x;
   local_int_t key = n;
@@ -165,9 +165,9 @@ void PermuteRows(SparseMatrix &A) {
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_permute(local_int_t size, const local_int_t *__restrict__ perm,
-                        const double *__restrict__ in,
-                        double *__restrict__ out) {
+    void kernel_permute(local_int_t size, const local_int_t * perm,
+                        const double * in,
+                        double * out) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {

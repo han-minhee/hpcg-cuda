@@ -20,6 +20,14 @@ extern void *workspace;
   cudaMemcpy(dst, temp, sizeof(temp), cudaMemcpyHostToHost);                   \
   cudaFree(temp);
 
+#define cudaDeviceRealloc(dst, temp, size)                                       \
+  cudaMalloc((void **)&temp, sizeof(dst));                                     \
+  cudaMemcpy(temp, dst, sizeof(dst), cudaMemcpyDeviceToDevice);                    \
+  cudaFree(dst);                                                               \
+  cudaMalloc((void **)&dst, size);                                             \
+  cudaMemcpy(dst, temp, sizeof(temp), cudaMemcpyDeviceToDevice);                   \
+  cudaFree(temp);
+
 #define printFileLine                                                          \
   if (debug_message)                                                           \
     printf("line passed %s %d \n", __FILE__, __LINE__);

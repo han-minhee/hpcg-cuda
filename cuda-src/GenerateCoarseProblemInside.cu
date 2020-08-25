@@ -4,8 +4,9 @@
 #include "../src/GenerateGeometry.hpp"
 #include "../src/GenerateProblem.hpp"
 #include "../src/SetupHalo.hpp"
-#include "GenerateCoarseProblemInside.cuh"
 #include "../src/SparseMatrixOp.hpp"
+#include "GenerateCoarseProblemInside.cuh"
+#include "Utils.cuh"
 
 __global__ void kernel_f2c_operator(local_int_t nxc, local_int_t nyc,
                                     local_int_t nzc, global_int_t nxf,
@@ -100,7 +101,6 @@ void GenerateCoarseProblemInside(const SparseMatrix &Af) {
 #ifdef HPCG_REFERENCE
   CudaInitializeVector(*Axf, Af.localNumberOfColumns);
 #endif
-
   Af.Ac = Ac;
   MGData *mgData = new MGData;
   InitializeMGData(d_f2cOperator, rc, xc, Axf, *mgData);
@@ -113,8 +113,26 @@ void CopyCoarseProblemToHostInside(SparseMatrix &A) {
   // Copy problem to host
   CopyProblemToHost(*A.Ac, NULL, NULL, NULL);
 
+  if (cudaPeekAtLastError() != cudaSuccess) {
+    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+           cudaGetErrorString(cudaPeekAtLastError()));
+    printf("at file, line %s %d \n", __FILE__, __LINE__);
+    return;
+  } else {
+    printf("line passed %s %d \n", __FILE__, __LINE__);
+  }
+
   // Copy halo to host
   CopyHaloToHost(*A.Ac);
+
+  if (cudaPeekAtLastError() != cudaSuccess) {
+    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+           cudaGetErrorString(cudaPeekAtLastError()));
+    printf("at file, line %s %d \n", __FILE__, __LINE__);
+    return;
+  } else {
+    printf("line passed %s %d \n", __FILE__, __LINE__);
+  }
 
   // Allocate additional host vectors
   InitializeVector(*A.mgData->rc, A.Ac->localNumberOfRows);
@@ -122,8 +140,10 @@ void CopyCoarseProblemToHostInside(SparseMatrix &A) {
   InitializeVector(*A.mgData->Axf, A.localNumberOfColumns);
 
   // Copy f2c operator to host
+  // FIXME: Invalid arg here
+  // Wrong length?
   A.mgData->f2cOperator = new local_int_t[A.Ac->localNumberOfRows];
   CUDA_CHECK_COMMAND(cudaMemcpy(A.mgData->f2cOperator, A.mgData->d_f2cOperator,
-                                sizeof(local_int_t) * A.Ac->localNumberOfRows,
+                                sizeof(local_int_t) * (A.Ac->localNumberOfRows),
                                 cudaMemcpyDeviceToHost));
 }

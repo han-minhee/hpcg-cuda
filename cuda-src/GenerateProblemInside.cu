@@ -217,8 +217,6 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__ void kernelGenerateProblem(
       // __builtin_nontemporal_store(curcol, mtxIndG + idx);
     }
 
-    // First thread writes number of neighboring vertices, including the
-    // identity vertex
     if (threadIdx.x == 0) {
       numberOfNonzerosInRow = column_offset[BLOCKSIZEX - 1];
     }
@@ -227,29 +225,18 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__ void kernelGenerateProblem(
   // For each row, initialize vector arrays and number of vertices
   if (threadIdx.x == 0) {
     nonzerosInRow[currentLocalRow] = numberOfNonzerosInRow;
-    // __builtin_nontemporal_store(numberOfNonzerosInRow,
-    //                             nonzerosInRow + currentLocalRow);
-
-    // Store local to global mapping
     localToGlobalMap[currentLocalRow] = currentGlobalRow;
-    // __builtin_nontemporal_store(currentGlobalRow,
-    //                             localToGlobalMap + currentLocalRow);
 
-    // Store local row hash
     local_int_t crd = iz * nx * ny + iy * (nx << 1) + (ix << 2);
     local_int_t hash = get_hash(ix, iy, iz) * nx * ny * nz + crd;
     rowHash[currentLocalRow] = hash;
-    // __builtin_nontemporal_store(hash, rowHash + currentLocalRow);
 
     if (b != NULL) {
       b[currentLocalRow] = (26.0 - (numberOfNonzerosInRow - 1.0));
-      // __builtin_nontemporal_store(26.0 - (numberOfNonzerosInRow - 1.0),
-      //                             b + currentLocalRow);
     }
   }
 }
 
-// Block reduce sum using LDS
 template <unsigned int BLOCKSIZE>
 __device__ void kernelDeviceReduceSum(local_int_t tid, local_int_t *data) {
   __syncthreads();
@@ -357,21 +344,6 @@ __launch_bounds__(BLOCKSIZE) __global__
   }
 }
 
-/*!
-  Routine to generate a sparse matrix, right hand side, initial guess, and exact
-  solution.
-
-  @param[in]  A        The generated system matrix
-  @param[inout] b      The newly allocated and generated right hand side vector
-  (if b!=0 on entry)
-  @param[inout] x      The newly allocated solution vector with entries set to
-  0.0 (if x!=0 on entry)
-  @param[inout] xexact The newly allocated solution vector with entries set to
-  the exact solution (if the xexact!=0 non-zero on entry)
-
-  @see GenerateGeometry
-*/
-
 void GenerateProblemInside(SparseMatrix &A, Vector *b, Vector *x,
                            Vector *xexact) {
   // Local dimension in x, y and z direction
@@ -429,30 +401,8 @@ void GenerateProblemInside(SparseMatrix &A, Vector *b, Vector *x,
                  sizeof(global_int_t) * localNumberOfRows));
 
   // Determine blocksize
-  unsigned int blocksize = 512 / numberOfNonzerosPerRow;
-
-  // Compute next power of two
-  blocksize |= blocksize >> 1;
-  blocksize |= blocksize >> 2;
-  blocksize |= blocksize >> 4;
-  blocksize |= blocksize >> 8;
-  blocksize |= blocksize >> 16;
-  ++blocksize;
-
-  // Shift right until we obtain a valid blocksize
-  while (blocksize * numberOfNonzerosPerRow > 512) {
-    blocksize >>= 1;
-  }
-
-  // Generate problem
-  if (blocksize == 32)
-    LAUNCH_GENERATE_PROBLEM(27, 32);
-  else if (blocksize == 16)
-    LAUNCH_GENERATE_PROBLEM(27, 16);
-  else if (blocksize == 8)
-    LAUNCH_GENERATE_PROBLEM(27, 8);
-  else
-    LAUNCH_GENERATE_PROBLEM(27, 4);
+  unsigned int blocksize = 16;
+  LAUNCH_GENERATE_PROBLEM(27, 16);
 
   // Initialize x vector, if not NULL
   if (x != NULL) {
@@ -486,7 +436,7 @@ void GenerateProblemInside(SparseMatrix &A, Vector *b, Vector *x,
   CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(&localNumberOfNonzeros, tmp,
                                        sizeof(local_int_t),
                                        cudaMemcpyDeviceToHost));
-  printf("passed memcpy");
+  printf("passed memcpy in Problem Generation \n");
 
   global_int_t totalNumberOfNonzeros = 0;
 
