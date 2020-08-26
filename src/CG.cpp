@@ -10,6 +10,8 @@
 #include "ComputeWAXPBY.hpp"
 #include "mytimer.hpp"
 
+#include <cuda_runtime.h>
+
 // Use TICK and TOCK to time a code section in MATLAB-like fashion
 #define TICK()                                                                 \
   cudaDeviceSynchronize();                                                     \

@@ -22,17 +22,6 @@ int OptimizeProblem(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
   // Extract diagonal indices and inverse values
   ExtractDiagonal(A);
 
-  // Defrag
-  // CUDA_CHECK_COMMAND(deviceDefrag((void**)&A.diag_idx, sizeof(local_int_t) *
-  // A.localNumberOfRows)); CUDA_CHECK_COMMAND(deviceDefrag((void**)&A.inv_diag,
-  // sizeof(double) * A.localNumberOfRows));
-#ifndef HPCG_NO_MPI
-  // CUDA_CHECK_COMMAND(deviceDefrag((void**)&A.d_send_buffer, sizeof(double) *
-  // A.totalToBeSent));
-  // CUDA_CHECK_COMMAND(deviceDefrag((void**)&A.d_elementsToSend,
-  // sizeof(local_int_t) * A.totalToBeSent));
-#endif
-
   // Permute vectors
   PermuteVector(A.localNumberOfRows, b, A.perm);
   PermuteVector(A.localNumberOfRows, xexact, A.perm);
@@ -53,59 +42,14 @@ int OptimizeProblem(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
     // Convert matrix to ELL format
     ConvertToELL(*M);
 
-    // Defrag matrix arrays and permutation vector
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&M->ell_col_ind,
-    // sizeof(local_int_t) * M->ell_width * M->localNumberOfRows));
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&M->ell_val, sizeof(double) *
-    // M->ell_width * M->localNumberOfRows));
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&M->perm, sizeof(local_int_t) *
-    // M->localNumberOfRows));
-
     // Permute matrix rows
     PermuteRows(*M);
 
     // Extract diagonal indices and inverse values
     ExtractDiagonal(*M);
 
-    // Defrag
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&M->diag_idx, sizeof(local_int_t)
-    // * M->localNumberOfRows));
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&M->inv_diag, sizeof(double) *
-    // M->localNumberOfRows));
-#ifndef HPCG_NO_MPI
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&M->d_send_buffer, sizeof(double)
-    // * M->totalToBeSent));
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&M->d_elementsToSend,
-    // sizeof(local_int_t) * M->totalToBeSent));
-#endif
-
     // Go to next level in hierarchy
     M = M->Ac;
   }
-
-  // Defrag hierarchy structures
-  M = &A;
-  MGData *mg = M->mgData;
-
-  while (mg != NULL) {
-    M = M->Ac;
-
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&mg->d_f2cOperator,
-    // sizeof(local_int_t) * M->localNumberOfRows));
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&mg->rc->d_values, sizeof(double)
-    // * mg->rc->localLength));
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&mg->xc->d_values, sizeof(double)
-    // * mg->xc->localLength));
-#ifdef HPCG_REFERENCE
-    // CUDA_CHECK_COMMAND(deviceDefrag((void**)&mg->Axf->d_values,
-    // sizeof(double) * mg->Axf->localLength));
-#endif
-
-    mg = M->mgData;
-  }
-
   return 0;
 }
-
-// Helper function (see OptimizeProblem.hpp for details)
-// double OptimizeProblemMemoryUse(const SparseMatrix &A) { return 0.0; }

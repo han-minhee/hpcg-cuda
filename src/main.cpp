@@ -1,3 +1,26 @@
+
+//@HEADER
+// ***************************************************
+//
+// HPCG: High Performance Conjugate Gradient Benchmark
+//
+// Contact:
+// Michael A. Heroux ( maherou@sandia.gov)
+// Jack Dongarra     (dongarra@eecs.utk.edu)
+// Piotr Luszczek    (luszczek@eecs.utk.edu)
+//
+// ***************************************************
+//@HEADER
+
+/*!
+ @file main.cpp
+
+ HPCG routine
+ */
+
+// Main routine of a program that calls the HPCG conjugate gradient
+// solver to solve the problem, and then prints results.
+
 #ifndef HPCG_NO_MPI
 #include <mpi.h>
 #endif
@@ -39,8 +62,20 @@ using std::endl;
 #include "WriteProblem.hpp"
 #include "mytimer.hpp"
 
-#define debug_flag true
+#include "cuda_runtime.h"
 
+/*!
+  Main driver program: Construct synthetic problem, run V&V tests, compute
+  benchmark parameters, run benchmark, report results.
+
+  @param[in]  argc Standard argument count.  Should equal 1 (no arguments passed
+  in) or 4 (nx, ny, nz passed in)
+  @param[in]  argv Standard argument array.  If argc==1, argv is unused.  If
+  argc==4, argv[1], argv[2], argv[3] will be interpreted as nx, ny, nz, resp.
+
+  @return Returns zero on success and a non-zero value otherwise.
+
+*/
 int main(int argc, char *argv[]) {
 
 #ifndef HPCG_NO_MPI
@@ -51,18 +86,15 @@ int main(int argc, char *argv[]) {
 
   HPCG_Init(&argc, &argv, params);
 
+  // DONE : 8/25/2020 23:58
+
+  // Check if QuickPath option is enabled.
+  // If the running time is set to zero, we minimize all paths through the
+  // program
   bool quickPath = (params.runningTime == 0);
 
-  int size = params.comm_size, rank = params.comm_rank;
-
-#ifndef HPCG_NO_MPI
-  MPI_Barrier(MPI_COMM_WORLD);
-#endif
-
-  cudaDeviceProp prop;
-  cudaGetDeviceProperties(&prop, params.device);
-  printf("Using CUDA device (%d): %s (%lu MB global memory)\n", params.device,
-         prop.name, (prop.totalGlobalMem >> 20));
+  int size = params.comm_size,
+      rank = params.comm_rank; // Number of MPI processes, My process ID
 
 #ifdef HPCG_DETAILED_DEBUG
   if (size < 100 && rank == 0)
@@ -79,15 +111,21 @@ int main(int argc, char *argv[]) {
 #endif
 #endif
 
+  cudaDeviceProp prop;
+  cudaGetDeviceProperties(&prop, params.device);
+  printf("Using CUDA device (%d): %s (%lu MB global memory)\n", params.device,
+         prop.name, (prop.totalGlobalMem >> 20));
+
   local_int_t nx, ny, nz;
   nx = (local_int_t)params.nx;
   ny = (local_int_t)params.ny;
   nz = (local_int_t)params.nz;
-  int ierr = 0;
+  int ierr = 0; // Used to check return codes on function calls
 
   ierr = CheckAspectRatio(0.125, nx, ny, nz, "local problem", rank == 0);
   if (ierr)
     return ierr;
+    // DONE : 8/26/2020 00:00
 
     /////////////////////////
     // Problem setup Phase //
@@ -103,31 +141,33 @@ int main(int argc, char *argv[]) {
                    params.zu, nx, ny, nz, params.npx, params.npy, params.npz,
                    geom);
 
+  // DONE : 8/25/2020 00:02
+
   ierr = CheckAspectRatio(0.125, geom->npx, geom->npy, geom->npz,
                           "process grid", rank == 0);
   if (ierr)
     return ierr;
 
+  // Use this array for collecting timing information
   std::vector<double> times(10, 0.0);
+
   double setup_time = mytimer();
 
   SparseMatrix A;
   InitializeSparseMatrix(A, geom);
+
+  // DONE : 8/25/2020 00:02
+
   Vector b, x, xexact;
-  printf("entering Generation\n");
-
   GenerateProblem(A, &b, &x, &xexact);
-  printf("entering SetupHalo\n");
-
   SetupHalo(A);
-  printf("haloSetup Done\n");
-
-  int numberOfMgLevels = 4;
+  int numberOfMgLevels = 4; // Number of levels including first
   SparseMatrix *curLevelMatrix = &A;
   for (int level = 1; level < numberOfMgLevels; ++level) {
-    printf("Generating Coarse Problem for level %d\n", level);
     GenerateCoarseProblem(*curLevelMatrix);
-    curLevelMatrix = curLevelMatrix->Ac;
+    curLevelMatrix =
+        curLevelMatrix
+            ->Ac; // Make the just-constructed coarse grid the next level
   }
 
   setup_time = mytimer() - setup_time; // Capture total time of setup
@@ -140,40 +180,33 @@ int main(int argc, char *argv[]) {
   if (rank == 0)
     printf("\nCopying GPU assembled data to host for reference computations\n");
 
-  if (cudaPeekAtLastError() != cudaSuccess) {
-    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
-           cudaGetErrorString(cudaPeekAtLastError()));
-    printf("at file, line %s %d \n", __FILE__, __LINE__);
-    return -1;
-  } else {
-    printf("line passed %s %d \n", __FILE__, __LINE__);
-  }
-
   CopyProblemToHost(A, &b, &x, &xexact);
-
-  if (cudaPeekAtLastError() != cudaSuccess) {
-    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
-           cudaGetErrorString(cudaPeekAtLastError()));
-    printf("at file, line %s %d \n", __FILE__, __LINE__);
-    return -1;
-  } else {
-    printf("line passed %s %d \n", __FILE__, __LINE__);
-  }
 
   CopyHaloToHost(A);
 
-  if (cudaPeekAtLastError() != cudaSuccess) {
-    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
-           cudaGetErrorString(cudaPeekAtLastError()));
-    printf("at file, line %s %d \n", __FILE__, __LINE__);
-    return -1;
-  } else {
-    printf("line passed %s %d \n", __FILE__, __LINE__);
-  }
+//DONE : 08/26/2020 04:09
+  //           for (int i = 0; i< A.localNumberOfRows * A.numberOfNonzerosPerRow; i++){
+  //       printf("%d generateProblem Vals after copyToHost: %d %f %d\n", i, A.mtxIndL[0][i], A.matrixValues[0][i], A.mtxIndG[0][i]);
+  //     }
+  //     for (int i = 0; i< A.localNumberOfRows; i++){
+  //       printf("%d secondGenerate Vals after copyToHost: %d\n", i, A.localToGlobalMap.data()[i]);
+  //     }
+  //           for (int i = 0; i< A.localNumberOfRows; i++){
+  //   printf("%d b vals after copyToHost: %f\n", i, b.values[i]);
+  // }
+  // for (int i = 0; i< A.localNumberOfRows; i++){
+  //   printf("%d x vals after copyToHost: %f\n", i, x.values[i]);
+  // }
+  // for (int i = 0; i< A.localNumberOfRows; i++){
+  //   printf("%d xexact vals after copyToHost: %f\n", i, xexact.values[i]);
+  // }
+
+  // for (int i = 0; i< A.localNumberOfRows; i++){
+  //   printf("%d %d nonzeros\n", i, A.nonzerosInRow[i]);
+  // }
 
   curLevelMatrix = &A;
   for (int level = 1; level < numberOfMgLevels; ++level) {
-    printf("Opying Coarse Problem to Host, level %d\n", level);
     CopyCoarseProblemToHost(*curLevelMatrix);
     curLevelMatrix = curLevelMatrix->Ac;
   }
@@ -195,6 +228,7 @@ int main(int argc, char *argv[]) {
   }
 
   CGData data;
+
   InitializeSparseCGData(A, data);
 
   ////////////////////////////////////
@@ -238,12 +272,9 @@ int main(int argc, char *argv[]) {
               << mytimer() - t1 << endl;
 #endif
 
-  ///////////////////////////////
-  // Reference CG Timing Phase //
-  ///////////////////////////////
-
-  if (rank == 0)
-    printf("\nStarting Reference CG Phase ...\n\n");
+    ///////////////////////////////
+    // Reference CG Timing Phase //
+    ///////////////////////////////
 
 #ifdef HPCG_DEBUG
   t1 = mytimer();
@@ -286,20 +317,14 @@ int main(int argc, char *argv[]) {
               << endl;
 #endif
 
-  if (rank == 0)
-    printf("\nOptimization Phase took %0.2lf sec\n", times[7]);
-
 #ifdef HPCG_DETAILED_DEBUG
   if (geom->size == 1)
     WriteProblem(*geom, A, b, x, xexact);
 #endif
 
-  //////////////////////////////
-  // Validation Testing Phase //
-  //////////////////////////////
-
-  if (rank == 0)
-    printf("\nValidation Testing Phase ...\n");
+    //////////////////////////////
+    // Validation Testing Phase //
+    //////////////////////////////
 
 #ifdef HPCG_DEBUG
   t1 = mytimer();
@@ -307,11 +332,9 @@ int main(int argc, char *argv[]) {
   TestCGData testcg_data;
   testcg_data.count_pass = testcg_data.count_fail = 0;
   TestCG(A, data, b, x, testcg_data);
-  printf("TestCG @ validation phase finished\n");
 
   TestSymmetryData testsymmetry_data;
   TestSymmetry(A, b, xexact, testsymmetry_data);
-  printf("Test Symmetry @ validation phase finished\n");
 
 #ifdef HPCG_DEBUG
   if (rank == 0)
@@ -328,9 +351,6 @@ int main(int argc, char *argv[]) {
   // Optimized CG Setup Phase //
   //////////////////////////////
 
-  if (rank == 0)
-    printf("\nOptimized CG Setup ...\n\n");
-
   niters = 0;
   normr = 0.0;
   normr0 = 0.0;
@@ -341,7 +361,7 @@ int main(int argc, char *argv[]) {
   int optNiters = refMaxIters;
   double opt_worst_time = 0.0;
 
-  std::vector<double> opt_times(10, 0.0);
+  std::vector<double> opt_times(9, 0.0);
 
   // Compute the residual reduction and residual count for the user ordering and
   // optimized kernels.
@@ -381,26 +401,17 @@ int main(int argc, char *argv[]) {
                 << " times." << endl;
   }
 
+  size_t free_mem;
+  size_t total_mem;
+  cudaMemGetInfo(&free_mem, &total_mem);
+  size_t used_mem = total_mem - free_mem;
+  printf("\nTotal device memory usage: %lu MByte (%lu MByte)\n", used_mem >> 20,
+         total_mem >> 20);
+  printf("\nStarting Benchmarking Phase ...\n\n");
+
   ///////////////////////////////
   // Optimized CG Timing Phase //
   ///////////////////////////////
-
-  if (rank == 0) {
-#ifdef HPCG_MEMMGMT
-    size_t used_mem = allocator.GetUsedMemory();
-    size_t total_mem = allocator.GetTotalMemory();
-#else
-    size_t free_mem;
-    size_t total_mem;
-    cudaMemGetInfo(&free_mem, &total_mem);
-
-    size_t used_mem = total_mem - free_mem;
-#endif
-
-    printf("\nTotal device memory usage: %lu MByte (%lu MByte)\n",
-           used_mem >> 20, total_mem >> 20);
-    printf("\nStarting Benchmarking Phase ...\n\n");
-  }
 
   // Here we finally run the benchmark phase
   // The variable total_runtime is the target benchmark execution time in
@@ -426,14 +437,6 @@ int main(int argc, char *argv[]) {
   testnorms_data.samples = numberOfCgSets;
   testnorms_data.values = new double[numberOfCgSets];
 
-  if (rank == 0) {
-    opt_times[7] = times[7];
-    opt_times[9] = times[9];
-
-    printf("Performing %d CG sets in %0.1lf seconds ...\n", numberOfCgSets,
-           total_runtime);
-  }
-
   for (int i = 0; i < numberOfCgSets; ++i) {
     CudaZeroVector(x); // Zero out x
     ierr = CG(A, data, b, x, optMaxIters, optTolerance, niters, normr, normr0,
@@ -443,7 +446,6 @@ int main(int argc, char *argv[]) {
     if (rank == 0)
       HPCG_fout << "Call [" << i << "] Scaled Residual [" << normr / normr0
                 << "]" << endl;
-
     testnorms_data.values[i] =
         normr / normr0; // Record scaled residual from this run
   }
@@ -477,14 +479,17 @@ int main(int argc, char *argv[]) {
   DeleteMatrix(A); // This delete will recursively delete all coarse grid data
   DeleteCGData(data);
   CudaDeleteCGData(data);
+
   DeleteVector(x);
   DeleteVector(b);
   DeleteVector(xexact);
   CudaDeleteVector(x);
   CudaDeleteVector(b);
   CudaDeleteVector(xexact);
+
   DeleteVector(x_overlap);
   DeleteVector(b_computed);
+
   delete[] testnorms_data.values;
 
   HPCG_Finalize();

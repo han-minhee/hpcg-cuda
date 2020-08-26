@@ -3,10 +3,10 @@
 
 #include <cuda_runtime.h>
 
-#define LAUNCH_PERM_COLS(blocksizex, blocksizey)                               \
-  kernel_perm_cols<blocksizex, blocksizey>                                     \
-      <<<dim3((A.localNumberOfRows - 1) / blocksizey + 1),                     \
-         dim3(blocksizex, blocksizey)>>>(                                      \
+#define LAUNCH_PERM_COLS(blockSizeX, blockSizeY)                               \
+  kernel_perm_cols<blockSizeX, blockSizeY>                                     \
+      <<<dim3((A.localNumberOfRows - 1) / blockSizeY + 1),                     \
+         dim3(blockSizeX, blockSizeY)>>>(                                      \
           A.localNumberOfRows, A.localNumberOfColumns,                         \
           A.numberOfNonzerosPerRow, A.perm, A.d_mtxIndL, A.d_matrixValues)
 

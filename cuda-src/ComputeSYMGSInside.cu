@@ -204,7 +204,7 @@ int ComputeSYMGSInside(const SparseMatrix &A, const Vector &r, Vector &x) {
   if (A.geom->size > 1) {
     PrepareSendBuffer(A, x);
 
-    ///                             stream_interior,
+    ///                             streamInterior,
 
     kernel_symgs_interior<128><<<dim3((A.sizes[0] - 1) / 128 + 1), dim3(128)>>>(
         A.localNumberOfRows, A.sizes[0], A.ell_width, A.ell_col_ind, A.ell_val,

@@ -1,0 +1,875 @@
+nvcc -c --compiler-options= "-fomit-frame-pointer -O3 -funroll-loops -W -Wall"  -DHPCG_NO_MPI -DHPCG_NO_OPENMP -I./src -I./cuda-src  -I./src cuda-src/MultiColoring.cu -o cuda-src/MultiColoring.o
+nvcc --compiler-options= "-fomit-frame-pointer -O3 -funroll-loops -W -Wall"  -DHPCG_NO_MPI -DHPCG_NO_OPENMP -I./src -I./cuda-src  src/main.o -DHPCG_NO_MPI -DHPCG_NO_OPENMP src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/GenerateProblem_ref.o src/CheckProblem.o src/MixedBaseCounter.o src/OptimizeProblem.o src/ReadHpcgDat.o src/ReportResults.o src/SetupHalo.o src/SetupHalo_ref.o src/TestSymmetry.o src/TestNorms.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/ComputeDotProduct.o src/ComputeDotProduct_ref.o src/mytimer.o src/ComputeOptimalShapeXYZ.o src/ComputeSPMV.o src/ComputeSPMV_ref.o src/ComputeSYMGS.o src/ComputeSYMGS_ref.o src/ComputeWAXPBY.o src/ComputeWAXPBY_ref.o src/ComputeMG_ref.o src/ComputeMG.o src/ComputeProlongation_ref.o src/ComputeRestriction_ref.o src/CheckAspectRatio.o src/OutputFile.o src/GenerateCoarseProblem.o src/init.o src/finalize.o cuda-src/ComputeDotProductInside.o cuda-src/ComputeMGInside.o cuda-src/ComputeProlongationInside.o cuda-src/ComputeResidualInside.o cuda-src/ComputeRestrictionInside.o cuda-src/ComputeSPMVInside.o cuda-src/ComputeWAXPBYInside.o cuda-src/ExchangeHaloInside.o cuda-src/finalizeInside.o cuda-src/GenerateCoarseProblemInside.o cuda-src/GenerateProblemInside.o cuda-src/InitInside.o cuda-src/MultiColoring.o cuda-src/Permute.o cuda-src/SetupHaloInside.o cuda-src/SparseMatrixInside.o cuda-src/TestCGInside.o cuda-src/TestSymmetryInside.o cuda-src/Utils.o cuda-src/VectorInside.o cuda-src/ComputeSYMGSInside.o  -lcuda -lcudart -lcublas -lcusparse -o bin/xhpcg
+Using CUDA device (0): Tesla V100-PCIE-16GB (16160 MB global memory)
+generateProblem val : 32768 830584 32768 32768 830584 27 27
+generateProblem val : 4096 97336 4096 4096 97336 27 27
+generateProblem val : 512 10648 512 512 10648 27 27
+generateProblem val : 64 1000 64 64 1000 27 27
+
+Setup Phase took 0.00 sec
+
+Copying GPU assembled data to host for reference computations
+
+Checking assembled data ...
+entering coloring 2
+colored: 0, sizes: 4096
+entering coloring 2
+colored: 8192, sizes: 4096
+entering coloring 2
+colored: 16384, sizes: 4096
+entering coloring 2
+colored: 24576, sizes: 4096
+keys_temp[0] : 0
+vals_temp[0] : 1057
+keys_temp[1] : 0
+vals_temp[1] : 1059
+keys_temp[2] : 0
+vals_temp[2] : 1061
+keys_temp[3] : 0
+vals_temp[3] : 1063
+keys_temp[4] : 0
+vals_temp[4] : 1065
+keys_temp[5] : 0
+vals_temp[5] : 1067
+keys_temp[6] : 0
+vals_temp[6] : 1069
+keys_temp[7] : 0
+vals_temp[7] : 1071
+keys_temp[8] : 0
+vals_temp[8] : 1073
+keys_temp[9] : 0
+vals_temp[9] : 1075
+finished JPLCoring @ opt
+finished PermuteColumns @ opt
+entering coloring 2
+colored: 0, sizes: 512
+entering coloring 2
+colored: 1024, sizes: 512
+entering coloring 2
+colored: 2048, sizes: 512
+entering coloring 2
+colored: 3072, sizes: 512
+keys_temp[0] : 0
+vals_temp[0] : 273
+keys_temp[1] : 0
+vals_temp[1] : 275
+keys_temp[2] : 0
+vals_temp[2] : 277
+keys_temp[3] : 0
+vals_temp[3] : 279
+keys_temp[4] : 0
+vals_temp[4] : 281
+keys_temp[5] : 0
+vals_temp[5] : 283
+keys_temp[6] : 0
+vals_temp[6] : 285
+keys_temp[7] : 0
+vals_temp[7] : 287
+keys_temp[8] : 0
+vals_temp[8] : 305
+keys_temp[9] : 0
+vals_temp[9] : 307
+entering coloring 2
+colored: 0, sizes: 64
+entering coloring 2
+colored: 128, sizes: 64
+entering coloring 2
+colored: 256, sizes: 64
+entering coloring 2
+colored: 384, sizes: 64
+keys_temp[0] : 0
+vals_temp[0] : 73
+keys_temp[1] : 0
+vals_temp[1] : 75
+keys_temp[2] : 0
+vals_temp[2] : 77
+keys_temp[3] : 0
+vals_temp[3] : 79
+keys_temp[4] : 0
+vals_temp[4] : 89
+keys_temp[5] : 0
+vals_temp[5] : 91
+keys_temp[6] : 0
+vals_temp[6] : 93
+keys_temp[7] : 0
+vals_temp[7] : 95
+keys_temp[8] : 0
+vals_temp[8] : 105
+keys_temp[9] : 0
+vals_temp[9] : 107
+entering coloring 2
+colored: 0, sizes: 8
+entering coloring 2
+colored: 16, sizes: 8
+entering coloring 2
+colored: 32, sizes: 8
+entering coloring 2
+colored: 48, sizes: 8
+keys_temp[0] : 0
+vals_temp[0] : 21
+keys_temp[1] : 0
+vals_temp[1] : 23
+keys_temp[2] : 0
+vals_temp[2] : 29
+keys_temp[3] : 0
+vals_temp[3] : 31
+keys_temp[4] : 0
+vals_temp[4] : 53
+keys_temp[5] : 0
+vals_temp[5] : 55
+keys_temp[6] : 0
+vals_temp[6] : 61
+keys_temp[7] : 0
+vals_temp[7] : 63
+keys_temp[8] : 1
+vals_temp[8] : 5
+keys_temp[9] : 1
+vals_temp[9] : 7
+==== TestCGInside Copying finished ====
+==== TestCGInside Scaling finished ====
+====entering CG====
+finished SPMV
+=== entering CG iterations
+Ap 0 val: 1976034821000000.000000 
+normr, normr0 at 1 iter: 477637588477543744.000000, 778505619.761348 
+Ap 0 val: 3526045985488681.000000 
+normr, normr0 at 2 iter: 826116416654376960.000000, 778505619.761348 
+Ap 0 val: 8037232634697113.000000 
+normr, normr0 at 3 iter: 1084049454713656960.000000, 778505619.761348 
+Ap 0 val: 12420672293966650.000000 
+normr, normr0 at 4 iter: 947528745717578112.000000, 778505619.761348 
+Ap 0 val: 12650891862619540.000000 
+normr, normr0 at 5 iter: 677957658935534336.000000, 778505619.761348 
+Ap 0 val: 10775726395129518.000000 
+normr, normr0 at 6 iter: 487391962166308928.000000, 778505619.761348 
+Ap 0 val: 9413022188714450.000000 
+normr, normr0 at 7 iter: 388452378860875520.000000, 778505619.761348 
+Ap 0 val: 9116583114652596.000000 
+normr, normr0 at 8 iter: 343915470476172800.000000, 778505619.761348 
+Ap 0 val: 9632840181683134.000000 
+normr, normr0 at 9 iter: 319150667273538560.000000, 778505619.761348 
+Ap 0 val: 10442402099432716.000000 
+normr, normr0 at 10 iter: 287644960658697056.000000, 778505619.761348 
+Ap 0 val: 10851138727990732.000000 
+normr, normr0 at 11 iter: 239535026086622208.000000, 778505619.761348 
+Ap 0 val: 10411470511111508.000000 
+normr, normr0 at 12 iter: 184947667697107392.000000, 778505619.761348 
+Ap 0 val: 9354607321053450.000000 
+normr, normr0 at 13 iter: 139068064442586176.000000, 778505619.761348 
+Ap 0 val: 8297698952783016.000000 
+normr, normr0 at 14 iter: 108741462476451680.000000, 778505619.761348 
+Ap 0 val: 7705532437827147.000000 
+normr, normr0 at 15 iter: 93239620058527296.000000, 778505619.761348 
+Ap 0 val: 7779963885025441.000000 
+normr, normr0 at 16 iter: 89513945905981792.000000, 778505619.761348 
+Ap 0 val: 8594801712651653.000000 
+normr, normr0 at 17 iter: 94438598852093104.000000, 778505619.761348 
+Ap 0 val: 10138286020040804.000000 
+normr, normr0 at 18 iter: 103895892450208544.000000, 778505619.761348 
+Ap 0 val: 12156791814117940.000000 
+normr, normr0 at 19 iter: 111242265147121952.000000, 778505619.761348 
+Ap 0 val: 13938548253440860.000000 
+normr, normr0 at 20 iter: 109396050467706944.000000, 778505619.761348 
+Ap 0 val: 14539339143395584.000000 
+normr, normr0 at 21 iter: 97378219230365968.000000, 778505619.761348 
+Ap 0 val: 13684913231606028.000000 
+normr, normr0 at 22 iter: 82174167980764688.000000, 778505619.761348 
+Ap 0 val: 12210446624802258.000000 
+normr, normr0 at 23 iter: 71707612155772480.000000, 778505619.761348 
+Ap 0 val: 11246192273205882.000000 
+normr, normr0 at 24 iter: 69481580792106776.000000, 778505619.761348 
+Ap 0 val: 11420243515679086.000000 
+normr, normr0 at 25 iter: 74620703624107408.000000, 778505619.761348 
+Ap 0 val: 12714768098617666.000000 
+normr, normr0 at 26 iter: 80408813170514080.000000, 778505619.761348 
+Ap 0 val: 14065765939037856.000000 
+normr, normr0 at 27 iter: 74553082520561776.000000, 778505619.761348 
+Ap 0 val: 13315494084959624.000000 
+normr, normr0 at 28 iter: 56490004213038264.000000, 778505619.761348 
+Ap 0 val: 10285769500111800.000000 
+normr, normr0 at 29 iter: 41014653650153296.000000, 778505619.761348 
+Ap 0 val: 7608701331415928.000000 
+normr, normr0 at 30 iter: 35221091502033604.000000, 778505619.761348 
+Ap 0 val: 6632408354196295.000000 
+normr, normr0 at 31 iter: 37171221131815920.000000, 778505619.761348 
+Ap 0 val: 7056685919603687.000000 
+normr, normr0 at 32 iter: 40132338730032480.000000, 778505619.761348 
+Ap 0 val: 7627702895866715.000000 
+normr, normr0 at 33 iter: 35711682660713448.000000, 778505619.761348 
+Ap 0 val: 6747751917832585.000000 
+normr, normr0 at 34 iter: 29677961668539240.000000, 778505619.761348 
+Ap 0 val: 5529302974047876.000000 
+normr, normr0 at 35 iter: 29257746630825600.000000, 778505619.761348 
+Ap 0 val: 5339996300181343.000000 
+normr, normr0 at 36 iter: 31993175911480320.000000, 778505619.761348 
+Ap 0 val: 5692355990207220.000000 
+normr, normr0 at 37 iter: 28512236281647176.000000, 778505619.761348 
+Ap 0 val: 4888911033378260.000000 
+normr, normr0 at 38 iter: 22315484821524500.000000, 778505619.761348 
+Ap 0 val: 3614890749586495.500000 
+normr, normr0 at 39 iter: 20975975196782672.000000, 778505619.761348 
+Ap 0 val: 3165813540712024.000000 
+normr, normr0 at 40 iter: 21009517388414968.000000, 778505619.761348 
+Ap 0 val: 2917853838520613.000000 
+normr, normr0 at 41 iter: 16926169100080948.000000, 778505619.761348 
+Ap 0 val: 2079976549453405.250000 
+normr, normr0 at 42 iter: 14905427489946246.000000, 778505619.761348 
+Ap 0 val: 1549539985182887.000000 
+normr, normr0 at 43 iter: 15683837934701814.000000, 778505619.761348 
+Ap 0 val: 1338309099559216.500000 
+normr, normr0 at 44 iter: 13213950212043672.000000, 778505619.761348 
+Ap 0 val: 826661623000149.000000 
+normr, normr0 at 45 iter: 10954136527163600.000000, 778505619.761348 
+Ap 0 val: 379974860038089.625000 
+normr, normr0 at 46 iter: 10103355636459358.000000, 778505619.761348 
+Ap 0 val: 42779900819101.351562 
+normr, normr0 at 47 iter: 7309820810764945.000000, 778505619.761348 
+Ap 0 val: -276986443887961.906250 
+normr, normr0 at 48 iter: 6438503871744250.000000, 778505619.761348 
+Ap 0 val: -550486010497526.312500 
+normr, normr0 at 49 iter: 5977457484879464.000000, 778505619.761348 
+Ap 0 val: -813725988726237.875000 
+normr, normr0 at 50 iter: 5691434467723710.000000, 778505619.761348 
+====entering CG====
+Ap 0 val: 43734964.986797 
+=== entering CG iterations
+Ap 0 val: -298215146835271.500000 
+normr, normr0 at 1 iter: 3011935202859946.500000, 75441596.402275 
+Ap 0 val: -455083885875634.375000 
+normr, normr0 at 2 iter: 2939783286591663.000000, 75441596.402275 
+Ap 0 val: -738397161228564.500000 
+normr, normr0 at 3 iter: 2970193805634310.000000, 75441596.402275 
+Ap 0 val: -1035885891541980.500000 
+normr, normr0 at 4 iter: 3101063296209692.000000, 75441596.402275 
+Ap 0 val: -1364230594814173.000000 
+normr, normr0 at 5 iter: 2935041054626713.000000, 75441596.402275 
+Ap 0 val: -1565576261714657.750000 
+normr, normr0 at 6 iter: 3046418894840419.500000, 75441596.402275 
+Ap 0 val: -1889603461458655.000000 
+normr, normr0 at 7 iter: 2996691134178799.000000, 75441596.402275 
+Ap 0 val: -2110711506425423.500000 
+normr, normr0 at 8 iter: 2628374325838752.000000, 75441596.402275 
+Ap 0 val: -2090742892513198.500000 
+normr, normr0 at 9 iter: 2461827414287442.500000, 75441596.402275 
+Ap 0 val: -2185262974601933.500000 
+normr, normr0 at 10 iter: 2372802899911148.000000, 75441596.402275 
+Ap 0 val: -2319456214454001.000000 
+normr, normr0 at 11 iter: 2178463796225475.500000, 75441596.402275 
+Ap 0 val: -2328461351007508.000000 
+normr, normr0 at 12 iter: 2030968531843579.500000, 75441596.402275 
+Ap 0 val: -2355759847020825.000000 
+normr, normr0 at 13 iter: 1947611877929874.500000, 75441596.402275 
+Ap 0 val: -2429340757681356.500000 
+normr, normr0 at 14 iter: 1717668266542742.000000, 75441596.402275 
+Ap 0 val: -2297745874200945.000000 
+normr, normr0 at 15 iter: 1401948318567876.500000, 75441596.402275 
+Ap 0 val: -2017370770089388.250000 
+normr, normr0 at 16 iter: 1243808668917645.500000, 75441596.402275 
+Ap 0 val: -1920186898056578.750000 
+normr, normr0 at 17 iter: 1222539164842119.500000, 75441596.402275 
+Ap 0 val: -2005741781080377.250000 
+normr, normr0 at 18 iter: 1139958227253937.000000, 75441596.402275 
+Ap 0 val: -1975882510353184.750000 
+normr, normr0 at 19 iter: 969894407446284.625000, 75441596.402275 
+Ap 0 val: -1775024779000234.000000 
+normr, normr0 at 20 iter: 865924332779364.750000, 75441596.402275 
+Ap 0 val: -1668321063225063.500000 
+normr, normr0 at 21 iter: 849611412862041.250000, 75441596.402275 
+Ap 0 val: -1710132318244873.500000 
+normr, normr0 at 22 iter: 840463006713758.375000, 75441596.402275 
+Ap 0 val: -1754028018677314.750000 
+normr, normr0 at 23 iter: 800975931460071.750000, 75441596.402275 
+Ap 0 val: -1723005484264663.750000 
+normr, normr0 at 24 iter: 743374054862653.000000, 75441596.402275 
+Ap 0 val: -1639869206125612.750000 
+normr, normr0 at 25 iter: 638420981593999.250000, 75441596.402275 
+Ap 0 val: -1439163654960441.500000 
+normr, normr0 at 26 iter: 506644835193592.875000, 75441596.402275 
+Ap 0 val: -1164690494319224.500000 
+normr, normr0 at 27 iter: 430127628556139.312500, 75441596.402275 
+Ap 0 val: -1004835385968007.500000 
+normr, normr0 at 28 iter: 418641880449630.062500, 75441596.402275 
+Ap 0 val: -987928671887956.625000 
+normr, normr0 at 29 iter: 410196149554827.875000, 75441596.402275 
+Ap 0 val: -971529249692486.875000 
+normr, normr0 at 30 iter: 360687816495875.125000, 75441596.402275 
+Ap 0 val: -851870500853858.625000 
+normr, normr0 at 31 iter: 307892777572568.625000, 75441596.402275 
+Ap 0 val: -719815017675691.500000 
+normr, normr0 at 32 iter: 263524340808885.250000, 75441596.402275 
+Ap 0 val: -604450594670939.625000 
+normr, normr0 at 33 iter: 217031897380533.500000, 75441596.402275 
+Ap 0 val: -482640388088060.312500 
+normr, normr0 at 34 iter: 183284734456489.843750, 75441596.402275 
+Ap 0 val: -389662181083407.250000 
+normr, normr0 at 35 iter: 166591142317984.187500, 75441596.402275 
+Ap 0 val: -333907240867294.437500 
+normr, normr0 at 36 iter: 158118402512346.937500, 75441596.402275 
+Ap 0 val: -294606197581894.937500 
+normr, normr0 at 37 iter: 163226682335191.375000, 75441596.402275 
+Ap 0 val: -279966182153063.625000 
+normr, normr0 at 38 iter: 177357584119847.062500, 75441596.402275 
+Ap 0 val: -278155332738706.406250 
+normr, normr0 at 39 iter: 167896928132628.937500, 75441596.402275 
+Ap 0 val: -235457147605862.343750 
+normr, normr0 at 40 iter: 149326011738753.000000, 75441596.402275 
+Ap 0 val: -180176063638326.750000 
+normr, normr0 at 41 iter: 140449573364238.250000, 75441596.402275 
+Ap 0 val: -139127858888273.687500 
+normr, normr0 at 42 iter: 126112411103349.718750, 75441596.402275 
+Ap 0 val: -93728343886917.593750 
+normr, normr0 at 43 iter: 113978322969913.750000, 75441596.402275 
+Ap 0 val: -52967722777683.140625 
+normr, normr0 at 44 iter: 109513455305286.968750, 75441596.402275 
+Ap 0 val: -18820059700070.964844 
+normr, normr0 at 45 iter: 103023266690706.250000, 75441596.402275 
+Ap 0 val: 14484437037603.347656 
+normr, normr0 at 46 iter: 99550664200521.750000, 75441596.402275 
+Ap 0 val: 46097026500330.750000 
+normr, normr0 at 47 iter: 89314738620355.546875, 75441596.402275 
+Ap 0 val: 73163431081456.562500 
+normr, normr0 at 48 iter: 66800553218110.843750, 75441596.402275 
+Ap 0 val: 86114108774175.843750 
+normr, normr0 at 49 iter: 46475489197408.203125, 75441596.402275 
+Ap 0 val: 90842782226939.359375 
+normr, normr0 at 50 iter: 49656337069354.914062, 75441596.402275 
+====entering CG====
+Ap 0 val: 37414380.992861 
+=== entering CG iterations
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 5501803085483278737411670016.000000 
+normr, normr0 at 1 iter: 54769531387175.562500, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -35330073829058111565509689344.000000 
+normr, normr0 at 2 iter: 53888400625373.078125, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 194466540138679549928654503936.000000 
+normr, normr0 at 3 iter: 53052723871715.546875, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 162321423478632296258755100672.000000 
+normr, normr0 at 4 iter: 52341743618940.304688, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 5821373122027230294490218496.000000 
+normr, normr0 at 5 iter: 51692253464516.445312, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -16144751401020857347504865280.000000 
+normr, normr0 at 6 iter: 52687326849192.953125, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -75132923949101202605705527296.000000 
+normr, normr0 at 7 iter: 53481595754764.234375, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -69735408918770016301755662336.000000 
+normr, normr0 at 8 iter: 53826639956584.585938, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -96698180609882803101249830912.000000 
+normr, normr0 at 9 iter: 53954306314087.406250, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -187533573147777024549126668288.000000 
+normr, normr0 at 10 iter: 54041083556430.367188, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -1421589879679980780076144787456.000000 
+normr, normr0 at 11 iter: 54128733290367.226562, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -1496889186243437773391472361472.000000 
+normr, normr0 at 12 iter: 54216945973992.453125, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -67092374900237973888782303232.000000 
+normr, normr0 at 13 iter: 54235741546628.085938, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -6178649887179812586954426417152.000000 
+normr, normr0 at 14 iter: 54254559958441.671875, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -6215420245356219870769051598848.000000 
+normr, normr0 at 15 iter: 54273403303173.445312, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -108379364493214049826452275200.000000 
+normr, normr0 at 16 iter: 54282467077426.289062, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -1245148471722160265570570731520.000000 
+normr, normr0 at 17 iter: 54291112603254.476562, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 625187886027634244442763821056.000000 
+normr, normr0 at 18 iter: 54300759240097.765625, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 367474118688280028761691258880.000000 
+normr, normr0 at 19 iter: 54311869830660.968750, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 518076134906810191454480105472.000000 
+normr, normr0 at 20 iter: 54324495536976.835938, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 180994022308367680378643677184.000000 
+normr, normr0 at 21 iter: 54340936600457.421875, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -7070122059536340918910234656768.000000 
+normr, normr0 at 22 iter: 54357400742945.078125, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 1462330088961101864725601320960.000000 
+normr, normr0 at 23 iter: 54374717410332.703125, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 655561411561436553456866295808.000000 
+normr, normr0 at 24 iter: 54393948316880.640625, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -6186100439116675939850361241600.000000 
+normr, normr0 at 25 iter: 54413192245379.359375, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4993892049122566182091226087424.000000 
+normr, normr0 at 26 iter: 54432442166474.632812, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 723468945783269348096495058944.000000 
+normr, normr0 at 27 iter: 54453795954953.101562, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 786085741604996329595012644864.000000 
+normr, normr0 at 28 iter: 54477223617408.000000, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4164232174230765093047752458240.000000 
+normr, normr0 at 29 iter: 54500646748116.109375, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -2147072085243470836314631307264.000000 
+normr, normr0 at 30 iter: 54524066107109.250000, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -6394499137015510850873405210624.000000 
+normr, normr0 at 31 iter: 54547479043723.875000, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -5024031274427771743363345154048.000000 
+normr, normr0 at 32 iter: 54570905685798.656250, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -6511824157571187956020777320448.000000 
+normr, normr0 at 33 iter: 54594336513284.546875, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 1002084181415195142974471143424.000000 
+normr, normr0 at 34 iter: 54619300032075.781250, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4920372918604044878474226171904.000000 
+normr, normr0 at 35 iter: 54644254406605.343750, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4964013445774994599303962427392.000000 
+normr, normr0 at 36 iter: 54669194648428.953125, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -5379511864954489516456985755648.000000 
+normr, normr0 at 37 iter: 54694090085212.859375, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4968941563923321506734043824128.000000 
+normr, normr0 at 38 iter: 54718959213381.101562, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -5076499575411763698005912322048.000000 
+normr, normr0 at 39 iter: 54743787805558.546875, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 1504698836321760625462964387840.000000 
+normr, normr0 at 40 iter: 54770041437857.812500, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -5541681621405460953071479685120.000000 
+normr, normr0 at 41 iter: 54796235891682.953125, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 2134916932218986157111209099264.000000 
+normr, normr0 at 42 iter: 54823308196073.156250, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -6050033731726068574873886654464.000000 
+normr, normr0 at 43 iter: 54850322659744.781250, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 2765550154730074628591838035968.000000 
+normr, normr0 at 44 iter: 54878259439577.890625, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 2014157148033685232748094029824.000000 
+normr, normr0 at 45 iter: 54907443369901.765625, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -3743178584324245694112021348352.000000 
+normr, normr0 at 46 iter: 54936468651243.765625, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4753175936839632998189812940800.000000 
+normr, normr0 at 47 iter: 54965344008675.703125, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4547488610785887581687576002560.000000 
+normr, normr0 at 48 iter: 54994110098074.468750, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4913518159540390112710398836736.000000 
+normr, normr0 at 49 iter: 55022727240959.406250, 7046725.272732 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 2664231698681035688344352194560.000000 
+normr, normr0 at 50 iter: 55052218772315.617188, 7046725.272732 
+====entering CG====
+Ap 0 val: 37418874.127824 
+=== entering CG iterations
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -58567598566123992449044971520.000000 
+normr, normr0 at 1 iter: 56255880232503.906250, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -621607434830821170140413952.000000 
+normr, normr0 at 2 iter: 55902460346491.398438, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -73741390473195226455913529344.000000 
+normr, normr0 at 3 iter: 55130660880897.687500, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -8318882609688377638025953280.000000 
+normr, normr0 at 4 iter: 55329502602506.890625, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -46213178790774048884529299456.000000 
+normr, normr0 at 5 iter: 54516961764253.531250, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -48769748861657858025057157120.000000 
+normr, normr0 at 6 iter: 54677189710551.406250, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -21514989086674594486147874816.000000 
+normr, normr0 at 7 iter: 54473188904427.773438, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 37776819056014966065205346304.000000 
+normr, normr0 at 8 iter: 54198826362030.781250, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -39925662082584189084700246016.000000 
+normr, normr0 at 9 iter: 54407973555302.375000, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -42699974050406233535825313792.000000 
+normr, normr0 at 10 iter: 54306639307160.875000, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 78747640660103554429196697600.000000 
+normr, normr0 at 11 iter: 54165908583836.554688, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 577461344366787417527273127936.000000 
+normr, normr0 at 12 iter: 54024957972811.218750, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 97040982948511630794057318400.000000 
+normr, normr0 at 13 iter: 53858390806516.468750, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 50330731670020085424683220992.000000 
+normr, normr0 at 14 iter: 53663183139665.000000, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 31852502167389359673217908736.000000 
+normr, normr0 at 15 iter: 53506832937047.812500, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 35976915480194524093521854464.000000 
+normr, normr0 at 16 iter: 53407602100377.742188, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -12640035760336225898011295744.000000 
+normr, normr0 at 17 iter: 53380851065630.921875, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -70184238683668332955821932544.000000 
+normr, normr0 at 18 iter: 53450424214823.835938, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -112858445070198099942597197824.000000 
+normr, normr0 at 19 iter: 53677220271070.765625, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -145946196537759504197119639552.000000 
+normr, normr0 at 20 iter: 54049806300976.734375, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -311169670784878020600629559296.000000 
+normr, normr0 at 21 iter: 54467458005812.695312, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -319798706155480632716446138368.000000 
+normr, normr0 at 22 iter: 54943862548789.226562, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -284787479642301787506303041536.000000 
+normr, normr0 at 23 iter: 55415314577730.328125, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -476505183665253675878462783488.000000 
+normr, normr0 at 24 iter: 55832344946585.429688, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -367943602695749959642989461504.000000 
+normr, normr0 at 25 iter: 56196046314846.671875, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -434433887245924935895175135232.000000 
+normr, normr0 at 26 iter: 56511977654263.132812, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -486803461978173273515608768512.000000 
+normr, normr0 at 27 iter: 56786131870552.593750, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -452920913971030931877306302464.000000 
+normr, normr0 at 28 iter: 57011076413923.468750, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -279538257755592938856638316544.000000 
+normr, normr0 at 29 iter: 57179010867470.718750, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -532097920412599914617020350464.000000 
+normr, normr0 at 30 iter: 57312927356091.015625, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -356027008660683307868701589504.000000 
+normr, normr0 at 31 iter: 57416034263707.906250, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -504010655419093767998232592384.000000 
+normr, normr0 at 32 iter: 57501457945417.218750, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 91930584836971956202150821888.000000 
+normr, normr0 at 33 iter: 57701206069022.171875, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -71615262329212358412694716416.000000 
+normr, normr0 at 34 iter: 57698781424089.625000, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4612552153254249304190254841856.000000 
+normr, normr0 at 35 iter: 57696351849651.851562, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 4650808186039994671594318331904.000000 
+normr, normr0 at 36 iter: 57693923423271.289062, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -6707549772523860610811531624448.000000 
+normr, normr0 at 37 iter: 57691520375464.085938, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: -4825830421513653502663630782464.000000 
+normr, normr0 at 38 iter: 57689114814398.171875, 7419718.240763 
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+Ap 0 val: 14370110685396742248080697458688.000000 
+normr, normr0 at 39 iter: 5768669902164

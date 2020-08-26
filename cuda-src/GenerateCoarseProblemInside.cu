@@ -113,26 +113,26 @@ void CopyCoarseProblemToHostInside(SparseMatrix &A) {
   // Copy problem to host
   CopyProblemToHost(*A.Ac, NULL, NULL, NULL);
 
-  if (cudaPeekAtLastError() != cudaSuccess) {
-    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
-           cudaGetErrorString(cudaPeekAtLastError()));
-    printf("at file, line %s %d \n", __FILE__, __LINE__);
-    return;
-  } else {
-    printf("line passed %s %d \n", __FILE__, __LINE__);
-  }
+  // if (cudaPeekAtLastError() != cudaSuccess) {
+  //   printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+  //          cudaGetErrorString(cudaPeekAtLastError()));
+  //   printf("at file, line %s %d \n", __FILE__, __LINE__);
+  //   return;
+  // } else {
+  //   printf("line passed %s %d \n", __FILE__, __LINE__);
+  // }
 
   // Copy halo to host
   CopyHaloToHost(*A.Ac);
 
-  if (cudaPeekAtLastError() != cudaSuccess) {
-    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
-           cudaGetErrorString(cudaPeekAtLastError()));
-    printf("at file, line %s %d \n", __FILE__, __LINE__);
-    return;
-  } else {
-    printf("line passed %s %d \n", __FILE__, __LINE__);
-  }
+  // if (cudaPeekAtLastError() != cudaSuccess) {
+  //   printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),
+  //          cudaGetErrorString(cudaPeekAtLastError()));
+  //   printf("at file, line %s %d \n", __FILE__, __LINE__);
+  //   return;
+  // } else {
+  //   printf("line passed %s %d \n", __FILE__, __LINE__);
+  // }
 
   // Allocate additional host vectors
   InitializeVector(*A.mgData->rc, A.Ac->localNumberOfRows);

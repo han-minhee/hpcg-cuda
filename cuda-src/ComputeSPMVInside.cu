@@ -1,25 +1,24 @@
 #include "../src/ExchangeHalo.hpp"
 #include "ComputeSPMVInside.cuh"
 
+#include <cstddef>
 #include <cuda_runtime.h>
 
 #define LAUNCH_SPMV_ELL(blocksize)                                             \
-  kernel_spmv_ell<blocksize>                                                   \
-      <<<dim3((A.localNumberOfRows - 1) / blocksize + 1), dim3(blocksize)>>>(  \
-          A.localNumberOfRows, A.nblocks, A.localNumberOfRows / A.nblocks,     \
-          A.ell_width, A.ell_col_ind, A.ell_val, x.d_values, y.d_values)
-// 0, stream_interior,
+  kernelSPMVEll<blocksize><<<dim3((A.localNumberOfRows - 1) / blocksize + 1),  \
+                             dim3(blocksize), 0, streamInterior>>>(           \
+      A.localNumberOfRows, A.nblocks, A.localNumberOfRows / A.nblocks,         \
+      A.ell_width, A.ell_col_ind, A.ell_val, x.d_values, y.d_values)
+// 0, streamInterior,
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_spmv_ell_coarse(local_int_t size, local_int_t m, local_int_t n,
-                                local_int_t ell_width,
-                                const local_int_t * ell_col_ind,
-                                const double * ell_val,
-                                const local_int_t * perm,
-                                const local_int_t * f2cOperator,
-                                const double * x,
-                                double * y) {
+    void kernelSPMVEllCoarse(local_int_t size, local_int_t m, local_int_t n,
+                             local_int_t ell_width,
+                             const local_int_t *ell_col_ind,
+                             const double *ell_val, const local_int_t *perm,
+                             const local_int_t *f2cOperator, const double *x,
+                             double *y) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {
@@ -47,11 +46,9 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_spmv_ell(local_int_t m, int nblocks, local_int_t rows_per_block,
-                         local_int_t ell_width,
-                         const local_int_t * ell_col_ind,
-                         const double * ell_val,
-                         const double * x, double * y) {
+    void kernelSPMVEll(local_int_t m, int nblocks, local_int_t rows_per_block,
+                       local_int_t ell_width, const local_int_t *ell_col_ind,
+                       const double *ell_val, const double *x, double *y) {
   // Applies for chunks of blockDim.x * nblocks
   local_int_t color_block_offset = BLOCKSIZE * (blockIdx.x / nblocks);
 
@@ -86,12 +83,10 @@ __launch_bounds__(BLOCKSIZE) __global__
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_spmv_halo(local_int_t m, local_int_t n, local_int_t halo_width,
-                          const local_int_t * halo_row_ind,
-                          const local_int_t * halo_col_ind,
-                          const double * halo_val,
-                          const local_int_t * perm,
-                          const double * x,
-                          double * y) {
+                          const local_int_t *halo_row_ind,
+                          const local_int_t *halo_col_ind,
+                          const double *halo_val, const local_int_t *perm,
+                          const double *x, double *y) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= m) {
@@ -156,13 +151,36 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   }
 #endif
 
+  // double* ellVals = new double[10];
+  // cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+  // for (int i = 0; i<10; i++){
+  //   printf("input ellval[%d] : %f\n", i, ellVals[i]);
+  // }
+
+  // free(ellVals);
+
   if (&y == A.mgData->Axf) {
-    kernel_spmv_ell_coarse<1024>
+    kernelSPMVEllCoarse<1024>
         <<<dim3((A.mgData->rc->localLength - 1) / 1024 + 1), dim3(1024)>>>(
             A.mgData->rc->localLength, A.localNumberOfRows,
             A.localNumberOfColumns, A.ell_width, A.ell_col_ind, A.ell_val,
             A.perm, A.mgData->d_f2cOperator, x.d_values, y.d_values);
   }
+
+  cudaMemcpy(y.values, y.d_values, sizeof(double) * y.localLength, cudaMemcpyDeviceToHost);
+
+  bool caught = false;
+  for (int i = 0; i<32*32*32; i++){
+    if(y.values[i] != 0){
+      printf("Ap %d val: %f \n", i, y.values[i]);
+      caught = true;
+      break;
+    }
+  }
+  if(caught) return -1;
+  printf("finished SPMV\n");
+
 
   return 0;
 }

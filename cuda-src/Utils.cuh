@@ -4,13 +4,13 @@
 #include <cuda_runtime.h>
 
 // Streams
-extern cudaStream_t stream_interior;
-extern cudaStream_t stream_halo;
+extern cudaStream_t streamInterior;
+extern cudaStream_t streamHalo;
 // Workspace
 extern void *workspace;
 // Memory allocator
 
-#define debug_message true
+#define debug_message false
 
 #define cudaHostRealloc(dst, temp, size)                                       \
   cudaMalloc((void **)&temp, sizeof(dst));                                     \

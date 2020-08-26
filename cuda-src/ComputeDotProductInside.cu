@@ -134,8 +134,8 @@ __launch_bounds__(BLOCKSIZE) __global__
 }
 
 int ComputeDotProductInside(local_int_t n, const Vector &x, const Vector &y,
-                      double &result, double &time_allreduce,
-                      bool &isOptimized) {
+                            double &result, double &time_allreduce,
+                            bool &isOptimized) {
   assert(x.localLength >= n);
   assert(y.localLength >= n);
 

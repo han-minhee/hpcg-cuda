@@ -117,7 +117,7 @@ void PrepareSendBuffer(const SparseMatrix &A, const Vector &x) {
   // Copy send buffer to host
   CUDA_CHECK_COMMAND(cudaMemcpyAsync(A.send_buffer, A.d_send_buffer,
                                      sizeof(double) * A.totalToBeSent,
-                                     cudaMemcpyDeviceToHost, stream_halo));
+                                     cudaMemcpyDeviceToHost, streamHalo));
 }
 
 void ExchangeHaloAsync(const SparseMatrix &A) {
@@ -137,7 +137,7 @@ void ExchangeHaloAsync(const SparseMatrix &A) {
   }
 
   // Synchronize stream to make sure that send buffer is available
-  CUDA_CHECK_COMMAND(cudaStreamSynchronize(stream_halo));
+  CUDA_CHECK_COMMAND(cudaStreamSynchronize(streamHalo));
 
   // Post async boundary sends
   offset = 0;
@@ -164,7 +164,7 @@ void ObtainRecvBuffer(const SparseMatrix &A, Vector &x) {
   // Update boundary values
   CUDA_CHECK_COMMAND(cudaMemcpyAsync(
       x.d_values + A.localNumberOfRows, A.recv_buffer,
-      sizeof(double) * A.totalToBeSent, cudaMemcpyHostToDevice, stream_halo));
+      sizeof(double) * A.totalToBeSent, cudaMemcpyHostToDevice, streamHalo));
 }
 #endif
 // ifndef HPCG_NO_MPI

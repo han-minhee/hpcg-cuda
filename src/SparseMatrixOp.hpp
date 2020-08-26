@@ -65,11 +65,11 @@ inline void InitializeSparseMatrix(SparseMatrix &A, Geometry *geom) {
   return;
 }
 
-inline void ConvertToELL(SparseMatrix &A) { return ConvertToELLInside(A); }
-inline void ExtractDiagonal(SparseMatrix &A) { return ExtractDiagonalInside(A); }
+inline void ConvertToELL(SparseMatrix &A) { ConvertToELLInside(A); }
+inline void ExtractDiagonal(SparseMatrix &A) { ExtractDiagonalInside(A); }
 
 inline void CudaCopyMatrixDiagonal(const SparseMatrix &A, Vector &diagonal) {
-  return CudaCopyMatrixDiagonalInside(A, diagonal);
+  CudaCopyMatrixDiagonalInside(A, diagonal);
 }
 inline void CopyMatrixDiagonal(SparseMatrix &A, Vector &diagonal) {
   double **curDiagA = A.matrixDiagonal;
@@ -78,11 +78,10 @@ inline void CopyMatrixDiagonal(SparseMatrix &A, Vector &diagonal) {
   for (local_int_t i = 0; i < A.localNumberOfRows; ++i)
     dv[i] = *(curDiagA[i]);
   CudaCopyMatrixDiagonal(A, diagonal);
-  return;
 }
 
 inline void CudaReplaceMatrixDiagonal(SparseMatrix &A, const Vector &diagonal) {
-  return CudaReplaceMatrixDiagonalInside(A, diagonal);
+  CudaReplaceMatrixDiagonalInside(A, diagonal);
 }
 
 inline void ReplaceMatrixDiagonal(SparseMatrix &A, Vector &diagonal) {
@@ -92,7 +91,6 @@ inline void ReplaceMatrixDiagonal(SparseMatrix &A, Vector &diagonal) {
   for (local_int_t i = 0; i < A.localNumberOfRows; ++i)
     *(curDiagA[i]) = dv[i];
   CudaReplaceMatrixDiagonal(A, diagonal);
-  return;
 }
 
 inline void DeleteMatrix(SparseMatrix &A) { return DeleteMatrixInside(A); }

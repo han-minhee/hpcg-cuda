@@ -2,17 +2,17 @@
 #include "Utils.cuh"
 #include <cub/cub.cuh>
 
-#define LAUNCH_TO_ELL_COL(blocksizex, blocksizey)                              \
-  kernel_to_ell_col<blocksizex, blocksizey>                                    \
-      <<<dim3((A.localNumberOfRows - 1) / blocksizey + 1),                     \
-         dim3(blocksizex, blocksizey)>>>(A.localNumberOfRows, A.ell_width,     \
+#define LAUNCH_TO_ELL_COL(blockSizeX, blockSizeY)                              \
+  kernel_to_ell_col<blockSizeX, blockSizeY>                                    \
+      <<<dim3((A.localNumberOfRows - 1) / blockSizeY + 1),                     \
+         dim3(blockSizeX, blockSizeY)>>>(A.localNumberOfRows, A.ell_width,     \
                                          A.d_mtxIndL, A.ell_col_ind,           \
                                          d_halo_rows, A.halo_row_ind)
 
-#define LAUNCH_TO_ELL_VAL(blocksizex, blocksizey)                              \
-  kernel_to_ell_val<blocksizex, blocksizey>                                    \
-      <<<dim3((A.localNumberOfRows - 1) / blocksizey + 1),                     \
-         dim3(blocksizex, blocksizey)>>>(A.localNumberOfRows,                  \
+#define LAUNCH_TO_ELL_VAL(blockSizeX, blockSizeY)                              \
+  kernel_to_ell_val<blockSizeX, blockSizeY>                                    \
+      <<<dim3((A.localNumberOfRows - 1) / blockSizeY + 1),                     \
+         dim3(blockSizeX, blockSizeY)>>>(A.localNumberOfRows,                  \
                                          A.numberOfNonzerosPerRow,             \
                                          A.d_matrixValues, A.ell_val)
 
@@ -267,6 +267,15 @@ void ConvertToELLInside(SparseMatrix &A) {
       A.halo_rows, A.localNumberOfRows, A.localNumberOfColumns, A.ell_width,
       A.ell_col_ind, A.ell_val, A.halo_row_ind, A.halo_col_ind, A.halo_val);
 #endif
+
+double* ellVals = new double[10];
+cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+for (int i = 0; i<10; i++){
+  printf("input ellval[%d] : %f\n", i, ellVals[i]);
+}
+
+free(ellVals);
 }
 
 template <unsigned int BLOCKSIZE>

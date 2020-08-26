@@ -1,0 +1,434 @@
+nvcc -c --compiler-options= "-fomit-frame-pointer -O3 -funroll-loops -W -Wall"  -DHPCG_NO_MPI -DHPCG_NO_OPENMP -I./src -I./cuda-src  -I./src -I./cuda-src cuda-src/ComputeSPMVInside.cu -o cuda-src/ComputeSPMVInside.o
+nvcc -c --compiler-options= "-fomit-frame-pointer -O3 -funroll-loops -W -Wall"  -DHPCG_NO_MPI -DHPCG_NO_OPENMP -I./src -I./cuda-src  -I./src -I./cuda-src cuda-src/SparseMatrixInside.cu -o cuda-src/SparseMatrixInside.o
+nvcc --compiler-options= "-fomit-frame-pointer -O3 -funroll-loops -W -Wall"  -DHPCG_NO_MPI -DHPCG_NO_OPENMP -I./src -I./cuda-src  src/main.o -DHPCG_NO_MPI -DHPCG_NO_OPENMP src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/GenerateProblem_ref.o src/CheckProblem.o src/MixedBaseCounter.o src/OptimizeProblem.o src/ReadHpcgDat.o src/ReportResults.o src/SetupHalo.o src/SetupHalo_ref.o src/TestSymmetry.o src/TestNorms.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/ComputeDotProduct.o src/ComputeDotProduct_ref.o src/mytimer.o src/ComputeOptimalShapeXYZ.o src/ComputeSPMV.o src/ComputeSPMV_ref.o src/ComputeSYMGS.o src/ComputeSYMGS_ref.o src/ComputeWAXPBY.o src/ComputeWAXPBY_ref.o src/ComputeMG_ref.o src/ComputeMG.o src/ComputeProlongation_ref.o src/ComputeRestriction_ref.o src/CheckAspectRatio.o src/OutputFile.o src/GenerateCoarseProblem.o src/init.o src/finalize.o cuda-src/ComputeDotProductInside.o cuda-src/ComputeMGInside.o cuda-src/ComputeProlongationInside.o cuda-src/ComputeResidualInside.o cuda-src/ComputeRestrictionInside.o cuda-src/ComputeSPMVInside.o cuda-src/ComputeWAXPBYInside.o cuda-src/ExchangeHaloInside.o cuda-src/finalizeInside.o cuda-src/GenerateCoarseProblemInside.o cuda-src/GenerateProblemInside.o cuda-src/InitInside.o cuda-src/MultiColoring.o cuda-src/Permute.o cuda-src/SetupHaloInside.o cuda-src/SparseMatrixInside.o cuda-src/TestCGInside.o cuda-src/TestSymmetryInside.o cuda-src/Utils.o cuda-src/VectorInside.o cuda-src/ComputeSYMGSInside.o  -lcuda -lcudart -lcublas -lcusparse -o bin/xhpcg
+Using CUDA device (0): Tesla V100-PCIE-16GB (16160 MB global memory)
+generateProblem val : 32768 830584 32768 32768 830584 27 27
+generateProblem val : 4096 97336 4096 4096 97336 27 27
+generateProblem val : 512 10648 512 512 10648 27 27
+generateProblem val : 64 1000 64 64 1000 27 27
+
+Setup Phase took 0.00 sec
+
+Copying GPU assembled data to host for reference computations
+
+Checking assembled data ...
+entering coloring 2
+colored: 0, sizes: 4096
+entering coloring 2
+colored: 8192, sizes: 4096
+entering coloring 2
+colored: 16384, sizes: 4096
+entering coloring 2
+colored: 24576, sizes: 4096
+nblocks : 8
+keys[0] : 7
+vals[0] : 0
+keys[1] : 5
+vals[1] : 1
+keys[2] : 7
+vals[2] : 2
+keys[3] : 5
+vals[3] : 3
+keys[4] : 7
+vals[4] : 4
+keys[5] : 5
+vals[5] : 5
+keys[6] : 7
+vals[6] : 6
+keys[7] : 5
+vals[7] : 7
+keys[8] : 7
+vals[8] : 8
+keys[9] : 5
+vals[9] : 9
+keys_temp[0] : 0
+vals_temp[0] : 1057
+keys_temp[1] : 0
+vals_temp[1] : 1059
+keys_temp[2] : 0
+vals_temp[2] : 1061
+keys_temp[3] : 0
+vals_temp[3] : 1063
+keys_temp[4] : 0
+vals_temp[4] : 1065
+keys_temp[5] : 0
+vals_temp[5] : 1067
+keys_temp[6] : 0
+vals_temp[6] : 1069
+keys_temp[7] : 0
+vals_temp[7] : 1071
+keys_temp[8] : 0
+vals_temp[8] : 1073
+keys_temp[9] : 0
+vals_temp[9] : 1075
+final perm[0] : 28672
+final perm[1] : 20480
+final perm[2] : 28673
+final perm[3] : 20481
+final perm[4] : 28674
+final perm[5] : 20482
+final perm[6] : 28675
+final perm[7] : 20483
+final perm[8] : 28676
+final perm[9] : 20484
+finished JPLCoring @ opt
+finished PermuteColumns @ opt
+input ellval[0] : 0.000000
+input ellval[1] : 0.000000
+input ellval[2] : 0.000000
+input ellval[3] : 1.000000
+input ellval[4] : 1.000000
+input ellval[5] : 2.000000
+input ellval[6] : 2.000000
+input ellval[7] : 3.000000
+input ellval[8] : 3.000000
+input ellval[9] : 4.000000
+entering coloring 2
+colored: 0, sizes: 512
+entering coloring 2
+colored: 1024, sizes: 512
+entering coloring 2
+colored: 2048, sizes: 512
+entering coloring 2
+colored: 3072, sizes: 512
+nblocks : 8
+keys[0] : 7
+vals[0] : 0
+keys[1] : 5
+vals[1] : 1
+keys[2] : 7
+vals[2] : 2
+keys[3] : 5
+vals[3] : 3
+keys[4] : 7
+vals[4] : 4
+keys[5] : 5
+vals[5] : 5
+keys[6] : 7
+vals[6] : 6
+keys[7] : 5
+vals[7] : 7
+keys[8] : 7
+vals[8] : 8
+keys[9] : 5
+vals[9] : 9
+keys_temp[0] : 0
+vals_temp[0] : 273
+keys_temp[1] : 0
+vals_temp[1] : 275
+keys_temp[2] : 0
+vals_temp[2] : 277
+keys_temp[3] : 0
+vals_temp[3] : 279
+keys_temp[4] : 0
+vals_temp[4] : 281
+keys_temp[5] : 0
+vals_temp[5] : 283
+keys_temp[6] : 0
+vals_temp[6] : 285
+keys_temp[7] : 0
+vals_temp[7] : 287
+keys_temp[8] : 0
+vals_temp[8] : 305
+keys_temp[9] : 0
+vals_temp[9] : 307
+final perm[0] : 3584
+final perm[1] : 2560
+final perm[2] : 3585
+final perm[3] : 2561
+final perm[4] : 3586
+final perm[5] : 2562
+final perm[6] : 3587
+final perm[7] : 2563
+final perm[8] : 3588
+final perm[9] : 2564
+input ellval[0] : 0.000000
+input ellval[1] : 0.000000
+input ellval[2] : 0.000000
+input ellval[3] : 1.000000
+input ellval[4] : 1.000000
+input ellval[5] : 2.000000
+input ellval[6] : 2.000000
+input ellval[7] : 3.000000
+input ellval[8] : 3.000000
+input ellval[9] : 4.000000
+entering coloring 2
+colored: 0, sizes: 64
+entering coloring 2
+colored: 128, sizes: 64
+entering coloring 2
+colored: 256, sizes: 64
+entering coloring 2
+colored: 384, sizes: 64
+nblocks : 8
+keys[0] : 7
+vals[0] : 0
+keys[1] : 5
+vals[1] : 1
+keys[2] : 7
+vals[2] : 2
+keys[3] : 5
+vals[3] : 3
+keys[4] : 7
+vals[4] : 4
+keys[5] : 5
+vals[5] : 5
+keys[6] : 7
+vals[6] : 6
+keys[7] : 5
+vals[7] : 7
+keys[8] : 3
+vals[8] : 8
+keys[9] : 1
+vals[9] : 9
+keys_temp[0] : 0
+vals_temp[0] : 73
+keys_temp[1] : 0
+vals_temp[1] : 75
+keys_temp[2] : 0
+vals_temp[2] : 77
+keys_temp[3] : 0
+vals_temp[3] : 79
+keys_temp[4] : 0
+vals_temp[4] : 89
+keys_temp[5] : 0
+vals_temp[5] : 91
+keys_temp[6] : 0
+vals_temp[6] : 93
+keys_temp[7] : 0
+vals_temp[7] : 95
+keys_temp[8] : 0
+vals_temp[8] : 105
+keys_temp[9] : 0
+vals_temp[9] : 107
+final perm[0] : 448
+final perm[1] : 320
+final perm[2] : 449
+final perm[3] : 321
+final perm[4] : 450
+final perm[5] : 322
+final perm[6] : 451
+final perm[7] : 323
+final perm[8] : 192
+final perm[9] : 64
+input ellval[0] : 0.000000
+input ellval[1] : 0.000000
+input ellval[2] : 0.000000
+input ellval[3] : 1.000000
+input ellval[4] : 1.000000
+input ellval[5] : 2.000000
+input ellval[6] : 2.000000
+input ellval[7] : 3.000000
+input ellval[8] : 0.000000
+input ellval[9] : 0.000000
+entering coloring 2
+colored: 0, sizes: 8
+entering coloring 2
+colored: 16, sizes: 8
+entering coloring 2
+colored: 32, sizes: 8
+entering coloring 2
+colored: 48, sizes: 8
+nblocks : 8
+keys[0] : 7
+vals[0] : 0
+keys[1] : 5
+vals[1] : 1
+keys[2] : 7
+vals[2] : 2
+keys[3] : 5
+vals[3] : 3
+keys[4] : 3
+vals[4] : 4
+keys[5] : 1
+vals[5] : 5
+keys[6] : 3
+vals[6] : 6
+keys[7] : 1
+vals[7] : 7
+keys[8] : 7
+vals[8] : 8
+keys[9] : 5
+vals[9] : 9
+keys_temp[0] : 0
+vals_temp[0] : 21
+keys_temp[1] : 0
+vals_temp[1] : 23
+keys_temp[2] : 0
+vals_temp[2] : 29
+keys_temp[3] : 0
+vals_temp[3] : 31
+keys_temp[4] : 0
+vals_temp[4] : 53
+keys_temp[5] : 0
+vals_temp[5] : 55
+keys_temp[6] : 0
+vals_temp[6] : 61
+keys_temp[7] : 0
+vals_temp[7] : 63
+keys_temp[8] : 1
+vals_temp[8] : 5
+keys_temp[9] : 1
+vals_temp[9] : 7
+final perm[0] : 56
+final perm[1] : 40
+final perm[2] : 57
+final perm[3] : 41
+final perm[4] : 24
+final perm[5] : 8
+final perm[6] : 25
+final perm[7] : 9
+final perm[8] : 58
+final perm[9] : 42
+input ellval[0] : 0.000000
+input ellval[1] : 0.000000
+input ellval[2] : 0.000000
+input ellval[3] : 1.000000
+input ellval[4] : 0.000000
+input ellval[5] : 0.000000
+input ellval[6] : 0.000000
+input ellval[7] : 1.000000
+input ellval[8] : 0.000000
+input ellval[9] : 0.000000
+==== TestCGInside Copying finished ====
+==== TestCGInside Scaling finished ====
+====entering CG====
+finished SPMV
+=== entering CG iterations
+Ap 0 val: 4380259000000.000000 
+normr, normr0 at 1 iter: 169304509538970976.000000, 722002770.077789 
+Ap 0 val: -577349562714.407104 
+normr, normr0 at 2 iter: 89778032126264144.000000, 722002770.077789 
+Ap 0 val: 112827512432.875931 
+normr, normr0 at 3 iter: 48415598333610640.000000, 722002770.077789 
+Ap 0 val: 111333879534.255493 
+normr, normr0 at 4 iter: 30061088985888344.000000, 722002770.077789 
+Ap 0 val: -395604320775.382385 
+normr, normr0 at 5 iter: 28503101182759180.000000, 722002770.077789 
+Ap 0 val: 170384305668.095551 
+normr, normr0 at 6 iter: 26807697408974252.000000, 722002770.077789 
+Ap 0 val: -141407197584.606232 
+normr, normr0 at 7 iter: 19559846461886480.000000, 722002770.077789 
+Ap 0 val: 95848626767.227402 
+normr, normr0 at 8 iter: 14090785692172972.000000, 722002770.077789 
+Ap 0 val: 135048290764.120560 
+normr, normr0 at 9 iter: 12019395500495724.000000, 722002770.077789 
+Ap 0 val: -181176725837.689209 
+normr, normr0 at 10 iter: 12514152784891760.000000, 722002770.077789 
+Ap 0 val: 104612871145.596710 
+normr, normr0 at 11 iter: 9947733677327762.000000, 722002770.077789 
+Ap 0 val: -73435283811.833145 
+normr, normr0 at 12 iter: 7607063686024036.000000, 722002770.077789 
+Ap 0 val: -33287945733.153194 
+normr, normr0 at 13 iter: 6525296127226822.000000, 722002770.077789 
+Ap 0 val: 111558687867.086121 
+normr, normr0 at 14 iter: 6139900011777006.000000, 722002770.077789 
+Ap 0 val: -50366079009.163712 
+normr, normr0 at 15 iter: 5830810262987146.000000, 722002770.077789 
+Ap 0 val: 67125974500.201561 
+normr, normr0 at 16 iter: 4587798991412862.000000, 722002770.077789 
+Ap 0 val: -62158725730.818520 
+normr, normr0 at 17 iter: 3943109986220914.000000, 722002770.077789 
+Ap 0 val: -70600759524.439514 
+normr, normr0 at 18 iter: 3761180649669540.500000, 722002770.077789 
+Ap 0 val: 82405167738.019882 
+normr, normr0 at 19 iter: 3716015868746973.000000, 722002770.077789 
+Ap 0 val: -44072305617.833832 
+normr, normr0 at 20 iter: 3367953846441827.500000, 722002770.077789 
+Ap 0 val: 66300987122.974457 
+normr, normr0 at 21 iter: 2927985797684740.500000, 722002770.077789 
+Ap 0 val: 45047084859.498253 
+normr, normr0 at 22 iter: 2951673007917123.000000, 722002770.077789 
+Ap 0 val: -103401646968.107117 
+normr, normr0 at 23 iter: 2965595984252026.000000, 722002770.077789 
+Ap 0 val: 1913507070.076221 
+normr, normr0 at 24 iter: 2938090734956550.500000, 722002770.077789 
+Ap 0 val: 16196360363.852957 
+normr, normr0 at 25 iter: 2803438920382900.000000, 722002770.077789 
+Ap 0 val: 42345951411.710403 
+normr, normr0 at 26 iter: 2684132336990027.000000, 722002770.077789 
+Ap 0 val: 10465278620.684143 
+normr, normr0 at 27 iter: 2773282900123734.500000, 722002770.077789 
+Ap 0 val: -48267118418.458000 
+normr, normr0 at 28 iter: 2721500477061154.000000, 722002770.077789 
+Ap 0 val: 35471429494.380020 
+normr, normr0 at 29 iter: 2566627748356547.500000, 722002770.077789 
+Ap 0 val: -43215855933.616249 
+normr, normr0 at 30 iter: 2356583330169053.000000, 722002770.077789 
+Ap 0 val: 3883880622.329175 
+normr, normr0 at 31 iter: 2217669461211493.250000, 722002770.077789 
+Ap 0 val: 50612531426.227371 
+normr, normr0 at 32 iter: 2021562810103350.000000, 722002770.077789 
+Ap 0 val: -38974467627.704163 
+normr, normr0 at 33 iter: 1773161893004636.500000, 722002770.077789 
+Ap 0 val: 34424922296.649117 
+normr, normr0 at 34 iter: 1584380824638051.000000, 722002770.077789 
+Ap 0 val: -21755582343.221157 
+normr, normr0 at 35 iter: 1361033164791194.250000, 722002770.077789 
+Ap 0 val: -39466635322.187759 
+normr, normr0 at 36 iter: 1205264199550867.000000, 722002770.077789 
+Ap 0 val: 34824201002.464607 
+normr, normr0 at 37 iter: 1089264422329230.000000, 722002770.077789 
+Ap 0 val: -10676488317.236929 
+normr, normr0 at 38 iter: 995830058702695.125000, 722002770.077789 
+Ap 0 val: 24788046728.056477 
+normr, normr0 at 39 iter: 948639736741872.500000, 722002770.077789 
+Ap 0 val: 9481787397.095366 
+normr, normr0 at 40 iter: 919168156504410.000000, 722002770.077789 
+Ap 0 val: -42233918868.698967 
+normr, normr0 at 41 iter: 914048403177845.500000, 722002770.077789 
+Ap 0 val: 10105645924.409874 
+normr, normr0 at 42 iter: 950745121040361.000000, 722002770.077789 
+Ap 0 val: -7022501234.398264 
+normr, normr0 at 43 iter: 1008301756532261.625000, 722002770.077789 
+Ap 0 val: 5681845529.914855 
+normr, normr0 at 44 iter: 1015474011808232.500000, 722002770.077789 
+Ap 0 val: 30569745968.555859 
+normr, normr0 at 45 iter: 993134381138594.500000, 722002770.077789 
+Ap 0 val: -11479717500.189737 
+normr, normr0 at 46 iter: 978298411107584.250000, 722002770.077789 
+Ap 0 val: -10335875544.909061 
+normr, normr0 at 47 iter: 915453080298099.500000, 722002770.077789 
+Ap 0 val: -29062682911.657806 
+normr, normr0 at 48 iter: 802829999196034.000000, 722002770.077789 
+Ap 0 val: 21371371913.001274 
+normr, normr0 at 49 iter: 673026417182079.000000, 722002770.077789 
+Ap 0 val: 29736085708.258022 
+normr, normr0 at 50 iter: 561337221514839.125000, 722002770.077789 
+====entering CG====
+Ap 0 val: 219.458643 
+=== entering CG iterations
+Ap 0 val: -50165315707.280380 
+normr, normr0 at 1 iter: 285910471633894.312500, 23692556.246949 
+Ap 0 val: -2812254704.334617 
+normr, normr0 at 2 iter: 289802231546171.750000, 23692556.246949 
+Ap 0 val: 9707223882.605562 
+normr, normr0 at 3 iter: 281874663244950.312500, 23692556.246949 
+Ap 0 val: -6757858028.186127 
+normr, normr0 at 4 iter: 274210613093324.125000, 23692556.246949 
+Ap 0 val: 13878812103.145023 
+normr, normr0 at 5 iter: 273829811715844.000000, 23692556.246949 
+Ap 0 val: -12507502952.497402 
+normr, normr0 at 6 iter: 278307373698408.437500, 23692556.246949 
+Ap 0 val: 1056632658.667570 
+normr, normr0 at 7 iter: 275353168558386.875000, 23692556.246949 
+Ap 0 val: 9759500654.233053 
+normr, normr0 at 8 iter: 261805436336536.500000, 23692556.246949 
+Ap 0 val: -15424154440.740221 
+normr, normr0 at 9 iter: 249663773860207.843750, 23692556.246949 
+Ap 0 val: 13002173064.432537 
+normr, normr0 at 10 iter: 239904707330248.875000, 23692556.246949 
+Ap 0 val: -4392521286.472770 
+normr, normr0 at 11 iter: 227315244696609.406250, 23692556.246949 
+Ap 0 val: -4393191854.845630 
+normr, normr0 at 12 iter: 209319920777734.125000, 23692556.246949 
+Ap 0 val: 11389899197.998966 
+normr, normr0 at 13 iter: 201244984555073.875000, 23692556.246949 
+Ap 0 val: -13104572024.922606 
+normr, normr0 at 14 iter: 203104745072899.000000, 23692556.246949 
+Ap 0 val: 6924848629.823489 
+normr, normr0 at 15 iter: 207671864515170.218750, 23692556.246949 
+Ap 0 val: 1259418441.193460 
+normr, normr0 at 16 iter: 215679455777193.718750, 23692556.246949 
+Ap 0 val: -8196409147.159710 
+normr, normr0 at 17 iter: 21836680

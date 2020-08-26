@@ -12,16 +12,16 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 
-#define LAUNCH_COPY_INDICES(blocksizex, blocksizey)                            \
-  kernelCopyIndices<blocksizex, blocksizey>                                    \
-      <<<dim3((A.localNumberOfRows - 1) / blocksizey + 1),                     \
-         dim3(blocksizex, blocksizey)>>>(                                      \
+#define LAUNCH_COPY_INDICES(blockSizeX, blockSizeY)                            \
+  kernelCopyIndices<blockSizeX, blockSizeY>                                    \
+      <<<dim3((A.localNumberOfRows - 1) / blockSizeY + 1),                     \
+         dim3(blockSizeX, blockSizeY)>>>(                                      \
           A.localNumberOfRows, A.d_nonzerosInRow, A.d_mtxIndG, A.d_mtxIndL)
 
-#define LAUNCH_SETUP_HALO(blocksizex, blocksizey)                              \
-  kernelSetupHalo<blocksizex, blocksizey>                                      \
-      <<<dim3((A.localNumberOfRows - 1) / blocksizey + 1),                     \
-         dim3(blocksizex, blocksizey)>>>(                                      \
+#define LAUNCH_SETUP_HALO(blockSizeX, blockSizeY)                              \
+  kernelSetupHalo<blockSizeX, blockSizeY>                                      \
+      <<<dim3((A.localNumberOfRows - 1) / blockSizeY + 1),                     \
+         dim3(blockSizeX, blockSizeY)>>>(                                      \
           A.localNumberOfRows, max_boundary, max_sending, max_neighbors, nx,   \
           ny, nz, (nx & (nx - 1)), (ny & (ny - 1)), (nz & (nz - 1)),           \
           A.geom->npx, A.geom->npy, A.geom->npz, A.geom->gnx,                  \

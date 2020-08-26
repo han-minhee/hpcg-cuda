@@ -27,21 +27,21 @@ const char *NULLDEVICE = "/dev/null";
 #include "../src/ReadHpcgDat.hpp"
 #include "InitInside.cuh"
 
-cudaStream_t stream_interior;
-cudaStream_t stream_halo;
+cudaStream_t streamInterior;
+cudaStream_t streamHalo;
 void *workspace;
 
 std::ofstream
     HPCG_fout; //!< output file stream for logging activities during HPCG run
 
-static int startswith(const char *s, const char *prefix) {
+static int startsWith(const char *s, const char *prefix) {
   size_t n = strlen(prefix);
   if (strncmp(s, prefix, n))
     return 0;
   return 1;
 }
 
-__global__ void kernel_warmup() {}
+__global__ void kernelWarmUp() {}
 
 int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
   int argc = *argc_p;
@@ -72,7 +72,7 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
    * need a prefix */
   for (i = 1; i <= argc && argv[i]; ++i)
     for (j = 0; j < nparams; ++j)
-      if (startswith(argv[i], cparams[j]))
+      if (startsWith(argv[i], cparams[j]))
         if (sscanf(argv[i] + strlen(cparams[j]), "%d", iparams + j) != 1)
           iparams[j] = 0;
 
@@ -137,11 +137,11 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
   // Single GPU device can be selected via cli
   // Multi GPU devices are selected automatically
   if (params.comm_size == 1) {
-    // if (ndevs <= params) {
-    //   fprintf(stderr, "Error: invalid device ID\n");
-    //   cudaDeviceReset();
-    //   exit(1);
-    // }
+    if (ndevs <= params.device) {
+      fprintf(stderr, "Error: invalid device ID\n");
+      cudaDeviceReset();
+      exit(1);
+    }
   } else {
     params.device = params.comm_rank % ndevs;
   }
@@ -150,11 +150,11 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
   CUDA_CHECK_COMMAND(cudaSetDevice(params.device));
 
   // Warm up
-  kernel_warmup<<<1, 1>>>();
+  kernelWarmUp<<<1, 1, 0, 0>>>();
 
   // Create streams
-  CUDA_CHECK_COMMAND(cudaStreamCreate(&stream_interior));
-  CUDA_CHECK_COMMAND(cudaStreamCreate(&stream_halo));
+  CUDA_CHECK_COMMAND(cudaStreamCreate(&streamInterior));
+  CUDA_CHECK_COMMAND(cudaStreamCreate(&streamHalo));
 
   // Allocate device workspace
   CUDA_CHECK_COMMAND(
@@ -166,8 +166,6 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
 #pragma omp parallel
   params.numThreads = omp_get_num_threads();
 #endif
-  //  for (i = 0; i < nparams; ++i) std::cout << "rank = "<< params.comm_rank <<
-  //  " iparam["<<i<<"] = " << iparams[i] << "\n";
 
   time(&rawtime);
   ptm = localtime(&rawtime);

@@ -14,8 +14,8 @@ int HPCG_FinalizeInside(void) {
   HPCG_fout.close();
 
   // Destroy streams
-  CUDA_CHECK_COMMAND(cudaStreamDestroy(stream_interior));
-  CUDA_CHECK_COMMAND(cudaStreamDestroy(stream_halo));
+  CUDA_CHECK_COMMAND(cudaStreamDestroy(streamInterior));
+  CUDA_CHECK_COMMAND(cudaStreamDestroy(streamHalo));
 
   // Free workspace
   CUDA_CHECK_COMMAND(cudaFree(workspace));

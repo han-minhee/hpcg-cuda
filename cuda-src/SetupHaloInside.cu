@@ -12,16 +12,16 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 
-#define LAUNCH_COPY_INDICES(blocksizex, blocksizey)                            \
-  kernelCopyIndices<blocksizex, blocksizey>                                    \
-      <<<dim3((A.localNumberOfRows - 1) / blocksizey + 1),                     \
-         dim3(blocksizex, blocksizey)>>>(                                      \
+#define LAUNCH_COPY_INDICES(blockSizeX, blockSizeY)                            \
+  kernelCopyIndices<blockSizeX, blockSizeY>                                    \
+      <<<dim3((A.localNumberOfRows - 1) / blockSizeY + 1),                     \
+         dim3(blockSizeX, blockSizeY)>>>(                                      \
           A.localNumberOfRows, A.d_nonzerosInRow, A.d_mtxIndG, A.d_mtxIndL)
 
-#define LAUNCH_SETUP_HALO(blocksizex, blocksizey)                              \
-  kernelSetupHalo<blocksizex, blocksizey>                                      \
-      <<<dim3((A.localNumberOfRows - 1) / blocksizey + 1),                     \
-         dim3(blocksizex, blocksizey)>>>(                                      \
+#define LAUNCH_SETUP_HALO(blockSizeX, blockSizeY)                              \
+  kernelSetupHalo<blockSizeX, blockSizeY>                                      \
+      <<<dim3((A.localNumberOfRows - 1) / blockSizeY + 1),                     \
+         dim3(blockSizeX, blockSizeY)>>>(                                      \
           A.localNumberOfRows, max_boundary, max_sending, max_neighbors, nx,   \
           ny, nz, (nx & (nx - 1)), (ny & (ny - 1)), (nz & (nz - 1)),           \
           A.geom->npx, A.geom->npy, A.geom->npz, A.geom->gnx,                  \
@@ -32,10 +32,8 @@
 
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
-    void kernelCopyIndices(local_int_t size,
-                           const char * nonzerosInRow,
-                           const global_int_t * mtxIndG,
-                           local_int_t * mtxIndL) {
+    void kernelCopyIndices(local_int_t size, const char *nonzerosInRow,
+                           const global_int_t *mtxIndG, local_int_t *mtxIndL) {
   local_int_t row = blockIdx.x * BLOCKSIZEY + threadIdx.y;
 
   if (row >= size) {
@@ -52,19 +50,19 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
 }
 
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
-__launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__ void kernelSetupHalo(
-    local_int_t m, local_int_t max_boundary, local_int_t max_sending,
-    local_int_t max_neighbors, local_int_t nx, local_int_t ny, local_int_t nz,
-    bool xp2, bool yp2, bool zp2, local_int_t npx, local_int_t npy,
-    local_int_t npz, global_int_t gnx, global_int_t gnxgny, global_int_t ipx0,
-    global_int_t ipy0, global_int_t ipz0,
-    const char * nonzerosInRow,
-    const global_int_t * mtxIndG, local_int_t * mtxIndL,
-    local_int_t * nsend_per_rank,
-    local_int_t * nrecv_per_rank, int * neighbors,
-    local_int_t * send_indices,
-    global_int_t * recv_indices,
-    local_int_t * halo_indices) {
+__launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
+    void kernelSetupHalo(local_int_t m, local_int_t max_boundary,
+                         local_int_t max_sending, local_int_t max_neighbors,
+                         local_int_t nx, local_int_t ny, local_int_t nz,
+                         bool xp2, bool yp2, bool zp2, local_int_t npx,
+                         local_int_t npy, local_int_t npz, global_int_t gnx,
+                         global_int_t gnxgny, global_int_t ipx0,
+                         global_int_t ipy0, global_int_t ipz0,
+                         const char *nonzerosInRow, const global_int_t *mtxIndG,
+                         local_int_t *mtxIndL, local_int_t *nsend_per_rank,
+                         local_int_t *nrecv_per_rank, int *neighbors,
+                         local_int_t *send_indices, global_int_t *recv_indices,
+                         local_int_t *halo_indices) {
 
   // Each block processes blockDim.y rows
   local_int_t currentLocalRow = blockIdx.x * BLOCKSIZEY + threadIdx.y;
@@ -165,9 +163,9 @@ template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_halo_columns(local_int_t size, local_int_t m,
                              local_int_t rank_offset,
-                             const local_int_t * halo_indices,
-                             const global_int_t * offsets,
-                             local_int_t * mtxIndL) {
+                             const local_int_t *halo_indices,
+                             const global_int_t *offsets,
+                             local_int_t *mtxIndL) {
   // 1D thread indexing
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
@@ -193,6 +191,8 @@ void SetupHaloInside(SparseMatrix &A) {
 
 #ifdef HPCG_NO_MPI
   LAUNCH_COPY_INDICES(27, 16);
+
+  // TODO: from here, only for mpi
 #else
   if (A.geom->size == 1) {
     LAUNCH_COPY_INDICES(27, 16);
@@ -501,8 +501,11 @@ void SetupHaloInside(SparseMatrix &A) {
     // 1/4
     // inclusive_scan(InputIterator first, InputIterator last, OutputIterator
     // result) -> OutputIterator
-    thrust::inclusive_scan(d_offsets + 1, d_offsets + 1, rocprim_buffer,
-                           currentRankHaloEntries);
+    thrust::inclusive_scan(d_offsets + 1, d_offsets + currentRankHaloEntries,
+                           d_offsets + 1);
+
+    // thrust::inclusive_scan(d_offsets + 1, d_offsets + 1, rocprim_buffer,
+    //                        currentRankHaloEntries);
     CUDA_CHECK_COMMAND(cudaFree(rocprim_buffer));
     rocprim_buffer = NULL;
     // // hipError_t inclusive_scan(void * temporary_storage,
