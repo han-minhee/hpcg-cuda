@@ -5,7 +5,7 @@
 #include <cuda_runtime.h>
 
 #define LAUNCH_SPMV_ELL(blocksize)                                             \
-  kernelSPMVEll<blocksize><<<dim3((A.localNumberOfRows - 1) / blocksize + 1),  \
+  kernel_spmv_ell<blocksize><<<dim3((A.localNumberOfRows - 1) / blocksize + 1),  \
                              dim3(blocksize), 0, streamInterior>>>(           \
       A.localNumberOfRows, A.nblocks, A.localNumberOfRows / A.nblocks,         \
       A.ell_width, A.ell_col_ind, A.ell_val, x.d_values, y.d_values)
@@ -13,7 +13,7 @@
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernelSPMVEllCoarse(local_int_t size, local_int_t m, local_int_t n,
+    void kernel_spmv_ell_coarse(local_int_t size, local_int_t m, local_int_t n,
                              local_int_t ell_width,
                              const local_int_t *ell_col_ind,
                              const double *ell_val, const local_int_t *perm,
@@ -46,7 +46,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernelSPMVEll(local_int_t m, int nblocks, local_int_t rows_per_block,
+    void kernel_spmv_ell(local_int_t m, int nblocks, local_int_t rows_per_block,
                        local_int_t ell_width, const local_int_t *ell_col_ind,
                        const double *ell_val, const double *x, double *y) {
   // Applies for chunks of blockDim.x * nblocks
@@ -117,6 +117,28 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   }
 #endif
 
+  // double* ellVals = new double[10];
+  // cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+  // for (int i = 0; i<10; i++){
+  //   printf("input ellval[%d] : %f\n", i, ellVals[i]);
+  // }
+
+  // free(ellVals);
+
+  // double * AVals = new double[10];
+  // double * xVals = new double[10];
+  // double * yVals = new double[10];
+
+  // cudaMemcpy(AVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(xVals, x.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(yVals, y.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+  // printf("before MV\n");
+  // for (int i = 0 ; i<10 ; i++){
+  //   printf("A, x, y [%d] : %f %f %f\n",i, AVals[i], xVals[i], yVals[i]);
+  // }
+
   if (&y != A.mgData->Axf) {
     // Number of rows per block
     local_int_t rows_per_block = A.localNumberOfRows / A.nblocks;
@@ -161,26 +183,40 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   // free(ellVals);
 
   if (&y == A.mgData->Axf) {
-    kernelSPMVEllCoarse<1024>
+    kernel_spmv_ell_coarse<1024>
         <<<dim3((A.mgData->rc->localLength - 1) / 1024 + 1), dim3(1024)>>>(
             A.mgData->rc->localLength, A.localNumberOfRows,
             A.localNumberOfColumns, A.ell_width, A.ell_col_ind, A.ell_val,
             A.perm, A.mgData->d_f2cOperator, x.d_values, y.d_values);
   }
 
-  cudaMemcpy(y.values, y.d_values, sizeof(double) * y.localLength, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(y.values, y.d_values, sizeof(double) * y.localLength, cudaMemcpyDeviceToHost);
 
-  bool caught = false;
-  for (int i = 0; i<32*32*32; i++){
-    if(y.values[i] != 0){
-      printf("Ap %d val: %f \n", i, y.values[i]);
-      caught = true;
-      break;
-    }
-  }
-  if(caught) return -1;
-  printf("finished SPMV\n");
+  // cudaMemcpy(AVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(xVals, x.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(yVals, y.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
 
+  // printf("after MV\n");
+  // for (int i = 0 ; i<10 ; i++){
+  //   printf("A, x, y [%d] : %f %f %f\n",i, AVals[i], xVals[i], yVals[i]);
+  // }
+
+  // bool caught = false;
+  // for (int i = 0; i<32*32*32; i++){
+  //   if(y.values[i] != 0){
+  //     printf("Ap %d val: %f \n", i, y.values[i]);
+  //     caught = true;
+  //     break;
+  //   }
+  // }
+  // if(caught) return -1;
+  // printf("finished SPMV\n");
+
+
+
+  // free(AVals);
+  // free(xVals);
+  // free(yVals);
 
   return 0;
 }

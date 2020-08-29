@@ -13,11 +13,10 @@
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
     void kernel_permute_ell_rows(local_int_t m, local_int_t p,
-                                 const local_int_t * tmp_cols,
-                                 const double * tmp_vals,
-                                 const local_int_t * perm,
-                                 local_int_t * ell_col_ind,
-                                 double * ell_val) {
+                                 const local_int_t *tmp_cols,
+                                 const double *tmp_vals,
+                                 const local_int_t *perm,
+                                 local_int_t *ell_col_ind, double *ell_val) {
   local_int_t row = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (row >= m) {
@@ -34,11 +33,12 @@ __launch_bounds__(BLOCKSIZE) __global__
 __device__ void swap(local_int_t &key, double &val, int mask, int dir) {
 
   // 32 is for CUDA, temporarily
-  local_int_t key1 = __shfl_xor_sync(mask, key, mask, 32);
+  local_int_t key1 = __shfl_xor(key, mask);
+  __syncthreads();
   //__shfl_xor_sync()(key, mask);
-  double val1 = __shfl_xor_sync(mask, key, mask, 32);
+  double val1 = __shfl_xor(val, mask);
   //__shfl_xor_sync(val, mask);
-
+  __syncthreads();
   if (key < key1 == dir) {
     key = key1;
     val = val1;
@@ -50,10 +50,8 @@ __device__ int get_bit(int x, int i) { return (x >> i) & 1; }
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
     void kernel_perm_cols(local_int_t m, local_int_t n,
-                          local_int_t nonzerosPerRow,
-                          const local_int_t * perm,
-                          local_int_t * mtxIndL,
-                          double * matrixValues) {
+                          local_int_t nonzerosPerRow, const local_int_t *perm,
+                          local_int_t *mtxIndL, double *matrixValues) {
   local_int_t row = blockIdx.x * BLOCKSIZEY + threadIdx.y;
   local_int_t idx = row * nonzerosPerRow + threadIdx.x;
   local_int_t key = n;
@@ -124,6 +122,22 @@ void PermuteColumns(SparseMatrix &A) {
     dim_y >>= 1;
   }
 
+  // double *perm = new double[10];
+  // double *vals = new double[10];
+  // local_int_t *mtxIndl = new local_int_t[10];
+
+  // cudaMemcpy(perm, A.perm, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(vals, A.d_matrixValues, sizeof(double) * 10,
+  //            cudaMemcpyDeviceToHost);
+  // cudaMemcpy(mtxIndl, A.d_mtxIndL, sizeof(local_int_t) * 10,
+  //            cudaMemcpyDeviceToHost);
+
+  // printf("before launch perm\n");
+  // for (int i = 0; i < 10; i++) {
+  //   printf("perm, vals, mtxIndl [%d] : %f %f %d\n", i, perm[i], vals[i],
+  //          mtxIndl[i]);
+  // }
+
   if (dim_y == 32)
     LAUNCH_PERM_COLS(32, 32);
   else if (dim_y == 16)
@@ -132,6 +146,22 @@ void PermuteColumns(SparseMatrix &A) {
     LAUNCH_PERM_COLS(32, 8);
   else
     LAUNCH_PERM_COLS(32, 4);
+
+  // cudaMemcpy(perm, A.perm, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(vals, A.d_matrixValues, sizeof(double) * 10,
+  //            cudaMemcpyDeviceToHost);
+  // cudaMemcpy(mtxIndl, A.d_mtxIndL, sizeof(local_int_t) * 10,
+  //            cudaMemcpyDeviceToHost);
+
+  // // printf("after launch perm\n");
+  // // for (int i = 0; i < 10; i++) {
+  // //   printf("perm, vals, mtxIndl [%d] : %f %f %d\n", i, perm[i], vals[i],
+  // //          mtxIndl[i]);
+  // // }
+
+  // free(perm);
+  // free(vals);
+  // free(mtxIndl);
 }
 
 void PermuteRows(SparseMatrix &A) {
@@ -165,9 +195,8 @@ void PermuteRows(SparseMatrix &A) {
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_permute(local_int_t size, const local_int_t * perm,
-                        const double * in,
-                        double * out) {
+    void kernel_permute(local_int_t size, const local_int_t *perm,
+                        const double *in, double *out) {
   local_int_t gid = blockIdx.x * BLOCKSIZE + threadIdx.x;
 
   if (gid >= size) {

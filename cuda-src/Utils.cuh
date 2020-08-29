@@ -12,12 +12,12 @@ extern void *workspace;
 
 #define debug_message false
 
-#define cudaHostRealloc(dst, temp, size)                                       \
-  cudaMalloc((void **)&temp, sizeof(dst));                                     \
-  cudaMemcpy(temp, dst, sizeof(dst), cudaMemcpyHostToHost);                    \
+#define cudaRealloc(dst, temp, smallsize, size)                                       \
+  cudaMalloc((void **)&temp, smallsize);                                     \
+  cudaMemcpy(temp, dst, smallsize, cudaMemcpyDeviceToDevice);                    \
   cudaFree(dst);                                                               \
   cudaMalloc((void **)&dst, size);                                             \
-  cudaMemcpy(dst, temp, sizeof(temp), cudaMemcpyHostToHost);                   \
+  cudaMemcpy(dst, temp, smallsize, cudaMemcpyDeviceToDevice);                   \
   cudaFree(temp);
 
 #define cudaDeviceRealloc(dst, temp, size)                                       \

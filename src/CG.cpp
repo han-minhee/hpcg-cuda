@@ -68,6 +68,13 @@ int CG(const SparseMatrix &A, CGData &data, const Vector &b, Vector &x,
   Vector &p = data.p; // Direction vector (in MPI mode ncol>=nrow)
   Vector &Ap = data.Ap;
 
+
+  double * ellVal = new double[100];
+  double * rVal = new double[100];
+  double * zVal = new double[100];
+  double * pVal = new double[100];
+  double * ApVal = new double[100];
+
   if (!doPreconditioning && A.geom->rank == 0)
     HPCG_fout << "WARNING: PERFORMING UNPRECONDITIONED ITERATIONS" << std::endl;
 
@@ -79,17 +86,56 @@ int CG(const SparseMatrix &A, CGData &data, const Vector &b, Vector &x,
     print_freq = 1;
 #endif
   // p is of length ncols, copy x to p for sparse MV operation
+  //     // printf("localLength %d\n", x.localLength);
+
+    cudaMemcpy(ApVal, x.d_values, sizeof(double) * 100, cudaMemcpyDeviceToHost);
+    // printf("localLength %d\n", 100);
+
+     for(int i = 0; i < 100; i++)
+    {
+        printf("before copy, xVal [%d] %f \n", i, ApVal[i]);
+    }
+
+// in the test, zeroVector
+
   CudaCopyVector(x, p);
+    cudaMemcpy(pVal, p.d_values, sizeof(double) * 100, cudaMemcpyDeviceToHost);
+    cudaMemcpy(ApVal, Ap.d_values, sizeof(double) * 100, cudaMemcpyDeviceToHost);
+
+    for(int i = 0; i<100; i++){
+      printf("before SPMV pVal, ApVal [%d] %f %f \n", i, pVal[i], ApVal[i]);
+    }
+
   TICK();
+  // in the test, should be zero
   ComputeSPMV(A, p, Ap);
   TOCK(t3); // Ap = A*p
+
+
+    cudaMemcpy(pVal, p.d_values, sizeof(double) * 100, cudaMemcpyDeviceToHost);
+    cudaMemcpy(ApVal, Ap.d_values, sizeof(double) * 100, cudaMemcpyDeviceToHost);
+
+    for(int i = 0; i<100; i++){
+      printf("after SPMV pVal, ApVal [%d] %f %f \n", i, pVal[i], ApVal[i]);
+    }
+
   TICK();
   ComputeWAXPBY(nrow, 1.0, b, -1.0, Ap, r, A.isWaxpbyOptimized);
   TOCK(t2); // r = b - Ax (x stored in p)
+
+  // cudaMemcpy(pVal, b.d_values, sizeof(double) * 100, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(ApVal, r.d_values, sizeof(double) * 100, cudaMemcpyDeviceToHost);
+
+  //   for(int i = 0; i<100; i++){
+  //     printf("after copy bVal, rVal [%d] %f %f \n", i, pVal[i], ApVal[i]);
+  //   }
+
   TICK();
   ComputeDotProduct(nrow, r, r, normr, t4, A.isDotProductOptimized);
   TOCK(t1);
   normr = sqrt(normr);
+      printf("current normr : %f\n", normr);
+
 #ifdef HPCG_DEBUG
   if (A.geom->rank == 0)
     HPCG_fout << "Initial Residual = " << normr << std::endl;
@@ -100,13 +146,38 @@ int CG(const SparseMatrix &A, CGData &data, const Vector &b, Vector &x,
 
   // Start iterations
   printf("=== entering CG iterations\n");
+
+
+
   for (int k = 1; k <= max_iter && normr / normr0 > tolerance; k++) {
+
+    // printf("beginning ell, r, z\n");
+
+    // cudaMemcpy(ellVal, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    //     cudaMemcpy(rVal, r.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    // cudaMemcpy(zVal, z.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+    // for(int i = 0; i<10; i++){
+    //   printf("ell r z [%d] %f %f %f\n", i, ellVal[i], rVal[i], zVal[i]);
+    // }
+
+
+
     TICK();
     if (doPreconditioning)
       ComputeMG(A, r, z); // Apply preconditioner
     else
       CudaCopyVector(r, z); // copy r to z (no preconditioning)
     TOCK(t5);               // Preconditioner apply time
+    
+    // printf("after MG, copy\n");
+    // cudaMemcpy(ellVal, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    //     cudaMemcpy(rVal, r.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    // cudaMemcpy(zVal, z.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+    // for(int i = 0; i<10; i++){
+    //   printf("ell r z [%d] %f %f %f\n", i, ellVal[i], rVal[i], zVal[i]);
+    // }
 
     if (k == 1) {
       TICK();
@@ -126,17 +197,65 @@ int CG(const SparseMatrix &A, CGData &data, const Vector &b, Vector &x,
       TOCK(t2); // p = beta*p + z
     }
 
+    //     printf("dotprod, waxpby\n");
+    // cudaMemcpy(ellVal, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    //     cudaMemcpy(rVal, r.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    // cudaMemcpy(zVal, z.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+    // for(int i = 0; i<10; i++){
+    //   printf("ell r z [%d] %f %f %f\n", i, ellVal[i], rVal[i], zVal[i]);
+    // }
+
     TICK();
     ComputeSPMV(A, p, Ap);
     TOCK(t3); // Ap = A*p
+
+    //     printf("after spmv-final, copy\n");
+    // cudaMemcpy(ellVal, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    //     cudaMemcpy(rVal, r.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    // cudaMemcpy(zVal, z.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+    // for(int i = 0; i<10; i++){
+    //   printf("ell r z [%d] %f %f %f\n", i, ellVal[i], rVal[i], zVal[i]);
+    // }
+
     TICK();
     ComputeDotProduct(nrow, p, Ap, pAp, t4, A.isDotProductOptimized);
     TOCK(t1); // alpha = p'*Ap
+
+    //     printf("after dotProd-final, copy\n");
+    // cudaMemcpy(ellVal, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    //     cudaMemcpy(rVal, r.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    // cudaMemcpy(zVal, z.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+    // for(int i = 0; i<10; i++){
+    //   printf("ell r z [%d] %f %f %f\n", i, ellVal[i], rVal[i], zVal[i]);
+    // }
+
     alpha = rtz / pAp;
 #ifndef HPCG_REFERENCE
     TICK();
     ComputeFusedWAXPBYDot(nrow, -alpha, Ap, r, normr, t4);
-    printf("normr, normr0 at %d iter: %f, %f \n", k, normr, normr0);
+    // printf("fusedWaxpby parms at %d: %d, %f, %f\n", k, nrow, -alpha, normr);
+
+    // cudaMemcpy(zVal, Ap.d_values, sizeof(double) * 100, cudaMemcpyDeviceToHost);
+
+    // for(int i = 0; i<100; i++){
+    //   printf("Ap [%d] %f\n", i, zVal[i]);
+    // }
+
+    // printf("normr, normr0 at %d iter: %f, %f \n", k, normr, normr0);
+
+
+    // printf("after fusedwaxpby, copy\n");
+    // cudaMemcpy(ellVal, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    //     cudaMemcpy(rVal, r.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+    // cudaMemcpy(zVal, z.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+    // for(int i = 0; i<10; i++){
+    //   printf("ell r z [%d] %f %f %f\n", i, ellVal[i], rVal[i], zVal[i]);
+    // }
+
     ComputeWAXPBY(nrow, 1.0, x, alpha, p, x, A.isWaxpbyOptimized);
     TOCK(t2); // x = x + alpha*p
 #else
@@ -157,6 +276,12 @@ int CG(const SparseMatrix &A, CGData &data, const Vector &b, Vector &x,
 #endif
     niters = k;
   }
+
+  free(ellVal);
+  free(rVal);
+  free(zVal);
+  free(pVal);
+  free(ApVal);
 
   // Store times
   times[1] += t1;                  // dot-product time

@@ -176,11 +176,29 @@ void ConvertToELLInside(SparseMatrix &A) {
   A.ell_val = reinterpret_cast<double *>(A.d_mtxIndG);
   A.d_mtxIndG = NULL;
 
+//   printf("first ell_vals\n");
+//   double* ellVals = new double[10];
+// cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+// for (int i = 0; i<10; i++){
+//   printf("input ellval[%d] : %f\n", i, ellVals[i]);
+// }
+
+
   // Resize
   // TODO: implement cudaRealloc
   double *tempRealloc;
-  cudaHostRealloc(A.ell_val, tempRealloc,
-                  sizeof(double) * A.ell_width * A.localNumberOfRows);
+  cudaRealloc(A.ell_val, tempRealloc, std::max(sizeof(double), sizeof(global_int_t)) *
+  A.localNumberOfRows * A.numberOfNonzerosPerRow, sizeof(double) * A.ell_width * A.localNumberOfRows);
+
+//   printf("first ell_vals\n");
+// cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+// for (int i = 0; i<10; i++){
+//   printf("input ellval[%d] : %f\n", i, ellVals[i]);
+// }
+
+
 
   // Determine blocksize
   unsigned int blocksize = 1024 / A.ell_width;
@@ -198,6 +216,23 @@ void ConvertToELLInside(SparseMatrix &A) {
     blocksize >>= 1;
   }
 
+  // double * dVals =  new double[10];
+
+  // cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+  // for (int i = 0; i<10; i++){
+  //   printf("before kernel dVals[%d] : %f\n", i, dVals[i]);
+  // }
+  // free(dVals);
+
+
+//   cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+// for (int i = 0; i<10; i++){
+//   printf("before kernel ellval[%d] : %f\n", i, ellVals[i]);
+// }
+
+
   if (blocksize == 32)
     LAUNCH_TO_ELL_VAL(27, 32);
   else if (blocksize == 16)
@@ -207,13 +242,21 @@ void ConvertToELLInside(SparseMatrix &A) {
   else
     LAUNCH_TO_ELL_VAL(27, 4);
 
+
+//     cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+// for (int i = 0; i<10; i++){
+//   printf("after kernel ellval[%d] : %f\n", i, ellVals[i]);
+// }
+
+
   // We can re-use mtxIndG array for the ELL column indices
   A.ell_col_ind = reinterpret_cast<local_int_t *>(A.d_matrixValues);
   A.d_matrixValues = NULL;
 
   // Resize the array
 
-  cudaHostRealloc(A.ell_col_ind, tempRealloc,
+  cudaRealloc(A.ell_col_ind, tempRealloc, sizeof(double) * A.localNumberOfRows * A.numberOfNonzerosPerRow,
                   sizeof(local_int_t) * A.ell_width * A.localNumberOfRows);
 
   // Convert mtxIndL into ELL column indices
@@ -234,6 +277,7 @@ void ConvertToELLInside(SparseMatrix &A) {
     LAUNCH_TO_ELL_COL(27, 8);
   else
     LAUNCH_TO_ELL_COL(27, 4);
+
 
   // Free old matrix indices
   CUDA_CHECK_COMMAND(cudaFree(A.d_mtxIndL));
@@ -268,14 +312,13 @@ void ConvertToELLInside(SparseMatrix &A) {
       A.ell_col_ind, A.ell_val, A.halo_row_ind, A.halo_col_ind, A.halo_val);
 #endif
 
-double* ellVals = new double[10];
-cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+// cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
 
-for (int i = 0; i<10; i++){
-  printf("input ellval[%d] : %f\n", i, ellVals[i]);
-}
+// for (int i = 0; i<10; i++){
+//   printf("final ellval[%d] : %f\n", i, ellVals[i]);
+// }
 
-free(ellVals);
+// free(ellVals);
 }
 
 template <unsigned int BLOCKSIZE>

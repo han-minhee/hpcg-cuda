@@ -83,7 +83,9 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
     if (k == 1)
       expected_niters = testcg_data.expected_niters_prec;
     for (int i = 0; i < numberOfCgCalls; ++i) {
+      printf("inside TestCG: %d iter\n", i);
       CudaZeroVector(x); // Zero out x
+      // cudaMemset((void **)&x.d_values, 0x00000000, x.localLength * sizeof(double));
       int ierr = CG(A, data, b, x, maxIters, tolerance, niters, normr, normr0,
                     &times[0], k == 1);
       if (ierr)

@@ -28,7 +28,7 @@ __launch_bounds__(BLOCKSIZE) __global__
   }
 }
 
-int ComputeWAXPBY(local_int_t n, double alpha, const Vector &x, double beta,
+int ComputeWAXPBYInside(local_int_t n, double alpha, const Vector &x, double beta,
                   const Vector &y, Vector &w, bool &isOptimized) {
   assert(x.localLength >= n);
   assert(y.localLength >= n);

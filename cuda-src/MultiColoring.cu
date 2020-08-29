@@ -295,7 +295,7 @@ void JPLColoring(SparseMatrix &A) {
     kernelCountColorsPart1<256>
         <<<dim3(256), dim3(256)>>>(m, color1, A.perm, tmp);
 
-    printf("entering coloring 2\n");
+    // printf("entering coloring 2\n");
      kernelCountColorsPart2<256><<<dim3(1), dim3(256)>>>(256, tmp);
 
     //      int* temp_result = new int[1];
@@ -307,7 +307,7 @@ void JPLColoring(SparseMatrix &A) {
     CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(
         &A.sizes[A.nblocks], tmp, sizeof(local_int_t), cudaMemcpyDeviceToHost));
 
-        printf("colored: %d, sizes: %d\n", colored, A.sizes[A.nblocks]);
+        // printf("colored: %d, sizes: %d\n", colored, A.sizes[A.nblocks]);
 
     kernelCountColorsPart1<256>
         <<<dim3(256), dim3(256)>>>(m, color2, A.perm, tmp);
@@ -352,7 +352,7 @@ void JPLColoring(SparseMatrix &A) {
 
   int startbit = 0;
   int endbit = 32 - __builtin_clz(A.nblocks);
-  printf("nblocks : %d\n", A.nblocks);
+  // printf("nblocks : %d\n", A.nblocks);
 
   // SortPairs (void *d_temp_storage, size_t &temp_storage_bytes, const KeyT
   // *d_keys_in, KeyT *d_keys_out, const ValueT *d_values_in, ValueT
@@ -374,24 +374,24 @@ void JPLColoring(SparseMatrix &A) {
 //   buf, size, tmp_color, A.perm, tmp_perm, perm, m, startbit, endbit));
 //   CUDA_CHECK_COMMAND(cudaFree(buf));
 
-  local_int_t * keys_temp = new local_int_t[10];
-  local_int_t * vals_temp = new local_int_t[10];
-  cudaMemcpy(keys_temp, A.perm
-  , sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
-  cudaMemcpy(vals_temp, perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
-  for (int i = 0; i< 10; i++){
-    printf("keys[%d] : %d\n", i, keys_temp[i]);
-    printf("vals[%d] : %d\n", i, vals_temp[i]);
-}
+  // local_int_t * keys_temp = new local_int_t[10];
+  // local_int_t * vals_temp = new local_int_t[10];
+  // cudaMemcpy(keys_temp, A.perm
+  // , sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(vals_temp, perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
+  // for (int i = 0; i< 10; i++){
+  //   printf("keys[%d] : %d\n", i, keys_temp[i]);
+  //   printf("vals[%d] : %d\n", i, vals_temp[i]);
+// }
 
-  cudaMemcpy(keys_temp, tmp_color
-  , sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
-  cudaMemcpy(vals_temp, tmp_perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(keys_temp, tmp_color
+  // , sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(vals_temp, tmp_perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
 
-  for (int i = 0; i< 10; i++){
-      printf("keys_temp[%d] : %d\n", i, keys_temp[i]);
-      printf("vals_temp[%d] : %d\n", i, vals_temp[i]);
-  }
+  // for (int i = 0; i< 10; i++){
+  //     printf("keys_temp[%d] : %d\n", i, keys_temp[i]);
+  //     printf("vals_temp[%d] : %d\n", i, vals_temp[i]);
+  // }
 
 
 
@@ -399,19 +399,19 @@ void JPLColoring(SparseMatrix &A) {
   kernel_create_perm<1024>
       <<<dim3((m - 1) / 1024 + 1), dim3(1024)>>>(m, tmp_perm, A.perm);
 
-      cudaMemcpy(keys_temp, A.perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
+    //   cudaMemcpy(keys_temp, A.perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
 
-      for (int i = 0; i< 10; i++){
-        printf("final perm[%d] : %d\n", i, keys_temp[i]);
-    }
+    //   for (int i = 0; i< 10; i++){
+    //     printf("final perm[%d] : %d\n", i, keys_temp[i]);
+    // }
   
     //DONE: 08/27/2020 02:24
 
   CUDA_CHECK_COMMAND(cudaFree(tmp_color));
   CUDA_CHECK_COMMAND(cudaFree(tmp_perm));
   CUDA_CHECK_COMMAND(cudaFree(perm));
-  free(keys_temp);
-  free(vals_temp);
+  // free(keys_temp);
+  // free(vals_temp);
 #ifndef HPCG_REFERENCE
   --A.ublocks;
 #endif

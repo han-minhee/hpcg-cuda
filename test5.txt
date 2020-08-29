@@ -1,0 +1,5324 @@
+nvcc -c --compiler-options= "-fomit-frame-pointer -O3 -funroll-loops -W -Wall"  -DHPCG_NO_MPI -DHPCG_NO_OPENMP -I./src -I./cuda-src  -I./src src/CG.cpp -o src/CG.o
+nvcc --compiler-options= "-fomit-frame-pointer -O3 -funroll-loops -W -Wall"  -DHPCG_NO_MPI -DHPCG_NO_OPENMP -I./src -I./cuda-src  src/main.o -DHPCG_NO_MPI -DHPCG_NO_OPENMP src/CG.o src/CG_ref.o src/TestCG.o src/ComputeResidual.o src/ExchangeHalo.o src/GenerateGeometry.o src/GenerateProblem.o src/GenerateProblem_ref.o src/CheckProblem.o src/MixedBaseCounter.o src/OptimizeProblem.o src/ReadHpcgDat.o src/ReportResults.o src/SetupHalo.o src/SetupHalo_ref.o src/TestSymmetry.o src/TestNorms.o src/WriteProblem.o src/YAML_Doc.o src/YAML_Element.o src/ComputeDotProduct.o src/ComputeDotProduct_ref.o src/mytimer.o src/ComputeOptimalShapeXYZ.o src/ComputeSPMV.o src/ComputeSPMV_ref.o src/ComputeSYMGS.o src/ComputeSYMGS_ref.o src/ComputeWAXPBY.o src/ComputeWAXPBY_ref.o src/ComputeMG_ref.o src/ComputeMG.o src/ComputeProlongation_ref.o src/ComputeRestriction_ref.o src/CheckAspectRatio.o src/OutputFile.o src/GenerateCoarseProblem.o src/init.o src/finalize.o cuda-src/ComputeDotProductInside.o cuda-src/ComputeMGInside.o cuda-src/ComputeProlongationInside.o cuda-src/ComputeResidualInside.o cuda-src/ComputeRestrictionInside.o cuda-src/ComputeSPMVInside.o cuda-src/ComputeWAXPBYInside.o cuda-src/ExchangeHaloInside.o cuda-src/finalizeInside.o cuda-src/GenerateCoarseProblemInside.o cuda-src/GenerateProblemInside.o cuda-src/InitInside.o cuda-src/MultiColoring.o cuda-src/Permute.o cuda-src/SetupHaloInside.o cuda-src/SparseMatrixInside.o cuda-src/TestCGInside.o cuda-src/TestSymmetryInside.o cuda-src/Utils.o cuda-src/VectorInside.o cuda-src/ComputeSYMGSInside.o  -lcuda -lcudart -lcublas -lcusparse -o bin/xhpcg
+Using CUDA device (0): Tesla V100-PCIE-16GB (16160 MB global memory)
+
+Setup Phase took 0.00 sec
+
+Copying GPU assembled data to host for reference computations
+
+Checking assembled data ...
+entering coloring 2
+colored: 0, sizes: 4096
+entering coloring 2
+colored: 8192, sizes: 4096
+entering coloring 2
+colored: 16384, sizes: 4096
+entering coloring 2
+colored: 24576, sizes: 4096
+finished JPLCoring @ opt
+finished PermuteColumns @ opt
+before kernel dVals[0] : -1.000000
+before kernel dVals[1] : -1.000000
+before kernel dVals[2] : -1.000000
+before kernel dVals[3] : -1.000000
+before kernel dVals[4] : -1.000000
+before kernel dVals[5] : -1.000000
+before kernel dVals[6] : -1.000000
+before kernel dVals[7] : 26.000000
+before kernel dVals[8] : 0.000000
+before kernel dVals[9] : 0.000000
+entering coloring 2
+colored: 0, sizes: 512
+entering coloring 2
+colored: 1024, sizes: 512
+entering coloring 2
+colored: 2048, sizes: 512
+entering coloring 2
+colored: 3072, sizes: 512
+before kernel dVals[0] : -1.000000
+before kernel dVals[1] : -1.000000
+before kernel dVals[2] : -1.000000
+before kernel dVals[3] : -1.000000
+before kernel dVals[4] : -1.000000
+before kernel dVals[5] : -1.000000
+before kernel dVals[6] : -1.000000
+before kernel dVals[7] : 26.000000
+before kernel dVals[8] : 0.000000
+before kernel dVals[9] : 0.000000
+entering coloring 2
+colored: 0, sizes: 64
+entering coloring 2
+colored: 128, sizes: 64
+entering coloring 2
+colored: 256, sizes: 64
+entering coloring 2
+colored: 384, sizes: 64
+before kernel dVals[0] : -1.000000
+before kernel dVals[1] : -1.000000
+before kernel dVals[2] : -1.000000
+before kernel dVals[3] : -1.000000
+before kernel dVals[4] : -1.000000
+before kernel dVals[5] : -1.000000
+before kernel dVals[6] : -1.000000
+before kernel dVals[7] : 26.000000
+before kernel dVals[8] : 0.000000
+before kernel dVals[9] : 0.000000
+entering coloring 2
+colored: 0, sizes: 8
+entering coloring 2
+colored: 16, sizes: 8
+entering coloring 2
+colored: 32, sizes: 8
+entering coloring 2
+colored: 48, sizes: 8
+before kernel dVals[0] : -1.000000
+before kernel dVals[1] : -1.000000
+before kernel dVals[2] : -1.000000
+before kernel dVals[3] : -1.000000
+before kernel dVals[4] : -1.000000
+before kernel dVals[5] : -1.000000
+before kernel dVals[6] : -1.000000
+before kernel dVals[7] : 26.000000
+before kernel dVals[8] : 0.000000
+before kernel dVals[9] : 0.000000
+==== TestCGInside Copying finished ====
+==== TestCGInside Scaling finished ====
+inside TestCG: 0 iter
+====entering CG====
+before SPMV pVal, ApVal [0] 0.000000 0.000000 
+before SPMV pVal, ApVal [1] 0.000000 0.000000 
+before SPMV pVal, ApVal [2] 0.000000 0.000000 
+before SPMV pVal, ApVal [3] 0.000000 0.000000 
+before SPMV pVal, ApVal [4] 0.000000 0.000000 
+before SPMV pVal, ApVal [5] 0.000000 0.000000 
+before SPMV pVal, ApVal [6] 0.000000 0.000000 
+before SPMV pVal, ApVal [7] 0.000000 0.000000 
+before SPMV pVal, ApVal [8] 0.000000 0.000000 
+before SPMV pVal, ApVal [9] 0.000000 0.000000 
+before SPMV pVal, ApVal [10] 0.000000 0.000000 
+before SPMV pVal, ApVal [11] 0.000000 0.000000 
+before SPMV pVal, ApVal [12] 0.000000 0.000000 
+before SPMV pVal, ApVal [13] 0.000000 0.000000 
+before SPMV pVal, ApVal [14] 0.000000 0.000000 
+before SPMV pVal, ApVal [15] 0.000000 0.000000 
+before SPMV pVal, ApVal [16] 0.000000 0.000000 
+before SPMV pVal, ApVal [17] 0.000000 0.000000 
+before SPMV pVal, ApVal [18] 0.000000 0.000000 
+before SPMV pVal, ApVal [19] 0.000000 0.000000 
+before SPMV pVal, ApVal [20] 0.000000 0.000000 
+before SPMV pVal, ApVal [21] 0.000000 0.000000 
+before SPMV pVal, ApVal [22] 0.000000 0.000000 
+before SPMV pVal, ApVal [23] 0.000000 0.000000 
+before SPMV pVal, ApVal [24] 0.000000 0.000000 
+before SPMV pVal, ApVal [25] 0.000000 0.000000 
+before SPMV pVal, ApVal [26] 0.000000 0.000000 
+before SPMV pVal, ApVal [27] 0.000000 0.000000 
+before SPMV pVal, ApVal [28] 0.000000 0.000000 
+before SPMV pVal, ApVal [29] 0.000000 0.000000 
+before SPMV pVal, ApVal [30] 0.000000 0.000000 
+before SPMV pVal, ApVal [31] 0.000000 0.000000 
+before SPMV pVal, ApVal [32] 0.000000 0.000000 
+before SPMV pVal, ApVal [33] 0.000000 0.000000 
+before SPMV pVal, ApVal [34] 0.000000 0.000000 
+before SPMV pVal, ApVal [35] 0.000000 0.000000 
+before SPMV pVal, ApVal [36] 0.000000 0.000000 
+before SPMV pVal, ApVal [37] 0.000000 0.000000 
+before SPMV pVal, ApVal [38] 0.000000 0.000000 
+before SPMV pVal, ApVal [39] 0.000000 0.000000 
+before SPMV pVal, ApVal [40] 0.000000 0.000000 
+before SPMV pVal, ApVal [41] 0.000000 0.000000 
+before SPMV pVal, ApVal [42] 0.000000 0.000000 
+before SPMV pVal, ApVal [43] 0.000000 0.000000 
+before SPMV pVal, ApVal [44] 0.000000 0.000000 
+before SPMV pVal, ApVal [45] 0.000000 0.000000 
+before SPMV pVal, ApVal [46] 0.000000 0.000000 
+before SPMV pVal, ApVal [47] 0.000000 0.000000 
+before SPMV pVal, ApVal [48] 0.000000 0.000000 
+before SPMV pVal, ApVal [49] 0.000000 0.000000 
+before SPMV pVal, ApVal [50] 0.000000 0.000000 
+before SPMV pVal, ApVal [51] 0.000000 0.000000 
+before SPMV pVal, ApVal [52] 0.000000 0.000000 
+before SPMV pVal, ApVal [53] 0.000000 0.000000 
+before SPMV pVal, ApVal [54] 0.000000 0.000000 
+before SPMV pVal, ApVal [55] 0.000000 0.000000 
+before SPMV pVal, ApVal [56] 0.000000 0.000000 
+before SPMV pVal, ApVal [57] 0.000000 0.000000 
+before SPMV pVal, ApVal [58] 0.000000 0.000000 
+before SPMV pVal, ApVal [59] 0.000000 0.000000 
+before SPMV pVal, ApVal [60] 0.000000 0.000000 
+before SPMV pVal, ApVal [61] 0.000000 0.000000 
+before SPMV pVal, ApVal [62] 0.000000 0.000000 
+before SPMV pVal, ApVal [63] 0.000000 0.000000 
+before SPMV pVal, ApVal [64] 0.000000 0.000000 
+before SPMV pVal, ApVal [65] 0.000000 0.000000 
+before SPMV pVal, ApVal [66] 0.000000 0.000000 
+before SPMV pVal, ApVal [67] 0.000000 0.000000 
+before SPMV pVal, ApVal [68] 0.000000 0.000000 
+before SPMV pVal, ApVal [69] 0.000000 0.000000 
+before SPMV pVal, ApVal [70] 0.000000 0.000000 
+before SPMV pVal, ApVal [71] 0.000000 0.000000 
+before SPMV pVal, ApVal [72] 0.000000 0.000000 
+before SPMV pVal, ApVal [73] 0.000000 0.000000 
+before SPMV pVal, ApVal [74] 0.000000 0.000000 
+before SPMV pVal, ApVal [75] 0.000000 0.000000 
+before SPMV pVal, ApVal [76] 0.000000 0.000000 
+before SPMV pVal, ApVal [77] 0.000000 0.000000 
+before SPMV pVal, ApVal [78] 0.000000 0.000000 
+before SPMV pVal, ApVal [79] 0.000000 0.000000 
+before SPMV pVal, ApVal [80] 0.000000 0.000000 
+before SPMV pVal, ApVal [81] 0.000000 0.000000 
+before SPMV pVal, ApVal [82] 0.000000 0.000000 
+before SPMV pVal, ApVal [83] 0.000000 0.000000 
+before SPMV pVal, ApVal [84] 0.000000 0.000000 
+before SPMV pVal, ApVal [85] 0.000000 0.000000 
+before SPMV pVal, ApVal [86] 0.000000 0.000000 
+before SPMV pVal, ApVal [87] 0.000000 0.000000 
+before SPMV pVal, ApVal [88] 0.000000 0.000000 
+before SPMV pVal, ApVal [89] 0.000000 0.000000 
+before SPMV pVal, ApVal [90] 0.000000 0.000000 
+before SPMV pVal, ApVal [91] 0.000000 0.000000 
+before SPMV pVal, ApVal [92] 0.000000 0.000000 
+before SPMV pVal, ApVal [93] 0.000000 0.000000 
+before SPMV pVal, ApVal [94] 0.000000 0.000000 
+before SPMV pVal, ApVal [95] 0.000000 0.000000 
+before SPMV pVal, ApVal [96] 0.000000 0.000000 
+before SPMV pVal, ApVal [97] 0.000000 0.000000 
+before SPMV pVal, ApVal [98] 0.000000 0.000000 
+before SPMV pVal, ApVal [99] 0.000000 0.000000 
+finished SPMV
+before Waxpby bVal, rVal [0] 0.000000 1.000000 
+before Waxpby bVal, rVal [1] 0.000000 1.000000 
+before Waxpby bVal, rVal [2] 0.000000 1.000000 
+before Waxpby bVal, rVal [3] 0.000000 1.000000 
+before Waxpby bVal, rVal [4] 0.000000 1.000000 
+before Waxpby bVal, rVal [5] 0.000000 1.000000 
+before Waxpby bVal, rVal [6] 0.000000 1.000000 
+before Waxpby bVal, rVal [7] 0.000000 1.000000 
+before Waxpby bVal, rVal [8] 0.000000 1.000000 
+before Waxpby bVal, rVal [9] 0.000000 1.000000 
+before Waxpby bVal, rVal [10] 0.000000 1.000000 
+before Waxpby bVal, rVal [11] 0.000000 1.000000 
+before Waxpby bVal, rVal [12] 0.000000 1.000000 
+before Waxpby bVal, rVal [13] 0.000000 1.000000 
+before Waxpby bVal, rVal [14] 0.000000 1.000000 
+before Waxpby bVal, rVal [15] 9000000.000000 1.000000 
+before Waxpby bVal, rVal [16] 0.000000 1.000000 
+before Waxpby bVal, rVal [17] 0.000000 1.000000 
+before Waxpby bVal, rVal [18] 0.000000 1.000000 
+before Waxpby bVal, rVal [19] 0.000000 1.000000 
+before Waxpby bVal, rVal [20] 0.000000 1.000000 
+before Waxpby bVal, rVal [21] 0.000000 1.000000 
+before Waxpby bVal, rVal [22] 0.000000 1.000000 
+before Waxpby bVal, rVal [23] 0.000000 1.000000 
+before Waxpby bVal, rVal [24] 0.000000 1.000000 
+before Waxpby bVal, rVal [25] 0.000000 1.000000 
+before Waxpby bVal, rVal [26] 0.000000 1.000000 
+before Waxpby bVal, rVal [27] 0.000000 1.000000 
+before Waxpby bVal, rVal [28] 0.000000 1.000000 
+before Waxpby bVal, rVal [29] 0.000000 1.000000 
+before Waxpby bVal, rVal [30] 0.000000 1.000000 
+before Waxpby bVal, rVal [31] 9000000.000000 1.000000 
+before Waxpby bVal, rVal [32] 0.000000 1.000000 
+before Waxpby bVal, rVal [33] 0.000000 1.000000 
+before Waxpby bVal, rVal [34] 0.000000 1.000000 
+before Waxpby bVal, rVal [35] 0.000000 1.000000 
+before Waxpby bVal, rVal [36] 0.000000 1.000000 
+before Waxpby bVal, rVal [37] 0.000000 1.000000 
+before Waxpby bVal, rVal [38] 0.000000 1.000000 
+before Waxpby bVal, rVal [39] 0.000000 1.000000 
+before Waxpby bVal, rVal [40] 0.000000 1.000000 
+before Waxpby bVal, rVal [41] 0.000000 1.000000 
+before Waxpby bVal, rVal [42] 0.000000 1.000000 
+before Waxpby bVal, rVal [43] 0.000000 1.000000 
+before Waxpby bVal, rVal [44] 0.000000 1.000000 
+before Waxpby bVal, rVal [45] 0.000000 1.000000 
+before Waxpby bVal, rVal [46] 0.000000 1.000000 
+before Waxpby bVal, rVal [47] 9000000.000000 1.000000 
+before Waxpby bVal, rVal [48] 0.000000 1.000000 
+before Waxpby bVal, rVal [49] 0.000000 1.000000 
+before Waxpby bVal, rVal [50] 0.000000 1.000000 
+before Waxpby bVal, rVal [51] 0.000000 1.000000 
+before Waxpby bVal, rVal [52] 0.000000 1.000000 
+before Waxpby bVal, rVal [53] 0.000000 1.000000 
+before Waxpby bVal, rVal [54] 0.000000 1.000000 
+before Waxpby bVal, rVal [55] 0.000000 1.000000 
+before Waxpby bVal, rVal [56] 0.000000 1.000000 
+before Waxpby bVal, rVal [57] 0.000000 1.000000 
+before Waxpby bVal, rVal [58] 0.000000 1.000000 
+before Waxpby bVal, rVal [59] 0.000000 1.000000 
+before Waxpby bVal, rVal [60] 0.000000 1.000000 
+before Waxpby bVal, rVal [61] 0.000000 1.000000 
+before Waxpby bVal, rVal [62] 0.000000 1.000000 
+before Waxpby bVal, rVal [63] 9000000.000000 1.000000 
+before Waxpby bVal, rVal [64] 0.000000 1.000000 
+before Waxpby bVal, rVal [65] 0.000000 1.000000 
+before Waxpby bVal, rVal [66] 0.000000 1.000000 
+before Waxpby bVal, rVal [67] 0.000000 1.000000 
+before Waxpby bVal, rVal [68] 0.000000 1.000000 
+before Waxpby bVal, rVal [69] 0.000000 1.000000 
+before Waxpby bVal, rVal [70] 0.000000 1.000000 
+before Waxpby bVal, rVal [71] 0.000000 1.000000 
+before Waxpby bVal, rVal [72] 0.000000 1.000000 
+before Waxpby bVal, rVal [73] 0.000000 1.000000 
+before Waxpby bVal, rVal [74] 0.000000 1.000000 
+before Waxpby bVal, rVal [75] 0.000000 1.000000 
+before Waxpby bVal, rVal [76] 0.000000 1.000000 
+before Waxpby bVal, rVal [77] 0.000000 1.000000 
+before Waxpby bVal, rVal [78] 0.000000 1.000000 
+before Waxpby bVal, rVal [79] 9000000.000000 1.000000 
+before Waxpby bVal, rVal [80] 0.000000 1.000000 
+before Waxpby bVal, rVal [81] 0.000000 1.000000 
+before Waxpby bVal, rVal [82] 0.000000 1.000000 
+before Waxpby bVal, rVal [83] 0.000000 1.000000 
+before Waxpby bVal, rVal [84] 0.000000 1.000000 
+before Waxpby bVal, rVal [85] 0.000000 1.000000 
+before Waxpby bVal, rVal [86] 0.000000 1.000000 
+before Waxpby bVal, rVal [87] 0.000000 1.000000 
+before Waxpby bVal, rVal [88] 0.000000 1.000000 
+before Waxpby bVal, rVal [89] 0.000000 1.000000 
+before Waxpby bVal, rVal [90] 0.000000 1.000000 
+before Waxpby bVal, rVal [91] 0.000000 1.000000 
+before Waxpby bVal, rVal [92] 0.000000 1.000000 
+before Waxpby bVal, rVal [93] 0.000000 1.000000 
+before Waxpby bVal, rVal [94] 0.000000 1.000000 
+before Waxpby bVal, rVal [95] 9000000.000000 1.000000 
+before Waxpby bVal, rVal [96] 0.000000 1.000000 
+before Waxpby bVal, rVal [97] 0.000000 1.000000 
+before Waxpby bVal, rVal [98] 0.000000 1.000000 
+before Waxpby bVal, rVal [99] 0.000000 1.000000 
+after copy bVal, rVal [0] 0.000000 0.000000 
+after copy bVal, rVal [1] 0.000000 0.000000 
+after copy bVal, rVal [2] 0.000000 0.000000 
+after copy bVal, rVal [3] 0.000000 0.000000 
+after copy bVal, rVal [4] 0.000000 0.000000 
+after copy bVal, rVal [5] 0.000000 0.000000 
+after copy bVal, rVal [6] 0.000000 0.000000 
+after copy bVal, rVal [7] 0.000000 0.000000 
+after copy bVal, rVal [8] 0.000000 0.000000 
+after copy bVal, rVal [9] 0.000000 0.000000 
+after copy bVal, rVal [10] 0.000000 0.000000 
+after copy bVal, rVal [11] 0.000000 0.000000 
+after copy bVal, rVal [12] 0.000000 0.000000 
+after copy bVal, rVal [13] 0.000000 0.000000 
+after copy bVal, rVal [14] 0.000000 0.000000 
+after copy bVal, rVal [15] 9000000.000000 9000000.000000 
+after copy bVal, rVal [16] 0.000000 0.000000 
+after copy bVal, rVal [17] 0.000000 0.000000 
+after copy bVal, rVal [18] 0.000000 0.000000 
+after copy bVal, rVal [19] 0.000000 0.000000 
+after copy bVal, rVal [20] 0.000000 0.000000 
+after copy bVal, rVal [21] 0.000000 0.000000 
+after copy bVal, rVal [22] 0.000000 0.000000 
+after copy bVal, rVal [23] 0.000000 0.000000 
+after copy bVal, rVal [24] 0.000000 0.000000 
+after copy bVal, rVal [25] 0.000000 0.000000 
+after copy bVal, rVal [26] 0.000000 0.000000 
+after copy bVal, rVal [27] 0.000000 0.000000 
+after copy bVal, rVal [28] 0.000000 0.000000 
+after copy bVal, rVal [29] 0.000000 0.000000 
+after copy bVal, rVal [30] 0.000000 0.000000 
+after copy bVal, rVal [31] 9000000.000000 9000000.000000 
+after copy bVal, rVal [32] 0.000000 0.000000 
+after copy bVal, rVal [33] 0.000000 0.000000 
+after copy bVal, rVal [34] 0.000000 0.000000 
+after copy bVal, rVal [35] 0.000000 0.000000 
+after copy bVal, rVal [36] 0.000000 0.000000 
+after copy bVal, rVal [37] 0.000000 0.000000 
+after copy bVal, rVal [38] 0.000000 0.000000 
+after copy bVal, rVal [39] 0.000000 0.000000 
+after copy bVal, rVal [40] 0.000000 0.000000 
+after copy bVal, rVal [41] 0.000000 0.000000 
+after copy bVal, rVal [42] 0.000000 0.000000 
+after copy bVal, rVal [43] 0.000000 0.000000 
+after copy bVal, rVal [44] 0.000000 0.000000 
+after copy bVal, rVal [45] 0.000000 0.000000 
+after copy bVal, rVal [46] 0.000000 0.000000 
+after copy bVal, rVal [47] 9000000.000000 9000000.000000 
+after copy bVal, rVal [48] 0.000000 0.000000 
+after copy bVal, rVal [49] 0.000000 0.000000 
+after copy bVal, rVal [50] 0.000000 0.000000 
+after copy bVal, rVal [51] 0.000000 0.000000 
+after copy bVal, rVal [52] 0.000000 0.000000 
+after copy bVal, rVal [53] 0.000000 0.000000 
+after copy bVal, rVal [54] 0.000000 0.000000 
+after copy bVal, rVal [55] 0.000000 0.000000 
+after copy bVal, rVal [56] 0.000000 0.000000 
+after copy bVal, rVal [57] 0.000000 0.000000 
+after copy bVal, rVal [58] 0.000000 0.000000 
+after copy bVal, rVal [59] 0.000000 0.000000 
+after copy bVal, rVal [60] 0.000000 0.000000 
+after copy bVal, rVal [61] 0.000000 0.000000 
+after copy bVal, rVal [62] 0.000000 0.000000 
+after copy bVal, rVal [63] 9000000.000000 9000000.000000 
+after copy bVal, rVal [64] 0.000000 0.000000 
+after copy bVal, rVal [65] 0.000000 0.000000 
+after copy bVal, rVal [66] 0.000000 0.000000 
+after copy bVal, rVal [67] 0.000000 0.000000 
+after copy bVal, rVal [68] 0.000000 0.000000 
+after copy bVal, rVal [69] 0.000000 0.000000 
+after copy bVal, rVal [70] 0.000000 0.000000 
+after copy bVal, rVal [71] 0.000000 0.000000 
+after copy bVal, rVal [72] 0.000000 0.000000 
+after copy bVal, rVal [73] 0.000000 0.000000 
+after copy bVal, rVal [74] 0.000000 0.000000 
+after copy bVal, rVal [75] 0.000000 0.000000 
+after copy bVal, rVal [76] 0.000000 0.000000 
+after copy bVal, rVal [77] 0.000000 0.000000 
+after copy bVal, rVal [78] 0.000000 0.000000 
+after copy bVal, rVal [79] 9000000.000000 9000000.000000 
+after copy bVal, rVal [80] 0.000000 0.000000 
+after copy bVal, rVal [81] 0.000000 0.000000 
+after copy bVal, rVal [82] 0.000000 0.000000 
+after copy bVal, rVal [83] 0.000000 0.000000 
+after copy bVal, rVal [84] 0.000000 0.000000 
+after copy bVal, rVal [85] 0.000000 0.000000 
+after copy bVal, rVal [86] 0.000000 0.000000 
+after copy bVal, rVal [87] 0.000000 0.000000 
+after copy bVal, rVal [88] 0.000000 0.000000 
+after copy bVal, rVal [89] 0.000000 0.000000 
+after copy bVal, rVal [90] 0.000000 0.000000 
+after copy bVal, rVal [91] 0.000000 0.000000 
+after copy bVal, rVal [92] 0.000000 0.000000 
+after copy bVal, rVal [93] 0.000000 0.000000 
+after copy bVal, rVal [94] 0.000000 0.000000 
+after copy bVal, rVal [95] 9000000.000000 9000000.000000 
+after copy bVal, rVal [96] 0.000000 0.000000 
+after copy bVal, rVal [97] 0.000000 0.000000 
+after copy bVal, rVal [98] 0.000000 0.000000 
+after copy bVal, rVal [99] 0.000000 0.000000 
+current normr : 722002770.077789
+=== entering CG iterations
+beginning ell, r, z
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 1: 32768, -0.000000, 60816.994877
+Ap [0] -217000000.000000
+Ap [1] -153000000.000000
+Ap [2] -153000000.000000
+Ap [3] -153000000.000000
+Ap [4] -153000000.000000
+Ap [5] -153000000.000000
+Ap [6] -153000000.000000
+Ap [7] -153000000.000000
+Ap [8] -153000000.000000
+Ap [9] -153000000.000000
+Ap [10] -153000000.000000
+Ap [11] -153000000.000000
+Ap [12] -153000000.000000
+Ap [13] -153000000.000000
+Ap [14] -153000000.000000
+Ap [15] 233999843000000.000000
+Ap [16] -153000000.000000
+Ap [17] -81000000.000000
+Ap [18] -81000000.000000
+Ap [19] -81000000.000000
+Ap [20] -81000000.000000
+Ap [21] -81000000.000000
+Ap [22] -81000000.000000
+Ap [23] -81000000.000000
+Ap [24] -81000000.000000
+Ap [25] -81000000.000000
+Ap [26] -81000000.000000
+Ap [27] -81000000.000000
+Ap [28] -81000000.000000
+Ap [29] -81000000.000000
+Ap [30] -81000000.000000
+Ap [31] 233999883000000.000000
+Ap [32] -153000000.000000
+Ap [33] -81000000.000000
+Ap [34] -81000000.000000
+Ap [35] -81000000.000000
+Ap [36] -81000000.000000
+Ap [37] -81000000.000000
+Ap [38] -81000000.000000
+Ap [39] -81000000.000000
+Ap [40] -81000000.000000
+Ap [41] -81000000.000000
+Ap [42] -81000000.000000
+Ap [43] -81000000.000000
+Ap [44] -81000000.000000
+Ap [45] -81000000.000000
+Ap [46] -81000000.000000
+Ap [47] 233999883000000.000000
+Ap [48] -153000000.000000
+Ap [49] -81000000.000000
+Ap [50] -81000000.000000
+Ap [51] -81000000.000000
+Ap [52] -81000000.000000
+Ap [53] -81000000.000000
+Ap [54] -81000000.000000
+Ap [55] -81000000.000000
+Ap [56] -81000000.000000
+Ap [57] -81000000.000000
+Ap [58] -81000000.000000
+Ap [59] -81000000.000000
+Ap [60] -81000000.000000
+Ap [61] -81000000.000000
+Ap [62] -81000000.000000
+Ap [63] 233999883000000.000000
+Ap [64] -153000000.000000
+Ap [65] -81000000.000000
+Ap [66] -81000000.000000
+Ap [67] -81000000.000000
+Ap [68] -81000000.000000
+Ap [69] -81000000.000000
+Ap [70] -81000000.000000
+Ap [71] -81000000.000000
+Ap [72] -81000000.000000
+Ap [73] -81000000.000000
+Ap [74] -81000000.000000
+Ap [75] -81000000.000000
+Ap [76] -81000000.000000
+Ap [77] -81000000.000000
+Ap [78] -81000000.000000
+Ap [79] 233999883000000.000000
+Ap [80] -153000000.000000
+Ap [81] -81000000.000000
+Ap [82] -81000000.000000
+Ap [83] -81000000.000000
+Ap [84] -81000000.000000
+Ap [85] -81000000.000000
+Ap [86] -81000000.000000
+Ap [87] -81000000.000000
+Ap [88] -81000000.000000
+Ap [89] -81000000.000000
+Ap [90] -81000000.000000
+Ap [91] -81000000.000000
+Ap [92] -81000000.000000
+Ap [93] -81000000.000000
+Ap [94] -81000000.000000
+Ap [95] 233999883000000.000000
+Ap [96] -153000000.000000
+Ap [97] -81000000.000000
+Ap [98] -81000000.000000
+Ap [99] -81000000.000000
+normr, normr0 at 1 iter: 60816.994877, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 8.346156 0.000000
+ell r z [1] 78000000.000000 5.884617 0.000000
+ell r z [2] 104000000.000000 5.884617 0.000000
+ell r z [3] 130000000.000000 5.884617 0.000000
+ell r z [4] 156000000.000000 5.884617 0.000000
+ell r z [5] 182000000.000000 5.884617 0.000000
+ell r z [6] 208000000.000000 5.884617 0.000000
+ell r z [7] 234000000.000000 5.884617 0.000000
+ell r z [8] 260000000.000000 5.884617 0.000000
+ell r z [9] 26000000.000000 5.884617 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 8.346156 0.000000
+ell r z [1] 78000000.000000 5.884617 0.000000
+ell r z [2] 104000000.000000 5.884617 0.000000
+ell r z [3] 130000000.000000 5.884617 0.000000
+ell r z [4] 156000000.000000 5.884617 0.000000
+ell r z [5] 182000000.000000 5.884617 0.000000
+ell r z [6] 208000000.000000 5.884617 0.000000
+ell r z [7] 234000000.000000 5.884617 0.000000
+ell r z [8] 260000000.000000 5.884617 0.000000
+ell r z [9] 26000000.000000 5.884617 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 8.346156 8.346156
+ell r z [1] 78000000.000000 5.884617 5.884617
+ell r z [2] 104000000.000000 5.884617 5.884617
+ell r z [3] 130000000.000000 5.884617 5.884617
+ell r z [4] 156000000.000000 5.884617 5.884617
+ell r z [5] 182000000.000000 5.884617 5.884617
+ell r z [6] 208000000.000000 5.884617 5.884617
+ell r z [7] 234000000.000000 5.884617 5.884617
+ell r z [8] 260000000.000000 5.884617 5.884617
+ell r z [9] 26000000.000000 5.884617 5.884617
+dotprod, waxpby
+ell r z [0] 52000000.000000 8.346156 8.346156
+ell r z [1] 78000000.000000 5.884617 5.884617
+ell r z [2] 104000000.000000 5.884617 5.884617
+ell r z [3] 130000000.000000 5.884617 5.884617
+ell r z [4] 156000000.000000 5.884617 5.884617
+ell r z [5] 182000000.000000 5.884617 5.884617
+ell r z [6] 208000000.000000 5.884617 5.884617
+ell r z [7] 234000000.000000 5.884617 5.884617
+ell r z [8] 260000000.000000 5.884617 5.884617
+ell r z [9] 26000000.000000 5.884617 5.884617
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 8.346156 8.346156
+ell r z [1] 78000000.000000 5.884617 5.884617
+ell r z [2] 104000000.000000 5.884617 5.884617
+ell r z [3] 130000000.000000 5.884617 5.884617
+ell r z [4] 156000000.000000 5.884617 5.884617
+ell r z [5] 182000000.000000 5.884617 5.884617
+ell r z [6] 208000000.000000 5.884617 5.884617
+ell r z [7] 234000000.000000 5.884617 5.884617
+ell r z [8] 260000000.000000 5.884617 5.884617
+ell r z [9] 26000000.000000 5.884617 5.884617
+after dotProd-final, copy
+ell r z [0] 52000000.000000 8.346156 8.346156
+ell r z [1] 78000000.000000 5.884617 5.884617
+ell r z [2] 104000000.000000 5.884617 5.884617
+ell r z [3] 130000000.000000 5.884617 5.884617
+ell r z [4] 156000000.000000 5.884617 5.884617
+ell r z [5] 182000000.000000 5.884617 5.884617
+ell r z [6] 208000000.000000 5.884617 5.884617
+ell r z [7] 234000000.000000 5.884617 5.884617
+ell r z [8] 260000000.000000 5.884617 5.884617
+ell r z [9] 26000000.000000 5.884617 5.884617
+fusedWaxpby parms at 2: 32768, -0.000000, 9365.332409
+Ap [0] 434000099.311207
+Ap [1] 459000108.736033
+Ap [2] 612000156.862361
+Ap [3] 765000204.988688
+Ap [4] 918000253.115016
+Ap [5] 1071000301.241343
+Ap [6] 1224000349.367670
+Ap [7] 1377000397.493997
+Ap [8] 1530000445.620324
+Ap [9] 153000012.483379
+Ap [10] 153000012.483379
+Ap [11] 153000012.483379
+Ap [12] 153000012.483379
+Ap [13] 153000012.483379
+Ap [14] 152999993.867989
+Ap [15] 83395077.232290
+Ap [16] 153000012.483379
+Ap [17] 81000001.111109
+Ap [18] 81000001.111109
+Ap [19] 81000001.111109
+Ap [20] 81000001.111109
+Ap [21] 81000001.111109
+Ap [22] 81000001.111109
+Ap [23] 81000001.111109
+Ap [24] 81000001.111109
+Ap [25] 81000001.111109
+Ap [26] 81000001.111109
+Ap [27] 81000001.111109
+Ap [28] 81000001.111109
+Ap [29] 81000001.111109
+Ap [30] 80999978.264948
+Ap [31] 43395062.452820
+Ap [32] 153000012.483379
+Ap [33] 81000001.111109
+Ap [34] 81000001.111109
+Ap [35] 81000001.111109
+Ap [36] 81000001.111109
+Ap [37] 81000001.111109
+Ap [38] 81000001.111109
+Ap [39] 81000001.111109
+Ap [40] 81000001.111109
+Ap [41] 81000001.111109
+Ap [42] 81000001.111109
+Ap [43] 81000001.111109
+Ap [44] 81000001.111109
+Ap [45] 81000001.111109
+Ap [46] 80999978.264948
+Ap [47] 43395062.452820
+Ap [48] 153000012.483379
+Ap [49] 81000001.111109
+Ap [50] 81000001.111109
+Ap [51] 81000001.111109
+Ap [52] 81000001.111109
+Ap [53] 81000001.111109
+Ap [54] 81000001.111109
+Ap [55] 81000001.111109
+Ap [56] 81000001.111109
+Ap [57] 81000001.111109
+Ap [58] 81000001.111109
+Ap [59] 81000001.111109
+Ap [60] 81000001.111109
+Ap [61] 81000001.111109
+Ap [62] 80999978.264948
+Ap [63] 43395062.452820
+Ap [64] 153000012.483379
+Ap [65] 81000001.111109
+Ap [66] 81000001.111109
+Ap [67] 81000001.111109
+Ap [68] 81000001.111109
+Ap [69] 81000001.111109
+Ap [70] 81000001.111109
+Ap [71] 81000001.111109
+Ap [72] 81000001.111109
+Ap [73] 81000001.111109
+Ap [74] 81000001.111109
+Ap [75] 81000001.111109
+Ap [76] 81000001.111109
+Ap [77] 81000001.111109
+Ap [78] 80999978.264948
+Ap [79] 43395062.452820
+Ap [80] 153000012.483379
+Ap [81] 81000001.111109
+Ap [82] 81000001.111109
+Ap [83] 81000001.111109
+Ap [84] 81000001.111109
+Ap [85] 81000001.111109
+Ap [86] 81000001.111109
+Ap [87] 81000001.111109
+Ap [88] 81000001.111109
+Ap [89] 81000001.111109
+Ap [90] 81000001.111109
+Ap [91] 81000001.111109
+Ap [92] 81000001.111109
+Ap [93] 81000001.111109
+Ap [94] 80999978.264948
+Ap [95] 43395062.452820
+Ap [96] 153000012.483379
+Ap [97] 81000001.111109
+Ap [98] 81000001.111109
+Ap [99] 81000001.111109
+normr, normr0 at 2 iter: 9365.332409, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -7.920009 8.346156
+ell r z [1] 78000000.000000 -11.318539 5.884617
+ell r z [2] 104000000.000000 -17.052925 5.884617
+ell r z [3] 130000000.000000 -22.787311 5.884617
+ell r z [4] 156000000.000000 -28.521697 5.884617
+ell r z [5] 182000000.000000 -34.256083 5.884617
+ell r z [6] 208000000.000000 -39.990469 5.884617
+ell r z [7] 234000000.000000 -45.724855 5.884617
+ell r z [8] 260000000.000000 -51.459241 5.884617
+ell r z [9] 26000000.000000 0.150233 5.884617
+beginning ell, r, z
+ell r z [0] 52000000.000000 -7.920009 8.346156
+ell r z [1] 78000000.000000 -11.318539 5.884617
+ell r z [2] 104000000.000000 -17.052925 5.884617
+ell r z [3] 130000000.000000 -22.787311 5.884617
+ell r z [4] 156000000.000000 -28.521697 5.884617
+ell r z [5] 182000000.000000 -34.256083 5.884617
+ell r z [6] 208000000.000000 -39.990469 5.884617
+ell r z [7] 234000000.000000 -45.724855 5.884617
+ell r z [8] 260000000.000000 -51.459241 5.884617
+ell r z [9] 26000000.000000 0.150233 5.884617
+after MG, copy
+ell r z [0] 52000000.000000 -7.920009 -7.920009
+ell r z [1] 78000000.000000 -11.318539 -11.318539
+ell r z [2] 104000000.000000 -17.052925 -17.052925
+ell r z [3] 130000000.000000 -22.787311 -22.787311
+ell r z [4] 156000000.000000 -28.521697 -28.521697
+ell r z [5] 182000000.000000 -34.256083 -34.256083
+ell r z [6] 208000000.000000 -39.990469 -39.990469
+ell r z [7] 234000000.000000 -45.724855 -45.724855
+ell r z [8] 260000000.000000 -51.459241 -51.459241
+ell r z [9] 26000000.000000 0.150233 0.150233
+dotprod, waxpby
+ell r z [0] 52000000.000000 -7.920009 -7.920009
+ell r z [1] 78000000.000000 -11.318539 -11.318539
+ell r z [2] 104000000.000000 -17.052925 -17.052925
+ell r z [3] 130000000.000000 -22.787311 -22.787311
+ell r z [4] 156000000.000000 -28.521697 -28.521697
+ell r z [5] 182000000.000000 -34.256083 -34.256083
+ell r z [6] 208000000.000000 -39.990469 -39.990469
+ell r z [7] 234000000.000000 -45.724855 -45.724855
+ell r z [8] 260000000.000000 -51.459241 -51.459241
+ell r z [9] 26000000.000000 0.150233 0.150233
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -7.920009 -7.920009
+ell r z [1] 78000000.000000 -11.318539 -11.318539
+ell r z [2] 104000000.000000 -17.052925 -17.052925
+ell r z [3] 130000000.000000 -22.787311 -22.787311
+ell r z [4] 156000000.000000 -28.521697 -28.521697
+ell r z [5] 182000000.000000 -34.256083 -34.256083
+ell r z [6] 208000000.000000 -39.990469 -39.990469
+ell r z [7] 234000000.000000 -45.724855 -45.724855
+ell r z [8] 260000000.000000 -51.459241 -51.459241
+ell r z [9] 26000000.000000 0.150233 0.150233
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -7.920009 -7.920009
+ell r z [1] 78000000.000000 -11.318539 -11.318539
+ell r z [2] 104000000.000000 -17.052925 -17.052925
+ell r z [3] 130000000.000000 -22.787311 -22.787311
+ell r z [4] 156000000.000000 -28.521697 -28.521697
+ell r z [5] 182000000.000000 -34.256083 -34.256083
+ell r z [6] 208000000.000000 -39.990469 -39.990469
+ell r z [7] 234000000.000000 -45.724855 -45.724855
+ell r z [8] 260000000.000000 -51.459241 -51.459241
+ell r z [9] 26000000.000000 0.150233 0.150233
+fusedWaxpby parms at 3: 32768, -0.000000, 516.736124
+Ap [0] -345007907.051901
+Ap [1] -812163712.106330
+Ap [2] -1679261088.500220
+Ap [3] -2844546535.473122
+Ap [4] -4308020053.025033
+Ap [5] -6069681641.155952
+Ap [6] -8129531299.865878
+Ap [7] -10487569029.154810
+Ap [8] -13143794829.022755
+Ap [9] 27466828.944436
+Ap [10] 27466828.944436
+Ap [11] 27466828.944436
+Ap [12] 27466828.944436
+Ap [13] 27466828.944436
+Ap [14] 27466843.742716
+Ap [15] 14971211.176398
+Ap [16] 27466828.944430
+Ap [17] 14541266.752751
+Ap [18] 14541266.752758
+Ap [19] 14541266.752758
+Ap [20] 14541266.752758
+Ap [21] 14541266.752758
+Ap [22] 14541266.752758
+Ap [23] 14541266.752758
+Ap [24] 14541266.752758
+Ap [25] 14541266.752758
+Ap [26] 14541266.752758
+Ap [27] 14541266.752758
+Ap [28] 14541266.752758
+Ap [29] 14541266.752758
+Ap [30] 14541284.914281
+Ap [31] 7790350.018621
+Ap [32] 27466828.944436
+Ap [33] 14541266.752758
+Ap [34] 14541266.752765
+Ap [35] 14541266.752765
+Ap [36] 14541266.752765
+Ap [37] 14541266.752765
+Ap [38] 14541266.752765
+Ap [39] 14541266.752765
+Ap [40] 14541266.752765
+Ap [41] 14541266.752765
+Ap [42] 14541266.752765
+Ap [43] 14541266.752765
+Ap [44] 14541266.752765
+Ap [45] 14541266.752765
+Ap [46] 14541284.914288
+Ap [47] 7790350.018624
+Ap [48] 27466828.944436
+Ap [49] 14541266.752758
+Ap [50] 14541266.752765
+Ap [51] 14541266.752765
+Ap [52] 14541266.752765
+Ap [53] 14541266.752765
+Ap [54] 14541266.752765
+Ap [55] 14541266.752765
+Ap [56] 14541266.752765
+Ap [57] 14541266.752765
+Ap [58] 14541266.752765
+Ap [59] 14541266.752765
+Ap [60] 14541266.752765
+Ap [61] 14541266.752765
+Ap [62] 14541284.914288
+Ap [63] 7790350.018624
+Ap [64] 27466828.944436
+Ap [65] 14541266.752758
+Ap [66] 14541266.752765
+Ap [67] 14541266.752765
+Ap [68] 14541266.752765
+Ap [69] 14541266.752765
+Ap [70] 14541266.752765
+Ap [71] 14541266.752765
+Ap [72] 14541266.752765
+Ap [73] 14541266.752765
+Ap [74] 14541266.752765
+Ap [75] 14541266.752765
+Ap [76] 14541266.752765
+Ap [77] 14541266.752765
+Ap [78] 14541284.914288
+Ap [79] 7790350.018624
+Ap [80] 27466828.944436
+Ap [81] 14541266.752758
+Ap [82] 14541266.752765
+Ap [83] 14541266.752765
+Ap [84] 14541266.752765
+Ap [85] 14541266.752765
+Ap [86] 14541266.752765
+Ap [87] 14541266.752765
+Ap [88] 14541266.752765
+Ap [89] 14541266.752765
+Ap [90] 14541266.752765
+Ap [91] 14541266.752765
+Ap [92] 14541266.752765
+Ap [93] 14541266.752765
+Ap [94] 14541284.914288
+Ap [95] 7790350.018624
+Ap [96] 27466828.944436
+Ap [97] 14541266.752758
+Ap [98] 14541266.752765
+Ap [99] 14541266.752765
+normr, normr0 at 3 iter: 516.736124, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -6.240983 -7.920009
+ell r z [1] 78000000.000000 -7.366040 -11.318539
+ell r z [2] 104000000.000000 -8.880584 -17.052925
+ell r z [3] 130000000.000000 -8.943958 -22.787311
+ell r z [4] 156000000.000000 -7.556162 -28.521697
+ell r z [5] 182000000.000000 -4.717194 -34.256083
+ell r z [6] 208000000.000000 -0.427056 -39.990469
+ell r z [7] 234000000.000000 5.314253 -45.724855
+ell r z [8] 260000000.000000 12.506733 -51.459241
+ell r z [9] 26000000.000000 0.016562 0.150233
+beginning ell, r, z
+ell r z [0] 52000000.000000 -6.240983 -7.920009
+ell r z [1] 78000000.000000 -7.366040 -11.318539
+ell r z [2] 104000000.000000 -8.880584 -17.052925
+ell r z [3] 130000000.000000 -8.943958 -22.787311
+ell r z [4] 156000000.000000 -7.556162 -28.521697
+ell r z [5] 182000000.000000 -4.717194 -34.256083
+ell r z [6] 208000000.000000 -0.427056 -39.990469
+ell r z [7] 234000000.000000 5.314253 -45.724855
+ell r z [8] 260000000.000000 12.506733 -51.459241
+ell r z [9] 26000000.000000 0.016562 0.150233
+after MG, copy
+ell r z [0] 52000000.000000 -6.240983 -6.240983
+ell r z [1] 78000000.000000 -7.366040 -7.366040
+ell r z [2] 104000000.000000 -8.880584 -8.880584
+ell r z [3] 130000000.000000 -8.943958 -8.943958
+ell r z [4] 156000000.000000 -7.556162 -7.556162
+ell r z [5] 182000000.000000 -4.717194 -4.717194
+ell r z [6] 208000000.000000 -0.427056 -0.427056
+ell r z [7] 234000000.000000 5.314253 5.314253
+ell r z [8] 260000000.000000 12.506733 12.506733
+ell r z [9] 26000000.000000 0.016562 0.016562
+dotprod, waxpby
+ell r z [0] 52000000.000000 -6.240983 -6.240983
+ell r z [1] 78000000.000000 -7.366040 -7.366040
+ell r z [2] 104000000.000000 -8.880584 -8.880584
+ell r z [3] 130000000.000000 -8.943958 -8.943958
+ell r z [4] 156000000.000000 -7.556162 -7.556162
+ell r z [5] 182000000.000000 -4.717194 -4.717194
+ell r z [6] 208000000.000000 -0.427056 -0.427056
+ell r z [7] 234000000.000000 5.314253 5.314253
+ell r z [8] 260000000.000000 12.506733 12.506733
+ell r z [9] 26000000.000000 0.016562 0.016562
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -6.240983 -6.240983
+ell r z [1] 78000000.000000 -7.366040 -7.366040
+ell r z [2] 104000000.000000 -8.880584 -8.880584
+ell r z [3] 130000000.000000 -8.943958 -8.943958
+ell r z [4] 156000000.000000 -7.556162 -7.556162
+ell r z [5] 182000000.000000 -4.717194 -4.717194
+ell r z [6] 208000000.000000 -0.427056 -0.427056
+ell r z [7] 234000000.000000 5.314253 5.314253
+ell r z [8] 260000000.000000 12.506733 12.506733
+ell r z [9] 26000000.000000 0.016562 0.016562
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -6.240983 -6.240983
+ell r z [1] 78000000.000000 -7.366040 -7.366040
+ell r z [2] 104000000.000000 -8.880584 -8.880584
+ell r z [3] 130000000.000000 -8.943958 -8.943958
+ell r z [4] 156000000.000000 -7.556162 -7.556162
+ell r z [5] 182000000.000000 -4.717194 -4.717194
+ell r z [6] 208000000.000000 -0.427056 -0.427056
+ell r z [7] 234000000.000000 5.314253 5.314253
+ell r z [8] 260000000.000000 12.506733 12.506733
+ell r z [9] 26000000.000000 0.016562 0.016562
+fusedWaxpby parms at 4: 32768, -0.000000, 70.615759
+Ap [0] -343567090.412786
+Ap [1] -619362576.755260
+Ap [2] -1016234716.430720
+Ap [3] -1319663634.219563
+Ap [4] -1416458012.717367
+Ap [5] -1193426534.519709
+Ap [6] -537377882.222172
+Ap [7] 664879261.579665
+Ap [8] 2526536214.290223
+Ap [9] 1946098.637836
+Ap [10] 1946098.637834
+Ap [11] 1946098.637834
+Ap [12] 1946098.637834
+Ap [13] 1946098.637834
+Ap [14] 1946115.669631
+Ap [15] 1060734.913441
+Ap [16] 1946098.637830
+Ap [17] 1030292.544185
+Ap [18] 1030292.544191
+Ap [19] 1030292.544192
+Ap [20] 1030292.544192
+Ap [21] 1030292.544192
+Ap [22] 1030292.544193
+Ap [23] 1030292.544193
+Ap [24] 1030292.544193
+Ap [25] 1030292.544191
+Ap [26] 1030292.544190
+Ap [27] 1030292.544190
+Ap [28] 1030292.544190
+Ap [29] 1030292.544190
+Ap [30] 1030313.446847
+Ap [31] 551961.492030
+Ap [32] 1946098.637834
+Ap [33] 1030292.544190
+Ap [34] 1030292.544196
+Ap [35] 1030292.544196
+Ap [36] 1030292.544196
+Ap [37] 1030292.544196
+Ap [38] 1030292.544196
+Ap [39] 1030292.544196
+Ap [40] 1030292.544196
+Ap [41] 1030292.544196
+Ap [42] 1030292.544196
+Ap [43] 1030292.544196
+Ap [44] 1030292.544196
+Ap [45] 1030292.544196
+Ap [46] 1030313.446853
+Ap [47] 551961.492032
+Ap [48] 1946098.637834
+Ap [49] 1030292.544190
+Ap [50] 1030292.544196
+Ap [51] 1030292.544196
+Ap [52] 1030292.544196
+Ap [53] 1030292.544196
+Ap [54] 1030292.544196
+Ap [55] 1030292.544196
+Ap [56] 1030292.544196
+Ap [57] 1030292.544196
+Ap [58] 1030292.544196
+Ap [59] 1030292.544196
+Ap [60] 1030292.544196
+Ap [61] 1030292.544196
+Ap [62] 1030313.446853
+Ap [63] 551961.492032
+Ap [64] 1946098.637834
+Ap [65] 1030292.544190
+Ap [66] 1030292.544196
+Ap [67] 1030292.544196
+Ap [68] 1030292.544196
+Ap [69] 1030292.544196
+Ap [70] 1030292.544196
+Ap [71] 1030292.544196
+Ap [72] 1030292.544196
+Ap [73] 1030292.544196
+Ap [74] 1030292.544196
+Ap [75] 1030292.544196
+Ap [76] 1030292.544196
+Ap [77] 1030292.544196
+Ap [78] 1030313.446853
+Ap [79] 551961.492032
+Ap [80] 1946098.637834
+Ap [81] 1030292.544190
+Ap [82] 1030292.544196
+Ap [83] 1030292.544196
+Ap [84] 1030292.544196
+Ap [85] 1030292.544196
+Ap [86] 1030292.544196
+Ap [87] 1030292.544196
+Ap [88] 1030292.544196
+Ap [89] 1030292.544196
+Ap [90] 1030292.544196
+Ap [91] 1030292.544196
+Ap [92] 1030292.544196
+Ap [93] 1030292.544196
+Ap [94] 1030313.446853
+Ap [95] 551961.492032
+Ap [96] 1946098.637834
+Ap [97] 1030292.544190
+Ap [98] 1030292.544196
+Ap [99] 1030292.544196
+normr, normr0 at 4 iter: 70.615759, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -4.001792 -6.240983
+ell r z [1] 78000000.000000 -3.329357 -7.366040
+ell r z [2] 104000000.000000 -2.257296 -8.880584
+ell r z [3] 130000000.000000 -0.343078 -8.943958
+ell r z [4] 156000000.000000 1.675574 -7.556162
+ell r z [5] 182000000.000000 3.060939 -4.717194
+ell r z [6] 208000000.000000 3.075294 -0.427056
+ell r z [7] 234000000.000000 0.980916 5.314253
+ell r z [8] 260000000.000000 -3.959915 12.506733
+ell r z [9] 26000000.000000 0.003878 0.016562
+beginning ell, r, z
+ell r z [0] 52000000.000000 -4.001792 -6.240983
+ell r z [1] 78000000.000000 -3.329357 -7.366040
+ell r z [2] 104000000.000000 -2.257296 -8.880584
+ell r z [3] 130000000.000000 -0.343078 -8.943958
+ell r z [4] 156000000.000000 1.675574 -7.556162
+ell r z [5] 182000000.000000 3.060939 -4.717194
+ell r z [6] 208000000.000000 3.075294 -0.427056
+ell r z [7] 234000000.000000 0.980916 5.314253
+ell r z [8] 260000000.000000 -3.959915 12.506733
+ell r z [9] 26000000.000000 0.003878 0.016562
+after MG, copy
+ell r z [0] 52000000.000000 -4.001792 -4.001792
+ell r z [1] 78000000.000000 -3.329357 -3.329357
+ell r z [2] 104000000.000000 -2.257296 -2.257296
+ell r z [3] 130000000.000000 -0.343078 -0.343078
+ell r z [4] 156000000.000000 1.675574 1.675574
+ell r z [5] 182000000.000000 3.060939 3.060939
+ell r z [6] 208000000.000000 3.075294 3.075294
+ell r z [7] 234000000.000000 0.980916 0.980916
+ell r z [8] 260000000.000000 -3.959915 -3.959915
+ell r z [9] 26000000.000000 0.003878 0.003878
+dotprod, waxpby
+ell r z [0] 52000000.000000 -4.001792 -4.001792
+ell r z [1] 78000000.000000 -3.329357 -3.329357
+ell r z [2] 104000000.000000 -2.257296 -2.257296
+ell r z [3] 130000000.000000 -0.343078 -0.343078
+ell r z [4] 156000000.000000 1.675574 1.675574
+ell r z [5] 182000000.000000 3.060939 3.060939
+ell r z [6] 208000000.000000 3.075294 3.075294
+ell r z [7] 234000000.000000 0.980916 0.980916
+ell r z [8] 260000000.000000 -3.959915 -3.959915
+ell r z [9] 26000000.000000 0.003878 0.003878
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -4.001792 -4.001792
+ell r z [1] 78000000.000000 -3.329357 -3.329357
+ell r z [2] 104000000.000000 -2.257296 -2.257296
+ell r z [3] 130000000.000000 -0.343078 -0.343078
+ell r z [4] 156000000.000000 1.675574 1.675574
+ell r z [5] 182000000.000000 3.060939 3.060939
+ell r z [6] 208000000.000000 3.075294 3.075294
+ell r z [7] 234000000.000000 0.980916 0.980916
+ell r z [8] 260000000.000000 -3.959915 -3.959915
+ell r z [9] 26000000.000000 0.003878 0.003878
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -4.001792 -4.001792
+ell r z [1] 78000000.000000 -3.329357 -3.329357
+ell r z [2] 104000000.000000 -2.257296 -2.257296
+ell r z [3] 130000000.000000 -0.343078 -0.343078
+ell r z [4] 156000000.000000 1.675574 1.675574
+ell r z [5] 182000000.000000 3.060939 3.060939
+ell r z [6] 208000000.000000 3.075294 3.075294
+ell r z [7] 234000000.000000 0.980916 0.980916
+ell r z [8] 260000000.000000 -3.959915 -3.959915
+ell r z [9] 26000000.000000 0.003878 0.003878
+fusedWaxpby parms at 5: 32768, -0.000000, 13.819306
+Ap [0] -255044126.845242
+Ap [1] -344330251.229965
+Ap [2] -373634619.929775
+Ap [3] -224941760.773284
+Ap [4] 67820302.159735
+Ap [5] 394000447.263485
+Ap [6] 566224455.406139
+Ap [7] 320395009.929844
+Ap [8] -684308303.349280
+Ap [9] 366778.427495
+Ap [10] 366778.427493
+Ap [11] 366778.427493
+Ap [12] 366778.427493
+Ap [13] 366778.427493
+Ap [14] 366794.124317
+Ap [15] 199903.041782
+Ap [16] 366778.427491
+Ap [17] 194181.450336
+Ap [18] 194181.450341
+Ap [19] 194181.450341
+Ap [20] 194181.450342
+Ap [21] 194181.450342
+Ap [22] 194181.450342
+Ap [23] 194181.450341
+Ap [24] 194181.450341
+Ap [25] 194181.450339
+Ap [26] 194181.450339
+Ap [27] 194181.450339
+Ap [28] 194181.450339
+Ap [29] 194181.450339
+Ap [30] 194200.714622
+Ap [31] 104022.967171
+Ap [32] 366778.427493
+Ap [33] 194181.450339
+Ap [34] 194181.450343
+Ap [35] 194181.450343
+Ap [36] 194181.450343
+Ap [37] 194181.450343
+Ap [38] 194181.450343
+Ap [39] 194181.450343
+Ap [40] 194181.450343
+Ap [41] 194181.450343
+Ap [42] 194181.450343
+Ap [43] 194181.450343
+Ap [44] 194181.450343
+Ap [45] 194181.450343
+Ap [46] 194200.714625
+Ap [47] 104022.967173
+Ap [48] 366778.427493
+Ap [49] 194181.450339
+Ap [50] 194181.450343
+Ap [51] 194181.450343
+Ap [52] 194181.450343
+Ap [53] 194181.450343
+Ap [54] 194181.450343
+Ap [55] 194181.450343
+Ap [56] 194181.450343
+Ap [57] 194181.450343
+Ap [58] 194181.450343
+Ap [59] 194181.450343
+Ap [60] 194181.450343
+Ap [61] 194181.450343
+Ap [62] 194200.714625
+Ap [63] 104022.967173
+Ap [64] 366778.427493
+Ap [65] 194181.450339
+Ap [66] 194181.450343
+Ap [67] 194181.450343
+Ap [68] 194181.450343
+Ap [69] 194181.450343
+Ap [70] 194181.450343
+Ap [71] 194181.450343
+Ap [72] 194181.450343
+Ap [73] 194181.450343
+Ap [74] 194181.450343
+Ap [75] 194181.450343
+Ap [76] 194181.450343
+Ap [77] 194181.450343
+Ap [78] 194200.714625
+Ap [79] 104022.967173
+Ap [80] 366778.427493
+Ap [81] 194181.450339
+Ap [82] 194181.450343
+Ap [83] 194181.450343
+Ap [84] 194181.450343
+Ap [85] 194181.450343
+Ap [86] 194181.450343
+Ap [87] 194181.450343
+Ap [88] 194181.450343
+Ap [89] 194181.450343
+Ap [90] 194181.450343
+Ap [91] 194181.450343
+Ap [92] 194181.450343
+Ap [93] 194181.450343
+Ap [94] 194200.714625
+Ap [95] 104022.967173
+Ap [96] 366778.427493
+Ap [97] 194181.450339
+Ap [98] 194181.450343
+Ap [99] 194181.450343
+normr, normr0 at 5 iter: 13.819306, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -2.038863 -4.001792
+ell r z [1] 78000000.000000 -0.679243 -3.329357
+ell r z [2] 104000000.000000 0.618357 -2.257296
+ell r z [3] 130000000.000000 1.388171 -0.343078
+ell r z [4] 156000000.000000 1.153600 1.675574
+ell r z [5] 182000000.000000 0.028542 3.060939
+ell r z [6] 208000000.000000 -1.282614 3.075294
+ell r z [7] 234000000.000000 -1.484982 0.980916
+ell r z [8] 260000000.000000 1.306816 -3.959915
+ell r z [9] 26000000.000000 0.001055 0.003878
+beginning ell, r, z
+ell r z [0] 52000000.000000 -2.038863 -4.001792
+ell r z [1] 78000000.000000 -0.679243 -3.329357
+ell r z [2] 104000000.000000 0.618357 -2.257296
+ell r z [3] 130000000.000000 1.388171 -0.343078
+ell r z [4] 156000000.000000 1.153600 1.675574
+ell r z [5] 182000000.000000 0.028542 3.060939
+ell r z [6] 208000000.000000 -1.282614 3.075294
+ell r z [7] 234000000.000000 -1.484982 0.980916
+ell r z [8] 260000000.000000 1.306816 -3.959915
+ell r z [9] 26000000.000000 0.001055 0.003878
+after MG, copy
+ell r z [0] 52000000.000000 -2.038863 -2.038863
+ell r z [1] 78000000.000000 -0.679243 -0.679243
+ell r z [2] 104000000.000000 0.618357 0.618357
+ell r z [3] 130000000.000000 1.388171 1.388171
+ell r z [4] 156000000.000000 1.153600 1.153600
+ell r z [5] 182000000.000000 0.028542 0.028542
+ell r z [6] 208000000.000000 -1.282614 -1.282614
+ell r z [7] 234000000.000000 -1.484982 -1.484982
+ell r z [8] 260000000.000000 1.306816 1.306816
+ell r z [9] 26000000.000000 0.001055 0.001055
+dotprod, waxpby
+ell r z [0] 52000000.000000 -2.038863 -2.038863
+ell r z [1] 78000000.000000 -0.679243 -0.679243
+ell r z [2] 104000000.000000 0.618357 0.618357
+ell r z [3] 130000000.000000 1.388171 1.388171
+ell r z [4] 156000000.000000 1.153600 1.153600
+ell r z [5] 182000000.000000 0.028542 0.028542
+ell r z [6] 208000000.000000 -1.282614 -1.282614
+ell r z [7] 234000000.000000 -1.484982 -1.484982
+ell r z [8] 260000000.000000 1.306816 1.306816
+ell r z [9] 26000000.000000 0.001055 0.001055
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -2.038863 -2.038863
+ell r z [1] 78000000.000000 -0.679243 -0.679243
+ell r z [2] 104000000.000000 0.618357 0.618357
+ell r z [3] 130000000.000000 1.388171 1.388171
+ell r z [4] 156000000.000000 1.153600 1.153600
+ell r z [5] 182000000.000000 0.028542 0.028542
+ell r z [6] 208000000.000000 -1.282614 -1.282614
+ell r z [7] 234000000.000000 -1.484982 -1.484982
+ell r z [8] 260000000.000000 1.306816 1.306816
+ell r z [9] 26000000.000000 0.001055 0.001055
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -2.038863 -2.038863
+ell r z [1] 78000000.000000 -0.679243 -0.679243
+ell r z [2] 104000000.000000 0.618357 0.618357
+ell r z [3] 130000000.000000 1.388171 1.388171
+ell r z [4] 156000000.000000 1.153600 1.153600
+ell r z [5] 182000000.000000 0.028542 0.028542
+ell r z [6] 208000000.000000 -1.282614 -1.282614
+ell r z [7] 234000000.000000 -1.484982 -1.484982
+ell r z [8] 260000000.000000 1.306816 1.306816
+ell r z [9] 26000000.000000 0.001055 0.001055
+fusedWaxpby parms at 6: 32768, -0.000000, 2.642972
+Ap [0] -155932270.389437
+Ap [1] -120365424.110697
+Ap [2] -8810084.928592
+Ap [3] 136441745.987186
+Ap [4] 193233880.707886
+Ap [5] 82299409.643579
+Ap [6] -155975081.164557
+Ap [7] -284785292.751951
+Ap [8] 205855004.061636
+Ap [9] 99212.381511
+Ap [10] 99212.381510
+Ap [11] 99212.381510
+Ap [12] 99212.381510
+Ap [13] 99212.381510
+Ap [14] 99225.690522
+Ap [15] 54064.322017
+Ap [16] 99212.381510
+Ap [17] 52528.132563
+Ap [18] 52528.132565
+Ap [19] 52528.132565
+Ap [20] 52528.132565
+Ap [21] 52528.132565
+Ap [22] 52528.132564
+Ap [23] 52528.132564
+Ap [24] 52528.132564
+Ap [25] 52528.132563
+Ap [26] 52528.132563
+Ap [27] 52528.132563
+Ap [28] 52528.132563
+Ap [29] 52528.132563
+Ap [30] 52544.466350
+Ap [31] 28134.677708
+Ap [32] 99212.381510
+Ap [33] 52528.132563
+Ap [34] 52528.132565
+Ap [35] 52528.132565
+Ap [36] 52528.132565
+Ap [37] 52528.132565
+Ap [38] 52528.132565
+Ap [39] 52528.132565
+Ap [40] 52528.132565
+Ap [41] 52528.132565
+Ap [42] 52528.132565
+Ap [43] 52528.132565
+Ap [44] 52528.132565
+Ap [45] 52528.132565
+Ap [46] 52544.466352
+Ap [47] 28134.677709
+Ap [48] 99212.381510
+Ap [49] 52528.132563
+Ap [50] 52528.132565
+Ap [51] 52528.132565
+Ap [52] 52528.132565
+Ap [53] 52528.132565
+Ap [54] 52528.132565
+Ap [55] 52528.132565
+Ap [56] 52528.132565
+Ap [57] 52528.132565
+Ap [58] 52528.132565
+Ap [59] 52528.132565
+Ap [60] 52528.132565
+Ap [61] 52528.132565
+Ap [62] 52544.466352
+Ap [63] 28134.677709
+Ap [64] 99212.381510
+Ap [65] 52528.132563
+Ap [66] 52528.132565
+Ap [67] 52528.132565
+Ap [68] 52528.132565
+Ap [69] 52528.132565
+Ap [70] 52528.132565
+Ap [71] 52528.132565
+Ap [72] 52528.132565
+Ap [73] 52528.132565
+Ap [74] 52528.132565
+Ap [75] 52528.132565
+Ap [76] 52528.132565
+Ap [77] 52528.132565
+Ap [78] 52544.466352
+Ap [79] 28134.677709
+Ap [80] 99212.381510
+Ap [81] 52528.132563
+Ap [82] 52528.132565
+Ap [83] 52528.132565
+Ap [84] 52528.132565
+Ap [85] 52528.132565
+Ap [86] 52528.132565
+Ap [87] 52528.132565
+Ap [88] 52528.132565
+Ap [89] 52528.132565
+Ap [90] 52528.132565
+Ap [91] 52528.132565
+Ap [92] 52528.132565
+Ap [93] 52528.132565
+Ap [94] 52544.466352
+Ap [95] 28134.677709
+Ap [96] 99212.381510
+Ap [97] 52528.132563
+Ap [98] 52528.132565
+Ap [99] 52528.132565
+normr, normr0 at 6 iter: 2.642972, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.772076 -2.038863
+ell r z [1] 78000000.000000 0.298600 -0.679243
+ell r z [2] 104000000.000000 0.689930 0.618357
+ell r z [3] 130000000.000000 0.279724 1.388171
+ell r z [4] 156000000.000000 -0.416223 1.153600
+ell r z [5] 182000000.000000 -0.640055 0.028542
+ell r z [6] 208000000.000000 -0.015479 -1.282614
+ell r z [7] 234000000.000000 0.828601 -1.484982
+ell r z [8] 260000000.000000 -0.365541 1.306816
+ell r z [9] 26000000.000000 0.000249 0.001055
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.772076 -2.038863
+ell r z [1] 78000000.000000 0.298600 -0.679243
+ell r z [2] 104000000.000000 0.689930 0.618357
+ell r z [3] 130000000.000000 0.279724 1.388171
+ell r z [4] 156000000.000000 -0.416223 1.153600
+ell r z [5] 182000000.000000 -0.640055 0.028542
+ell r z [6] 208000000.000000 -0.015479 -1.282614
+ell r z [7] 234000000.000000 0.828601 -1.484982
+ell r z [8] 260000000.000000 -0.365541 1.306816
+ell r z [9] 26000000.000000 0.000249 0.001055
+after MG, copy
+ell r z [0] 52000000.000000 -0.772076 -0.772076
+ell r z [1] 78000000.000000 0.298600 0.298600
+ell r z [2] 104000000.000000 0.689930 0.689930
+ell r z [3] 130000000.000000 0.279724 0.279724
+ell r z [4] 156000000.000000 -0.416223 -0.416223
+ell r z [5] 182000000.000000 -0.640055 -0.640055
+ell r z [6] 208000000.000000 -0.015479 -0.015479
+ell r z [7] 234000000.000000 0.828601 0.828601
+ell r z [8] 260000000.000000 -0.365541 -0.365541
+ell r z [9] 26000000.000000 0.000249 0.000249
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.772076 -0.772076
+ell r z [1] 78000000.000000 0.298600 0.298600
+ell r z [2] 104000000.000000 0.689930 0.689930
+ell r z [3] 130000000.000000 0.279724 0.279724
+ell r z [4] 156000000.000000 -0.416223 -0.416223
+ell r z [5] 182000000.000000 -0.640055 -0.640055
+ell r z [6] 208000000.000000 -0.015479 -0.015479
+ell r z [7] 234000000.000000 0.828601 0.828601
+ell r z [8] 260000000.000000 -0.365541 -0.365541
+ell r z [9] 26000000.000000 0.000249 0.000249
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.772076 -0.772076
+ell r z [1] 78000000.000000 0.298600 0.298600
+ell r z [2] 104000000.000000 0.689930 0.689930
+ell r z [3] 130000000.000000 0.279724 0.279724
+ell r z [4] 156000000.000000 -0.416223 -0.416223
+ell r z [5] 182000000.000000 -0.640055 -0.640055
+ell r z [6] 208000000.000000 -0.015479 -0.015479
+ell r z [7] 234000000.000000 0.828601 0.828601
+ell r z [8] 260000000.000000 -0.365541 -0.365541
+ell r z [9] 26000000.000000 0.000249 0.000249
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.772076 -0.772076
+ell r z [1] 78000000.000000 0.298600 0.298600
+ell r z [2] 104000000.000000 0.689930 0.689930
+ell r z [3] 130000000.000000 0.279724 0.279724
+ell r z [4] 156000000.000000 -0.416223 -0.416223
+ell r z [5] 182000000.000000 -0.640055 -0.640055
+ell r z [6] 208000000.000000 -0.015479 -0.015479
+ell r z [7] 234000000.000000 0.828601 0.828601
+ell r z [8] 260000000.000000 -0.365541 -0.365541
+ell r z [9] 26000000.000000 0.000249 0.000249
+fusedWaxpby parms at 7: 32768, -0.000000, 0.407988
+Ap [0] -69970325.957254
+Ap [1] 270666.897433
+Ap [2] 70067776.793454
+Ap [3] 62458935.952716
+Ap [4] -27974409.472974
+Ap [5] -100750031.626028
+Ap [6] -33050199.532215
+Ap [7] 139426908.480369
+Ap [8] -55670341.467485
+Ap [9] 25453.542781
+Ap [10] 25453.542781
+Ap [11] 25453.542781
+Ap [12] 25453.542781
+Ap [13] 25453.542781
+Ap [14] 25463.516729
+Ap [15] 13864.162581
+Ap [16] 25453.542782
+Ap [17] 13478.350638
+Ap [18] 13478.350638
+Ap [19] 13478.350638
+Ap [20] 13478.350638
+Ap [21] 13478.350638
+Ap [22] 13478.350638
+Ap [23] 13478.350638
+Ap [24] 13478.350638
+Ap [25] 13478.350638
+Ap [26] 13478.350638
+Ap [27] 13478.350638
+Ap [28] 13478.350638
+Ap [29] 13478.350638
+Ap [30] 13490.591392
+Ap [31] 7215.811670
+Ap [32] 25453.542781
+Ap [33] 13478.350638
+Ap [34] 13478.350638
+Ap [35] 13478.350638
+Ap [36] 13478.350638
+Ap [37] 13478.350638
+Ap [38] 13478.350638
+Ap [39] 13478.350638
+Ap [40] 13478.350638
+Ap [41] 13478.350638
+Ap [42] 13478.350638
+Ap [43] 13478.350638
+Ap [44] 13478.350638
+Ap [45] 13478.350638
+Ap [46] 13490.591392
+Ap [47] 7215.811670
+Ap [48] 25453.542781
+Ap [49] 13478.350638
+Ap [50] 13478.350638
+Ap [51] 13478.350638
+Ap [52] 13478.350638
+Ap [53] 13478.350638
+Ap [54] 13478.350638
+Ap [55] 13478.350638
+Ap [56] 13478.350638
+Ap [57] 13478.350638
+Ap [58] 13478.350638
+Ap [59] 13478.350638
+Ap [60] 13478.350638
+Ap [61] 13478.350638
+Ap [62] 13490.591392
+Ap [63] 7215.811670
+Ap [64] 25453.542781
+Ap [65] 13478.350638
+Ap [66] 13478.350638
+Ap [67] 13478.350638
+Ap [68] 13478.350638
+Ap [69] 13478.350638
+Ap [70] 13478.350638
+Ap [71] 13478.350638
+Ap [72] 13478.350638
+Ap [73] 13478.350638
+Ap [74] 13478.350638
+Ap [75] 13478.350638
+Ap [76] 13478.350638
+Ap [77] 13478.350638
+Ap [78] 13490.591392
+Ap [79] 7215.811670
+Ap [80] 25453.542781
+Ap [81] 13478.350638
+Ap [82] 13478.350638
+Ap [83] 13478.350638
+Ap [84] 13478.350638
+Ap [85] 13478.350638
+Ap [86] 13478.350638
+Ap [87] 13478.350638
+Ap [88] 13478.350638
+Ap [89] 13478.350638
+Ap [90] 13478.350638
+Ap [91] 13478.350638
+Ap [92] 13478.350638
+Ap [93] 13478.350638
+Ap [94] 13490.591392
+Ap [95] 7215.811670
+Ap [96] 25453.542781
+Ap [97] 13478.350638
+Ap [98] 13478.350638
+Ap [99] 13478.350638
+normr, normr0 at 7 iter: 0.407988, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.215808 -0.772076
+ell r z [1] 78000000.000000 0.296448 0.298600
+ell r z [2] 104000000.000000 0.132888 0.689930
+ell r z [3] 130000000.000000 -0.216827 0.279724
+ell r z [4] 156000000.000000 -0.193825 -0.416223
+ell r z [5] 182000000.000000 0.160913 -0.640055
+ell r z [6] 208000000.000000 0.247272 -0.015479
+ell r z [7] 234000000.000000 -0.279850 0.828601
+ell r z [8] 260000000.000000 0.077041 -0.365541
+ell r z [9] 26000000.000000 0.000047 0.000249
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.215808 -0.772076
+ell r z [1] 78000000.000000 0.296448 0.298600
+ell r z [2] 104000000.000000 0.132888 0.689930
+ell r z [3] 130000000.000000 -0.216827 0.279724
+ell r z [4] 156000000.000000 -0.193825 -0.416223
+ell r z [5] 182000000.000000 0.160913 -0.640055
+ell r z [6] 208000000.000000 0.247272 -0.015479
+ell r z [7] 234000000.000000 -0.279850 0.828601
+ell r z [8] 260000000.000000 0.077041 -0.365541
+ell r z [9] 26000000.000000 0.000047 0.000249
+after MG, copy
+ell r z [0] 52000000.000000 -0.215808 -0.215808
+ell r z [1] 78000000.000000 0.296448 0.296448
+ell r z [2] 104000000.000000 0.132888 0.132888
+ell r z [3] 130000000.000000 -0.216827 -0.216827
+ell r z [4] 156000000.000000 -0.193825 -0.193825
+ell r z [5] 182000000.000000 0.160913 0.160913
+ell r z [6] 208000000.000000 0.247272 0.247272
+ell r z [7] 234000000.000000 -0.279850 -0.279850
+ell r z [8] 260000000.000000 0.077041 0.077041
+ell r z [9] 26000000.000000 0.000047 0.000047
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.215808 -0.215808
+ell r z [1] 78000000.000000 0.296448 0.296448
+ell r z [2] 104000000.000000 0.132888 0.132888
+ell r z [3] 130000000.000000 -0.216827 -0.216827
+ell r z [4] 156000000.000000 -0.193825 -0.193825
+ell r z [5] 182000000.000000 0.160913 0.160913
+ell r z [6] 208000000.000000 0.247272 0.247272
+ell r z [7] 234000000.000000 -0.279850 -0.279850
+ell r z [8] 260000000.000000 0.077041 0.077041
+ell r z [9] 26000000.000000 0.000047 0.000047
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.215808 -0.215808
+ell r z [1] 78000000.000000 0.296448 0.296448
+ell r z [2] 104000000.000000 0.132888 0.132888
+ell r z [3] 130000000.000000 -0.216827 -0.216827
+ell r z [4] 156000000.000000 -0.193825 -0.193825
+ell r z [5] 182000000.000000 0.160913 0.160913
+ell r z [6] 208000000.000000 0.247272 0.247272
+ell r z [7] 234000000.000000 -0.279850 -0.279850
+ell r z [8] 260000000.000000 0.077041 0.077041
+ell r z [9] 26000000.000000 0.000047 0.000047
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.215808 -0.215808
+ell r z [1] 78000000.000000 0.296448 0.296448
+ell r z [2] 104000000.000000 0.132888 0.132888
+ell r z [3] 130000000.000000 -0.216827 -0.216827
+ell r z [4] 156000000.000000 -0.193825 -0.193825
+ell r z [5] 182000000.000000 0.160913 0.160913
+ell r z [6] 208000000.000000 0.247272 0.247272
+ell r z [7] 234000000.000000 -0.279850 -0.279850
+ell r z [8] 260000000.000000 0.077041 0.077041
+ell r z [9] 26000000.000000 0.000047 0.000047
+fusedWaxpby parms at 8: 32768, -0.000000, 0.049529
+Ap [0] -22023130.283152
+Ap [1] 23164757.441670
+Ap [2] 24636471.538959
+Ap [3] -18545966.829033
+Ap [4] -34555054.285603
+Ap [5] 13733689.846688
+Ap [6] 46330670.721334
+Ap [7] -43961886.790663
+Ap [8] 11437099.131041
+Ap [9] 5146.865017
+Ap [10] 5146.865018
+Ap [11] 5146.865018
+Ap [12] 5146.865018
+Ap [13] 5146.865018
+Ap [14] 5153.772248
+Ap [15] 2798.672109
+Ap [16] 5146.865019
+Ap [17] 2726.850828
+Ap [18] 2726.850827
+Ap [19] 2726.850826
+Ap [20] 2726.850826
+Ap [21] 2726.850826
+Ap [22] 2726.850826
+Ap [23] 2726.850826
+Ap [24] 2726.850826
+Ap [25] 2726.850826
+Ap [26] 2726.850827
+Ap [27] 2726.850827
+Ap [28] 2726.850827
+Ap [29] 2726.850827
+Ap [30] 2735.327883
+Ap [31] 1457.359431
+Ap [32] 5146.865018
+Ap [33] 2726.850827
+Ap [34] 2726.850825
+Ap [35] 2726.850825
+Ap [36] 2726.850825
+Ap [37] 2726.850825
+Ap [38] 2726.850825
+Ap [39] 2726.850825
+Ap [40] 2726.850825
+Ap [41] 2726.850825
+Ap [42] 2726.850825
+Ap [43] 2726.850825
+Ap [44] 2726.850825
+Ap [45] 2726.850825
+Ap [46] 2735.327882
+Ap [47] 1457.359430
+Ap [48] 5146.865018
+Ap [49] 2726.850827
+Ap [50] 2726.850825
+Ap [51] 2726.850825
+Ap [52] 2726.850825
+Ap [53] 2726.850825
+Ap [54] 2726.850825
+Ap [55] 2726.850825
+Ap [56] 2726.850825
+Ap [57] 2726.850825
+Ap [58] 2726.850825
+Ap [59] 2726.850825
+Ap [60] 2726.850825
+Ap [61] 2726.850825
+Ap [62] 2735.327882
+Ap [63] 1457.359430
+Ap [64] 5146.865018
+Ap [65] 2726.850827
+Ap [66] 2726.850825
+Ap [67] 2726.850825
+Ap [68] 2726.850825
+Ap [69] 2726.850825
+Ap [70] 2726.850825
+Ap [71] 2726.850825
+Ap [72] 2726.850825
+Ap [73] 2726.850825
+Ap [74] 2726.850825
+Ap [75] 2726.850825
+Ap [76] 2726.850825
+Ap [77] 2726.850825
+Ap [78] 2735.327882
+Ap [79] 1457.359430
+Ap [80] 5146.865018
+Ap [81] 2726.850827
+Ap [82] 2726.850825
+Ap [83] 2726.850825
+Ap [84] 2726.850825
+Ap [85] 2726.850825
+Ap [86] 2726.850825
+Ap [87] 2726.850825
+Ap [88] 2726.850825
+Ap [89] 2726.850825
+Ap [90] 2726.850825
+Ap [91] 2726.850825
+Ap [92] 2726.850825
+Ap [93] 2726.850825
+Ap [94] 2735.327882
+Ap [95] 1457.359430
+Ap [96] 5146.865018
+Ap [97] 2726.850827
+Ap [98] 2726.850825
+Ap [99] 2726.850825
+normr, normr0 at 8 iter: 0.049529, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.044542 -0.215808
+ell r z [1] 78000000.000000 0.116304 0.296448
+ell r z [2] 104000000.000000 -0.058701 0.132888
+ell r z [3] 130000000.000000 -0.072602 -0.216827
+ell r z [4] 156000000.000000 0.074897 -0.193825
+ell r z [5] 182000000.000000 0.054111 0.160913
+ell r z [6] 208000000.000000 -0.113025 0.247272
+ell r z [7] 234000000.000000 0.062026 -0.279850
+ell r z [8] 260000000.000000 -0.011901 0.077041
+ell r z [9] 26000000.000000 0.000007 0.000047
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.044542 -0.215808
+ell r z [1] 78000000.000000 0.116304 0.296448
+ell r z [2] 104000000.000000 -0.058701 0.132888
+ell r z [3] 130000000.000000 -0.072602 -0.216827
+ell r z [4] 156000000.000000 0.074897 -0.193825
+ell r z [5] 182000000.000000 0.054111 0.160913
+ell r z [6] 208000000.000000 -0.113025 0.247272
+ell r z [7] 234000000.000000 0.062026 -0.279850
+ell r z [8] 260000000.000000 -0.011901 0.077041
+ell r z [9] 26000000.000000 0.000007 0.000047
+after MG, copy
+ell r z [0] 52000000.000000 -0.044542 -0.044542
+ell r z [1] 78000000.000000 0.116304 0.116304
+ell r z [2] 104000000.000000 -0.058701 -0.058701
+ell r z [3] 130000000.000000 -0.072602 -0.072602
+ell r z [4] 156000000.000000 0.074897 0.074897
+ell r z [5] 182000000.000000 0.054111 0.054111
+ell r z [6] 208000000.000000 -0.113025 -0.113025
+ell r z [7] 234000000.000000 0.062026 0.062026
+ell r z [8] 260000000.000000 -0.011901 -0.011901
+ell r z [9] 26000000.000000 0.000007 0.000007
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.044542 -0.044542
+ell r z [1] 78000000.000000 0.116304 0.116304
+ell r z [2] 104000000.000000 -0.058701 -0.058701
+ell r z [3] 130000000.000000 -0.072602 -0.072602
+ell r z [4] 156000000.000000 0.074897 0.074897
+ell r z [5] 182000000.000000 0.054111 0.054111
+ell r z [6] 208000000.000000 -0.113025 -0.113025
+ell r z [7] 234000000.000000 0.062026 0.062026
+ell r z [8] 260000000.000000 -0.011901 -0.011901
+ell r z [9] 26000000.000000 0.000007 0.000007
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.044542 -0.044542
+ell r z [1] 78000000.000000 0.116304 0.116304
+ell r z [2] 104000000.000000 -0.058701 -0.058701
+ell r z [3] 130000000.000000 -0.072602 -0.072602
+ell r z [4] 156000000.000000 0.074897 0.074897
+ell r z [5] 182000000.000000 0.054111 0.054111
+ell r z [6] 208000000.000000 -0.113025 -0.113025
+ell r z [7] 234000000.000000 0.062026 0.062026
+ell r z [8] 260000000.000000 -0.011901 -0.011901
+ell r z [9] 26000000.000000 0.000007 0.000007
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.044542 -0.044542
+ell r z [1] 78000000.000000 0.116304 0.116304
+ell r z [2] 104000000.000000 -0.058701 -0.058701
+ell r z [3] 130000000.000000 -0.072602 -0.072602
+ell r z [4] 156000000.000000 0.074897 0.074897
+ell r z [5] 182000000.000000 0.054111 0.054111
+ell r z [6] 208000000.000000 -0.113025 -0.113025
+ell r z [7] 234000000.000000 0.062026 0.062026
+ell r z [8] 260000000.000000 -0.011901 -0.011901
+ell r z [9] 26000000.000000 0.000007 0.000007
+fusedWaxpby parms at 9: 32768, -0.000000, 0.004340
+Ap [0] -4989754.100598
+Ap [1] 11883892.764557
+Ap [2] -3114124.041780
+Ap [3] -11689704.907056
+Ap [4] 7489047.473452
+Ap [5] 11515439.078265
+Ap [6] -17884832.421071
+Ap [7] 9177301.225052
+Ap [8] -1705786.267258
+Ap [9] 801.839950
+Ap [10] 801.839950
+Ap [11] 801.839950
+Ap [12] 801.839950
+Ap [13] 801.839950
+Ap [14] 806.649592
+Ap [15] 432.385866
+Ap [16] 801.839951
+Ap [17] 425.923953
+Ap [18] 425.923951
+Ap [19] 425.923951
+Ap [20] 425.923951
+Ap [21] 425.923951
+Ap [22] 425.923951
+Ap [23] 425.923951
+Ap [24] 425.923951
+Ap [25] 425.923951
+Ap [26] 425.923951
+Ap [27] 425.923951
+Ap [28] 425.923951
+Ap [29] 425.923951
+Ap [30] 431.826694
+Ap [31] 225.729846
+Ap [32] 801.839950
+Ap [33] 425.923951
+Ap [34] 425.923950
+Ap [35] 425.923950
+Ap [36] 425.923950
+Ap [37] 425.923950
+Ap [38] 425.923950
+Ap [39] 425.923950
+Ap [40] 425.923950
+Ap [41] 425.923950
+Ap [42] 425.923950
+Ap [43] 425.923950
+Ap [44] 425.923950
+Ap [45] 425.923950
+Ap [46] 431.826693
+Ap [47] 225.729845
+Ap [48] 801.839950
+Ap [49] 425.923951
+Ap [50] 425.923950
+Ap [51] 425.923950
+Ap [52] 425.923950
+Ap [53] 425.923950
+Ap [54] 425.923950
+Ap [55] 425.923950
+Ap [56] 425.923950
+Ap [57] 425.923950
+Ap [58] 425.923950
+Ap [59] 425.923950
+Ap [60] 425.923950
+Ap [61] 425.923950
+Ap [62] 431.826693
+Ap [63] 225.729845
+Ap [64] 801.839950
+Ap [65] 425.923951
+Ap [66] 425.923950
+Ap [67] 425.923950
+Ap [68] 425.923950
+Ap [69] 425.923950
+Ap [70] 425.923950
+Ap [71] 425.923950
+Ap [72] 425.923950
+Ap [73] 425.923950
+Ap [74] 425.923950
+Ap [75] 425.923950
+Ap [76] 425.923950
+Ap [77] 425.923950
+Ap [78] 431.826693
+Ap [79] 225.729845
+Ap [80] 801.839950
+Ap [81] 425.923951
+Ap [82] 425.923950
+Ap [83] 425.923950
+Ap [84] 425.923950
+Ap [85] 425.923950
+Ap [86] 425.923950
+Ap [87] 425.923950
+Ap [88] 425.923950
+Ap [89] 425.923950
+Ap [90] 425.923950
+Ap [91] 425.923950
+Ap [92] 425.923950
+Ap [93] 425.923950
+Ap [94] 431.826693
+Ap [95] 225.729845
+Ap [96] 801.839950
+Ap [97] 425.923951
+Ap [98] 425.923950
+Ap [99] 425.923950
+normr, normr0 at 9 iter: 0.004340, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.006112 -0.044542
+ell r z [1] 78000000.000000 0.024778 0.116304
+ell r z [2] 104000000.000000 -0.034717 -0.058701
+ell r z [3] 130000000.000000 0.017429 -0.072602
+ell r z [4] 156000000.000000 0.017219 0.074897
+ell r z [5] 182000000.000000 -0.034577 0.054111
+ell r z [6] 208000000.000000 0.024718 -0.113025
+ell r z [7] 234000000.000000 -0.008654 0.062026
+ell r z [8] 260000000.000000 0.001237 -0.011901
+ell r z [9] 26000000.000000 0.000001 0.000007
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.006112 -0.044542
+ell r z [1] 78000000.000000 0.024778 0.116304
+ell r z [2] 104000000.000000 -0.034717 -0.058701
+ell r z [3] 130000000.000000 0.017429 -0.072602
+ell r z [4] 156000000.000000 0.017219 0.074897
+ell r z [5] 182000000.000000 -0.034577 0.054111
+ell r z [6] 208000000.000000 0.024718 -0.113025
+ell r z [7] 234000000.000000 -0.008654 0.062026
+ell r z [8] 260000000.000000 0.001237 -0.011901
+ell r z [9] 26000000.000000 0.000001 0.000007
+after MG, copy
+ell r z [0] 52000000.000000 -0.006112 -0.006112
+ell r z [1] 78000000.000000 0.024778 0.024778
+ell r z [2] 104000000.000000 -0.034717 -0.034717
+ell r z [3] 130000000.000000 0.017429 0.017429
+ell r z [4] 156000000.000000 0.017219 0.017219
+ell r z [5] 182000000.000000 -0.034577 -0.034577
+ell r z [6] 208000000.000000 0.024718 0.024718
+ell r z [7] 234000000.000000 -0.008654 -0.008654
+ell r z [8] 260000000.000000 0.001237 0.001237
+ell r z [9] 26000000.000000 0.000001 0.000001
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.006112 -0.006112
+ell r z [1] 78000000.000000 0.024778 0.024778
+ell r z [2] 104000000.000000 -0.034717 -0.034717
+ell r z [3] 130000000.000000 0.017429 0.017429
+ell r z [4] 156000000.000000 0.017219 0.017219
+ell r z [5] 182000000.000000 -0.034577 -0.034577
+ell r z [6] 208000000.000000 0.024718 0.024718
+ell r z [7] 234000000.000000 -0.008654 -0.008654
+ell r z [8] 260000000.000000 0.001237 0.001237
+ell r z [9] 26000000.000000 0.000001 0.000001
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.006112 -0.006112
+ell r z [1] 78000000.000000 0.024778 0.024778
+ell r z [2] 104000000.000000 -0.034717 -0.034717
+ell r z [3] 130000000.000000 0.017429 0.017429
+ell r z [4] 156000000.000000 0.017219 0.017219
+ell r z [5] 182000000.000000 -0.034577 -0.034577
+ell r z [6] 208000000.000000 0.024718 0.024718
+ell r z [7] 234000000.000000 -0.008654 -0.008654
+ell r z [8] 260000000.000000 0.001237 0.001237
+ell r z [9] 26000000.000000 0.000001 0.000001
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.006112 -0.006112
+ell r z [1] 78000000.000000 0.024778 0.024778
+ell r z [2] 104000000.000000 -0.034717 -0.034717
+ell r z [3] 130000000.000000 0.017429 0.017429
+ell r z [4] 156000000.000000 0.017219 0.017219
+ell r z [5] 182000000.000000 -0.034577 -0.034577
+ell r z [6] 208000000.000000 0.024718 0.024718
+ell r z [7] 234000000.000000 -0.008654 -0.008654
+ell r z [8] 260000000.000000 0.001237 0.001237
+ell r z [9] 26000000.000000 0.000001 0.000001
+fusedWaxpby parms at 10: 32768, -0.000000, 0.000198
+Ap [0] -755066.867105
+Ap [1] 2973996.673371
+Ap [2] -3883472.925447
+Ap [3] 1241430.227866
+Ap [4] 3342349.009159
+Ap [5] -5284085.523009
+Ap [6] 3574259.309088
+Ap [7] -1220977.635195
+Ap [8] 172043.382644
+Ap [9] 86.716228
+Ap [10] 86.716228
+Ap [11] 86.716228
+Ap [12] 86.716228
+Ap [13] 86.716228
+Ap [14] 90.145698
+Ap [15] 43.936632
+Ap [16] 86.716229
+Ap [17] 46.921431
+Ap [18] 46.921429
+Ap [19] 46.921429
+Ap [20] 46.921429
+Ap [21] 46.921429
+Ap [22] 46.921429
+Ap [23] 46.921429
+Ap [24] 46.921429
+Ap [25] 46.921429
+Ap [26] 46.921430
+Ap [27] 46.921430
+Ap [28] 46.921430
+Ap [29] 46.921430
+Ap [30] 51.130325
+Ap [31] 23.387261
+Ap [32] 86.716228
+Ap [33] 46.921430
+Ap [34] 46.921428
+Ap [35] 46.921428
+Ap [36] 46.921428
+Ap [37] 46.921428
+Ap [38] 46.921428
+Ap [39] 46.921428
+Ap [40] 46.921428
+Ap [41] 46.921428
+Ap [42] 46.921428
+Ap [43] 46.921428
+Ap [44] 46.921428
+Ap [45] 46.921428
+Ap [46] 51.130323
+Ap [47] 23.387260
+Ap [48] 86.716228
+Ap [49] 46.921430
+Ap [50] 46.921428
+Ap [51] 46.921428
+Ap [52] 46.921428
+Ap [53] 46.921428
+Ap [54] 46.921428
+Ap [55] 46.921428
+Ap [56] 46.921428
+Ap [57] 46.921428
+Ap [58] 46.921428
+Ap [59] 46.921428
+Ap [60] 46.921428
+Ap [61] 46.921428
+Ap [62] 51.130323
+Ap [63] 23.387260
+Ap [64] 86.716228
+Ap [65] 46.921430
+Ap [66] 46.921428
+Ap [67] 46.921428
+Ap [68] 46.921428
+Ap [69] 46.921428
+Ap [70] 46.921428
+Ap [71] 46.921428
+Ap [72] 46.921428
+Ap [73] 46.921428
+Ap [74] 46.921428
+Ap [75] 46.921428
+Ap [76] 46.921428
+Ap [77] 46.921428
+Ap [78] 51.130323
+Ap [79] 23.387260
+Ap [80] 86.716228
+Ap [81] 46.921430
+Ap [82] 46.921428
+Ap [83] 46.921428
+Ap [84] 46.921428
+Ap [85] 46.921428
+Ap [86] 46.921428
+Ap [87] 46.921428
+Ap [88] 46.921428
+Ap [89] 46.921428
+Ap [90] 46.921428
+Ap [91] 46.921428
+Ap [92] 46.921428
+Ap [93] 46.921428
+Ap [94] 51.130323
+Ap [95] 23.387260
+Ap [96] 86.716228
+Ap [97] 46.921430
+Ap [98] 46.921428
+Ap [99] 46.921428
+normr, normr0 at 10 iter: 0.000198, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000405 -0.006112
+ell r z [1] 78000000.000000 0.002299 0.024778
+ell r z [2] 104000000.000000 -0.005363 -0.034717
+ell r z [3] 130000000.000000 0.008045 0.017429
+ell r z [4] 156000000.000000 -0.008045 0.017219
+ell r z [5] 182000000.000000 0.005363 -0.034577
+ell r z [6] 208000000.000000 -0.002299 0.024718
+ell r z [7] 234000000.000000 0.000575 -0.008654
+ell r z [8] 260000000.000000 -0.000064 0.001237
+ell r z [9] 26000000.000000 -0.000000 0.000001
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000405 -0.006112
+ell r z [1] 78000000.000000 0.002299 0.024778
+ell r z [2] 104000000.000000 -0.005363 -0.034717
+ell r z [3] 130000000.000000 0.008045 0.017429
+ell r z [4] 156000000.000000 -0.008045 0.017219
+ell r z [5] 182000000.000000 0.005363 -0.034577
+ell r z [6] 208000000.000000 -0.002299 0.024718
+ell r z [7] 234000000.000000 0.000575 -0.008654
+ell r z [8] 260000000.000000 -0.000064 0.001237
+ell r z [9] 26000000.000000 -0.000000 0.000001
+after MG, copy
+ell r z [0] 52000000.000000 -0.000405 -0.000405
+ell r z [1] 78000000.000000 0.002299 0.002299
+ell r z [2] 104000000.000000 -0.005363 -0.005363
+ell r z [3] 130000000.000000 0.008045 0.008045
+ell r z [4] 156000000.000000 -0.008045 -0.008045
+ell r z [5] 182000000.000000 0.005363 0.005363
+ell r z [6] 208000000.000000 -0.002299 -0.002299
+ell r z [7] 234000000.000000 0.000575 0.000575
+ell r z [8] 260000000.000000 -0.000064 -0.000064
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000405 -0.000405
+ell r z [1] 78000000.000000 0.002299 0.002299
+ell r z [2] 104000000.000000 -0.005363 -0.005363
+ell r z [3] 130000000.000000 0.008045 0.008045
+ell r z [4] 156000000.000000 -0.008045 -0.008045
+ell r z [5] 182000000.000000 0.005363 0.005363
+ell r z [6] 208000000.000000 -0.002299 -0.002299
+ell r z [7] 234000000.000000 0.000575 0.000575
+ell r z [8] 260000000.000000 -0.000064 -0.000064
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000405 -0.000405
+ell r z [1] 78000000.000000 0.002299 0.002299
+ell r z [2] 104000000.000000 -0.005363 -0.005363
+ell r z [3] 130000000.000000 0.008045 0.008045
+ell r z [4] 156000000.000000 -0.008045 -0.008045
+ell r z [5] 182000000.000000 0.005363 0.005363
+ell r z [6] 208000000.000000 -0.002299 -0.002299
+ell r z [7] 234000000.000000 0.000575 0.000575
+ell r z [8] 260000000.000000 -0.000064 -0.000064
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000405 -0.000405
+ell r z [1] 78000000.000000 0.002299 0.002299
+ell r z [2] 104000000.000000 -0.005363 -0.005363
+ell r z [3] 130000000.000000 0.008045 0.008045
+ell r z [4] 156000000.000000 -0.008045 -0.008045
+ell r z [5] 182000000.000000 0.005363 0.005363
+ell r z [6] 208000000.000000 -0.002299 -0.002299
+ell r z [7] 234000000.000000 0.000575 0.000575
+ell r z [8] 260000000.000000 -0.000064 -0.000064
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+fusedWaxpby parms at 11: 32768, -0.000000, 0.000000
+Ap [0] -55524.149042
+Ap [1] 314999.855579
+Ap [2] -734999.731995
+Ap [3] 1102499.649729
+Ap [4] -1102499.680770
+Ap [5] 734999.800976
+Ap [6] -314999.918927
+Ap [7] 78749.980524
+Ap [8] -8749.997904
+Ap [9] 3.371640
+Ap [10] 3.371641
+Ap [11] 3.371641
+Ap [12] 3.371641
+Ap [13] 3.371641
+Ap [14] 5.862192
+Ap [15] -0.580093
+Ap [16] 3.371641
+Ap [17] 2.520532
+Ap [18] 2.520530
+Ap [19] 2.520530
+Ap [20] 2.520530
+Ap [21] 2.520530
+Ap [22] 2.520530
+Ap [23] 2.520530
+Ap [24] 2.520530
+Ap [25] 2.520530
+Ap [26] 2.520530
+Ap [27] 2.520530
+Ap [28] 2.520530
+Ap [29] 2.520530
+Ap [30] 5.577117
+Ap [31] 0.079137
+Ap [32] 3.371641
+Ap [33] 2.520530
+Ap [34] 2.520529
+Ap [35] 2.520529
+Ap [36] 2.520529
+Ap [37] 2.520529
+Ap [38] 2.520529
+Ap [39] 2.520529
+Ap [40] 2.520529
+Ap [41] 2.520529
+Ap [42] 2.520529
+Ap [43] 2.520529
+Ap [44] 2.520529
+Ap [45] 2.520529
+Ap [46] 5.577115
+Ap [47] 0.079137
+Ap [48] 3.371641
+Ap [49] 2.520530
+Ap [50] 2.520529
+Ap [51] 2.520529
+Ap [52] 2.520529
+Ap [53] 2.520529
+Ap [54] 2.520529
+Ap [55] 2.520529
+Ap [56] 2.520529
+Ap [57] 2.520529
+Ap [58] 2.520529
+Ap [59] 2.520529
+Ap [60] 2.520529
+Ap [61] 2.520529
+Ap [62] 5.577115
+Ap [63] 0.079137
+Ap [64] 3.371641
+Ap [65] 2.520530
+Ap [66] 2.520529
+Ap [67] 2.520529
+Ap [68] 2.520529
+Ap [69] 2.520529
+Ap [70] 2.520529
+Ap [71] 2.520529
+Ap [72] 2.520529
+Ap [73] 2.520529
+Ap [74] 2.520529
+Ap [75] 2.520529
+Ap [76] 2.520529
+Ap [77] 2.520529
+Ap [78] 5.577115
+Ap [79] 0.079137
+Ap [80] 3.371641
+Ap [81] 2.520530
+Ap [82] 2.520529
+Ap [83] 2.520529
+Ap [84] 2.520529
+Ap [85] 2.520529
+Ap [86] 2.520529
+Ap [87] 2.520529
+Ap [88] 2.520529
+Ap [89] 2.520529
+Ap [90] 2.520529
+Ap [91] 2.520529
+Ap [92] 2.520529
+Ap [93] 2.520529
+Ap [94] 5.577115
+Ap [95] 0.079137
+Ap [96] 3.371641
+Ap [97] 2.520530
+Ap [98] 2.520529
+Ap [99] 2.520529
+normr, normr0 at 11 iter: 0.000000, 722002770.077789 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 0.000000 -0.000405
+ell r z [1] 78000000.000000 -0.000000 0.002299
+ell r z [2] 104000000.000000 0.000000 -0.005363
+ell r z [3] 130000000.000000 -0.000000 0.008045
+ell r z [4] 156000000.000000 0.000000 -0.008045
+ell r z [5] 182000000.000000 -0.000000 0.005363
+ell r z [6] 208000000.000000 0.000000 -0.002299
+ell r z [7] 234000000.000000 -0.000000 0.000575
+ell r z [8] 260000000.000000 0.000000 -0.000064
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+inside TestCG: 1 iter
+====entering CG====
+before SPMV pVal, ApVal [0] 0.000000 -55524.149042 
+before SPMV pVal, ApVal [1] 0.000000 314999.855579 
+before SPMV pVal, ApVal [2] 0.000000 -734999.731995 
+before SPMV pVal, ApVal [3] 0.000000 1102499.649729 
+before SPMV pVal, ApVal [4] 0.000000 -1102499.680770 
+before SPMV pVal, ApVal [5] 0.000000 734999.800976 
+before SPMV pVal, ApVal [6] 0.000000 -314999.918927 
+before SPMV pVal, ApVal [7] 0.000000 78749.980524 
+before SPMV pVal, ApVal [8] 0.000000 -8749.997904 
+before SPMV pVal, ApVal [9] 0.000000 3.371640 
+before SPMV pVal, ApVal [10] 0.000000 3.371641 
+before SPMV pVal, ApVal [11] 0.000000 3.371641 
+before SPMV pVal, ApVal [12] 0.000000 3.371641 
+before SPMV pVal, ApVal [13] 0.000000 3.371641 
+before SPMV pVal, ApVal [14] 0.000000 5.862192 
+before SPMV pVal, ApVal [15] 0.346154 -0.580093 
+before SPMV pVal, ApVal [16] 0.000000 3.371641 
+before SPMV pVal, ApVal [17] 0.000000 2.520532 
+before SPMV pVal, ApVal [18] 0.000000 2.520530 
+before SPMV pVal, ApVal [19] 0.000000 2.520530 
+before SPMV pVal, ApVal [20] 0.000000 2.520530 
+before SPMV pVal, ApVal [21] 0.000000 2.520530 
+before SPMV pVal, ApVal [22] 0.000000 2.520530 
+before SPMV pVal, ApVal [23] 0.000000 2.520530 
+before SPMV pVal, ApVal [24] 0.000000 2.520530 
+before SPMV pVal, ApVal [25] 0.000000 2.520530 
+before SPMV pVal, ApVal [26] 0.000000 2.520530 
+before SPMV pVal, ApVal [27] 0.000000 2.520530 
+before SPMV pVal, ApVal [28] 0.000000 2.520530 
+before SPMV pVal, ApVal [29] 0.000000 2.520530 
+before SPMV pVal, ApVal [30] 0.000000 5.577117 
+before SPMV pVal, ApVal [31] 0.346154 0.079137 
+before SPMV pVal, ApVal [32] 0.000000 3.371641 
+before SPMV pVal, ApVal [33] 0.000000 2.520530 
+before SPMV pVal, ApVal [34] 0.000000 2.520529 
+before SPMV pVal, ApVal [35] 0.000000 2.520529 
+before SPMV pVal, ApVal [36] 0.000000 2.520529 
+before SPMV pVal, ApVal [37] 0.000000 2.520529 
+before SPMV pVal, ApVal [38] 0.000000 2.520529 
+before SPMV pVal, ApVal [39] 0.000000 2.520529 
+before SPMV pVal, ApVal [40] 0.000000 2.520529 
+before SPMV pVal, ApVal [41] 0.000000 2.520529 
+before SPMV pVal, ApVal [42] 0.000000 2.520529 
+before SPMV pVal, ApVal [43] 0.000000 2.520529 
+before SPMV pVal, ApVal [44] 0.000000 2.520529 
+before SPMV pVal, ApVal [45] 0.000000 2.520529 
+before SPMV pVal, ApVal [46] 0.000000 5.577115 
+before SPMV pVal, ApVal [47] 0.346154 0.079137 
+before SPMV pVal, ApVal [48] 0.000000 3.371641 
+before SPMV pVal, ApVal [49] 0.000000 2.520530 
+before SPMV pVal, ApVal [50] 0.000000 2.520529 
+before SPMV pVal, ApVal [51] 0.000000 2.520529 
+before SPMV pVal, ApVal [52] 0.000000 2.520529 
+before SPMV pVal, ApVal [53] 0.000000 2.520529 
+before SPMV pVal, ApVal [54] 0.000000 2.520529 
+before SPMV pVal, ApVal [55] 0.000000 2.520529 
+before SPMV pVal, ApVal [56] 0.000000 2.520529 
+before SPMV pVal, ApVal [57] 0.000000 2.520529 
+before SPMV pVal, ApVal [58] 0.000000 2.520529 
+before SPMV pVal, ApVal [59] 0.000000 2.520529 
+before SPMV pVal, ApVal [60] 0.000000 2.520529 
+before SPMV pVal, ApVal [61] 0.000000 2.520529 
+before SPMV pVal, ApVal [62] 0.000000 5.577115 
+before SPMV pVal, ApVal [63] 0.346154 0.079137 
+before SPMV pVal, ApVal [64] 0.000000 3.371641 
+before SPMV pVal, ApVal [65] 0.000000 2.520530 
+before SPMV pVal, ApVal [66] 0.000000 2.520529 
+before SPMV pVal, ApVal [67] 0.000000 2.520529 
+before SPMV pVal, ApVal [68] 0.000000 2.520529 
+before SPMV pVal, ApVal [69] 0.000000 2.520529 
+before SPMV pVal, ApVal [70] 0.000000 2.520529 
+before SPMV pVal, ApVal [71] 0.000000 2.520529 
+before SPMV pVal, ApVal [72] 0.000000 2.520529 
+before SPMV pVal, ApVal [73] 0.000000 2.520529 
+before SPMV pVal, ApVal [74] 0.000000 2.520529 
+before SPMV pVal, ApVal [75] 0.000000 2.520529 
+before SPMV pVal, ApVal [76] 0.000000 2.520529 
+before SPMV pVal, ApVal [77] 0.000000 2.520529 
+before SPMV pVal, ApVal [78] 0.000000 5.577115 
+before SPMV pVal, ApVal [79] 0.346154 0.079137 
+before SPMV pVal, ApVal [80] 0.000000 3.371641 
+before SPMV pVal, ApVal [81] 0.000000 2.520530 
+before SPMV pVal, ApVal [82] 0.000000 2.520529 
+before SPMV pVal, ApVal [83] 0.000000 2.520529 
+before SPMV pVal, ApVal [84] 0.000000 2.520529 
+before SPMV pVal, ApVal [85] 0.000000 2.520529 
+before SPMV pVal, ApVal [86] 0.000000 2.520529 
+before SPMV pVal, ApVal [87] 0.000000 2.520529 
+before SPMV pVal, ApVal [88] 0.000000 2.520529 
+before SPMV pVal, ApVal [89] 0.000000 2.520529 
+before SPMV pVal, ApVal [90] 0.000000 2.520529 
+before SPMV pVal, ApVal [91] 0.000000 2.520529 
+before SPMV pVal, ApVal [92] 0.000000 2.520529 
+before SPMV pVal, ApVal [93] 0.000000 2.520529 
+before SPMV pVal, ApVal [94] 0.000000 5.577115 
+before SPMV pVal, ApVal [95] 0.346154 0.079137 
+before SPMV pVal, ApVal [96] 0.000000 3.371641 
+before SPMV pVal, ApVal [97] 0.000000 2.520530 
+before SPMV pVal, ApVal [98] 0.000000 2.520529 
+before SPMV pVal, ApVal [99] 0.000000 2.520529 
+finished SPMV
+before Waxpby bVal, rVal [0] 0.000000 0.000000 
+before Waxpby bVal, rVal [1] 0.000000 -0.000000 
+before Waxpby bVal, rVal [2] 0.000000 0.000000 
+before Waxpby bVal, rVal [3] 0.000000 -0.000000 
+before Waxpby bVal, rVal [4] 0.000000 0.000000 
+before Waxpby bVal, rVal [5] 0.000000 -0.000000 
+before Waxpby bVal, rVal [6] 0.000000 0.000000 
+before Waxpby bVal, rVal [7] 0.000000 -0.000000 
+before Waxpby bVal, rVal [8] 0.000000 0.000000 
+before Waxpby bVal, rVal [9] 0.000000 -0.000000 
+before Waxpby bVal, rVal [10] 0.000000 -0.000000 
+before Waxpby bVal, rVal [11] 0.000000 -0.000000 
+before Waxpby bVal, rVal [12] 0.000000 -0.000000 
+before Waxpby bVal, rVal [13] 0.000000 -0.000000 
+before Waxpby bVal, rVal [14] 0.000000 0.000000 
+before Waxpby bVal, rVal [15] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [16] 0.000000 -0.000000 
+before Waxpby bVal, rVal [17] 0.000000 -0.000000 
+before Waxpby bVal, rVal [18] 0.000000 -0.000000 
+before Waxpby bVal, rVal [19] 0.000000 -0.000000 
+before Waxpby bVal, rVal [20] 0.000000 -0.000000 
+before Waxpby bVal, rVal [21] 0.000000 -0.000000 
+before Waxpby bVal, rVal [22] 0.000000 -0.000000 
+before Waxpby bVal, rVal [23] 0.000000 -0.000000 
+before Waxpby bVal, rVal [24] 0.000000 -0.000000 
+before Waxpby bVal, rVal [25] 0.000000 -0.000000 
+before Waxpby bVal, rVal [26] 0.000000 -0.000000 
+before Waxpby bVal, rVal [27] 0.000000 -0.000000 
+before Waxpby bVal, rVal [28] 0.000000 -0.000000 
+before Waxpby bVal, rVal [29] 0.000000 -0.000000 
+before Waxpby bVal, rVal [30] 0.000000 0.000000 
+before Waxpby bVal, rVal [31] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [32] 0.000000 -0.000000 
+before Waxpby bVal, rVal [33] 0.000000 -0.000000 
+before Waxpby bVal, rVal [34] 0.000000 -0.000000 
+before Waxpby bVal, rVal [35] 0.000000 -0.000000 
+before Waxpby bVal, rVal [36] 0.000000 -0.000000 
+before Waxpby bVal, rVal [37] 0.000000 -0.000000 
+before Waxpby bVal, rVal [38] 0.000000 -0.000000 
+before Waxpby bVal, rVal [39] 0.000000 -0.000000 
+before Waxpby bVal, rVal [40] 0.000000 -0.000000 
+before Waxpby bVal, rVal [41] 0.000000 -0.000000 
+before Waxpby bVal, rVal [42] 0.000000 -0.000000 
+before Waxpby bVal, rVal [43] 0.000000 -0.000000 
+before Waxpby bVal, rVal [44] 0.000000 -0.000000 
+before Waxpby bVal, rVal [45] 0.000000 -0.000000 
+before Waxpby bVal, rVal [46] 0.000000 0.000000 
+before Waxpby bVal, rVal [47] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [48] 0.000000 -0.000000 
+before Waxpby bVal, rVal [49] 0.000000 -0.000000 
+before Waxpby bVal, rVal [50] 0.000000 -0.000000 
+before Waxpby bVal, rVal [51] 0.000000 -0.000000 
+before Waxpby bVal, rVal [52] 0.000000 -0.000000 
+before Waxpby bVal, rVal [53] 0.000000 -0.000000 
+before Waxpby bVal, rVal [54] 0.000000 -0.000000 
+before Waxpby bVal, rVal [55] 0.000000 -0.000000 
+before Waxpby bVal, rVal [56] 0.000000 -0.000000 
+before Waxpby bVal, rVal [57] 0.000000 -0.000000 
+before Waxpby bVal, rVal [58] 0.000000 -0.000000 
+before Waxpby bVal, rVal [59] 0.000000 -0.000000 
+before Waxpby bVal, rVal [60] 0.000000 -0.000000 
+before Waxpby bVal, rVal [61] 0.000000 -0.000000 
+before Waxpby bVal, rVal [62] 0.000000 0.000000 
+before Waxpby bVal, rVal [63] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [64] 0.000000 -0.000000 
+before Waxpby bVal, rVal [65] 0.000000 -0.000000 
+before Waxpby bVal, rVal [66] 0.000000 -0.000000 
+before Waxpby bVal, rVal [67] 0.000000 -0.000000 
+before Waxpby bVal, rVal [68] 0.000000 -0.000000 
+before Waxpby bVal, rVal [69] 0.000000 -0.000000 
+before Waxpby bVal, rVal [70] 0.000000 -0.000000 
+before Waxpby bVal, rVal [71] 0.000000 -0.000000 
+before Waxpby bVal, rVal [72] 0.000000 -0.000000 
+before Waxpby bVal, rVal [73] 0.000000 -0.000000 
+before Waxpby bVal, rVal [74] 0.000000 -0.000000 
+before Waxpby bVal, rVal [75] 0.000000 -0.000000 
+before Waxpby bVal, rVal [76] 0.000000 -0.000000 
+before Waxpby bVal, rVal [77] 0.000000 -0.000000 
+before Waxpby bVal, rVal [78] 0.000000 0.000000 
+before Waxpby bVal, rVal [79] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [80] 0.000000 -0.000000 
+before Waxpby bVal, rVal [81] 0.000000 -0.000000 
+before Waxpby bVal, rVal [82] 0.000000 -0.000000 
+before Waxpby bVal, rVal [83] 0.000000 -0.000000 
+before Waxpby bVal, rVal [84] 0.000000 -0.000000 
+before Waxpby bVal, rVal [85] 0.000000 -0.000000 
+before Waxpby bVal, rVal [86] 0.000000 -0.000000 
+before Waxpby bVal, rVal [87] 0.000000 -0.000000 
+before Waxpby bVal, rVal [88] 0.000000 -0.000000 
+before Waxpby bVal, rVal [89] 0.000000 -0.000000 
+before Waxpby bVal, rVal [90] 0.000000 -0.000000 
+before Waxpby bVal, rVal [91] 0.000000 -0.000000 
+before Waxpby bVal, rVal [92] 0.000000 -0.000000 
+before Waxpby bVal, rVal [93] 0.000000 -0.000000 
+before Waxpby bVal, rVal [94] 0.000000 0.000000 
+before Waxpby bVal, rVal [95] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [96] 0.000000 -0.000000 
+before Waxpby bVal, rVal [97] 0.000000 -0.000000 
+before Waxpby bVal, rVal [98] 0.000000 -0.000000 
+before Waxpby bVal, rVal [99] 0.000000 -0.000000 
+after copy bVal, rVal [0] 0.000000 0.000000 
+after copy bVal, rVal [1] 0.000000 -0.000000 
+after copy bVal, rVal [2] 0.000000 0.000000 
+after copy bVal, rVal [3] 0.000000 -0.000000 
+after copy bVal, rVal [4] 0.000000 0.000000 
+after copy bVal, rVal [5] 0.000000 -0.000000 
+after copy bVal, rVal [6] 0.000000 0.000000 
+after copy bVal, rVal [7] 0.000000 -0.000000 
+after copy bVal, rVal [8] 0.000000 0.000000 
+after copy bVal, rVal [9] 0.000000 -0.000000 
+after copy bVal, rVal [10] 0.000000 -0.000000 
+after copy bVal, rVal [11] 0.000000 -0.000000 
+after copy bVal, rVal [12] 0.000000 -0.000000 
+after copy bVal, rVal [13] 0.000000 -0.000000 
+after copy bVal, rVal [14] 0.000000 0.000000 
+after copy bVal, rVal [15] 9000000.000000 -0.000000 
+after copy bVal, rVal [16] 0.000000 -0.000000 
+after copy bVal, rVal [17] 0.000000 -0.000000 
+after copy bVal, rVal [18] 0.000000 -0.000000 
+after copy bVal, rVal [19] 0.000000 -0.000000 
+after copy bVal, rVal [20] 0.000000 -0.000000 
+after copy bVal, rVal [21] 0.000000 -0.000000 
+after copy bVal, rVal [22] 0.000000 -0.000000 
+after copy bVal, rVal [23] 0.000000 -0.000000 
+after copy bVal, rVal [24] 0.000000 -0.000000 
+after copy bVal, rVal [25] 0.000000 -0.000000 
+after copy bVal, rVal [26] 0.000000 -0.000000 
+after copy bVal, rVal [27] 0.000000 -0.000000 
+after copy bVal, rVal [28] 0.000000 -0.000000 
+after copy bVal, rVal [29] 0.000000 -0.000000 
+after copy bVal, rVal [30] 0.000000 0.000000 
+after copy bVal, rVal [31] 9000000.000000 -0.000000 
+after copy bVal, rVal [32] 0.000000 -0.000000 
+after copy bVal, rVal [33] 0.000000 -0.000000 
+after copy bVal, rVal [34] 0.000000 -0.000000 
+after copy bVal, rVal [35] 0.000000 -0.000000 
+after copy bVal, rVal [36] 0.000000 -0.000000 
+after copy bVal, rVal [37] 0.000000 -0.000000 
+after copy bVal, rVal [38] 0.000000 -0.000000 
+after copy bVal, rVal [39] 0.000000 -0.000000 
+after copy bVal, rVal [40] 0.000000 -0.000000 
+after copy bVal, rVal [41] 0.000000 -0.000000 
+after copy bVal, rVal [42] 0.000000 -0.000000 
+after copy bVal, rVal [43] 0.000000 -0.000000 
+after copy bVal, rVal [44] 0.000000 -0.000000 
+after copy bVal, rVal [45] 0.000000 -0.000000 
+after copy bVal, rVal [46] 0.000000 0.000000 
+after copy bVal, rVal [47] 9000000.000000 -0.000000 
+after copy bVal, rVal [48] 0.000000 -0.000000 
+after copy bVal, rVal [49] 0.000000 -0.000000 
+after copy bVal, rVal [50] 0.000000 -0.000000 
+after copy bVal, rVal [51] 0.000000 -0.000000 
+after copy bVal, rVal [52] 0.000000 -0.000000 
+after copy bVal, rVal [53] 0.000000 -0.000000 
+after copy bVal, rVal [54] 0.000000 -0.000000 
+after copy bVal, rVal [55] 0.000000 -0.000000 
+after copy bVal, rVal [56] 0.000000 -0.000000 
+after copy bVal, rVal [57] 0.000000 -0.000000 
+after copy bVal, rVal [58] 0.000000 -0.000000 
+after copy bVal, rVal [59] 0.000000 -0.000000 
+after copy bVal, rVal [60] 0.000000 -0.000000 
+after copy bVal, rVal [61] 0.000000 -0.000000 
+after copy bVal, rVal [62] 0.000000 0.000000 
+after copy bVal, rVal [63] 9000000.000000 -0.000000 
+after copy bVal, rVal [64] 0.000000 -0.000000 
+after copy bVal, rVal [65] 0.000000 -0.000000 
+after copy bVal, rVal [66] 0.000000 -0.000000 
+after copy bVal, rVal [67] 0.000000 -0.000000 
+after copy bVal, rVal [68] 0.000000 -0.000000 
+after copy bVal, rVal [69] 0.000000 -0.000000 
+after copy bVal, rVal [70] 0.000000 -0.000000 
+after copy bVal, rVal [71] 0.000000 -0.000000 
+after copy bVal, rVal [72] 0.000000 -0.000000 
+after copy bVal, rVal [73] 0.000000 -0.000000 
+after copy bVal, rVal [74] 0.000000 -0.000000 
+after copy bVal, rVal [75] 0.000000 -0.000000 
+after copy bVal, rVal [76] 0.000000 -0.000000 
+after copy bVal, rVal [77] 0.000000 -0.000000 
+after copy bVal, rVal [78] 0.000000 0.000000 
+after copy bVal, rVal [79] 9000000.000000 -0.000000 
+after copy bVal, rVal [80] 0.000000 -0.000000 
+after copy bVal, rVal [81] 0.000000 -0.000000 
+after copy bVal, rVal [82] 0.000000 -0.000000 
+after copy bVal, rVal [83] 0.000000 -0.000000 
+after copy bVal, rVal [84] 0.000000 -0.000000 
+after copy bVal, rVal [85] 0.000000 -0.000000 
+after copy bVal, rVal [86] 0.000000 -0.000000 
+after copy bVal, rVal [87] 0.000000 -0.000000 
+after copy bVal, rVal [88] 0.000000 -0.000000 
+after copy bVal, rVal [89] 0.000000 -0.000000 
+after copy bVal, rVal [90] 0.000000 -0.000000 
+after copy bVal, rVal [91] 0.000000 -0.000000 
+after copy bVal, rVal [92] 0.000000 -0.000000 
+after copy bVal, rVal [93] 0.000000 -0.000000 
+after copy bVal, rVal [94] 0.000000 0.000000 
+after copy bVal, rVal [95] 9000000.000000 -0.000000 
+after copy bVal, rVal [96] 0.000000 -0.000000 
+after copy bVal, rVal [97] 0.000000 -0.000000 
+after copy bVal, rVal [98] 0.000000 -0.000000 
+after copy bVal, rVal [99] 0.000000 -0.000000 
+current normr : 0.000008
+=== entering CG iterations
+beginning ell, r, z
+ell r z [0] 52000000.000000 0.000000 -0.000405
+ell r z [1] 78000000.000000 -0.000000 0.002299
+ell r z [2] 104000000.000000 0.000000 -0.005363
+ell r z [3] 130000000.000000 -0.000000 0.008045
+ell r z [4] 156000000.000000 0.000000 -0.008045
+ell r z [5] 182000000.000000 -0.000000 0.005363
+ell r z [6] 208000000.000000 0.000000 -0.002299
+ell r z [7] 234000000.000000 -0.000000 0.000575
+ell r z [8] 260000000.000000 0.000000 -0.000064
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+after MG, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+fusedWaxpby parms at 1: 32768, -0.000000, 0.000000
+Ap [0] 0.040092
+Ap [1] -0.170591
+Ap [2] 0.353821
+Ap [3] -0.497556
+Ap [4] 0.477658
+Ap [5] -0.309589
+Ap [6] 0.129975
+Ap [7] -0.031981
+Ap [8] 0.003515
+Ap [9] -1.225132
+Ap [10] -1.225132
+Ap [11] -1.225132
+Ap [12] -1.225132
+Ap [13] -1.225132
+Ap [14] 0.636408
+Ap [15] -2.469867
+Ap [16] -1.225131
+Ap [17] -0.098822
+Ap [18] -0.098823
+Ap [19] -0.098823
+Ap [20] -0.098823
+Ap [21] -0.098823
+Ap [22] -0.098823
+Ap [23] -0.098823
+Ap [24] -0.098823
+Ap [25] -0.098823
+Ap [26] -0.098823
+Ap [27] -0.098823
+Ap [28] -0.098823
+Ap [29] -0.098823
+Ap [30] 2.185794
+Ap [31] -1.065433
+Ap [32] -1.225132
+Ap [33] -0.098823
+Ap [34] -0.098824
+Ap [35] -0.098824
+Ap [36] -0.098824
+Ap [37] -0.098824
+Ap [38] -0.098824
+Ap [39] -0.098824
+Ap [40] -0.098824
+Ap [41] -0.098824
+Ap [42] -0.098824
+Ap [43] -0.098824
+Ap [44] -0.098824
+Ap [45] -0.098824
+Ap [46] 2.185793
+Ap [47] -1.065433
+Ap [48] -1.225132
+Ap [49] -0.098823
+Ap [50] -0.098824
+Ap [51] -0.098824
+Ap [52] -0.098824
+Ap [53] -0.098824
+Ap [54] -0.098824
+Ap [55] -0.098824
+Ap [56] -0.098824
+Ap [57] -0.098824
+Ap [58] -0.098824
+Ap [59] -0.098824
+Ap [60] -0.098824
+Ap [61] -0.098824
+Ap [62] 2.185793
+Ap [63] -1.065433
+Ap [64] -1.225132
+Ap [65] -0.098823
+Ap [66] -0.098824
+Ap [67] -0.098824
+Ap [68] -0.098824
+Ap [69] -0.098824
+Ap [70] -0.098824
+Ap [71] -0.098824
+Ap [72] -0.098824
+Ap [73] -0.098824
+Ap [74] -0.098824
+Ap [75] -0.098824
+Ap [76] -0.098824
+Ap [77] -0.098824
+Ap [78] 2.185793
+Ap [79] -1.065433
+Ap [80] -1.225132
+Ap [81] -0.098823
+Ap [82] -0.098824
+Ap [83] -0.098824
+Ap [84] -0.098824
+Ap [85] -0.098824
+Ap [86] -0.098824
+Ap [87] -0.098824
+Ap [88] -0.098824
+Ap [89] -0.098824
+Ap [90] -0.098824
+Ap [91] -0.098824
+Ap [92] -0.098824
+Ap [93] -0.098824
+Ap [94] 2.185793
+Ap [95] -1.065433
+Ap [96] -1.225132
+Ap [97] -0.098823
+Ap [98] -0.098824
+Ap [99] -0.098824
+normr, normr0 at 1 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+fusedWaxpby parms at 2: 32768, -0.000000, 0.000000
+Ap [0] -0.040092
+Ap [1] 0.341180
+Ap [2] -1.061455
+Ap [3] 1.990214
+Ap [4] -2.388278
+Ap [5] 1.857528
+Ap [6] -0.909819
+Ap [7] 0.255851
+Ap [8] -0.031638
+Ap [9] -0.000014
+Ap [10] -0.000014
+Ap [11] -0.000014
+Ap [12] -0.000014
+Ap [13] -0.000014
+Ap [14] 0.000009
+Ap [15] -0.000030
+Ap [16] -0.000014
+Ap [17] 0.000001
+Ap [18] 0.000000
+Ap [19] 0.000000
+Ap [20] 0.000000
+Ap [21] 0.000000
+Ap [22] 0.000000
+Ap [23] 0.000000
+Ap [24] 0.000000
+Ap [25] 0.000000
+Ap [26] 0.000000
+Ap [27] 0.000000
+Ap [28] 0.000000
+Ap [29] 0.000000
+Ap [30] 0.000028
+Ap [31] -0.000013
+Ap [32] -0.000014
+Ap [33] 0.000000
+Ap [34] -0.000000
+Ap [35] -0.000000
+Ap [36] -0.000000
+Ap [37] -0.000000
+Ap [38] -0.000000
+Ap [39] -0.000000
+Ap [40] -0.000000
+Ap [41] -0.000000
+Ap [42] -0.000000
+Ap [43] -0.000000
+Ap [44] -0.000000
+Ap [45] -0.000000
+Ap [46] 0.000028
+Ap [47] -0.000013
+Ap [48] -0.000014
+Ap [49] 0.000000
+Ap [50] -0.000000
+Ap [51] -0.000000
+Ap [52] -0.000000
+Ap [53] -0.000000
+Ap [54] -0.000000
+Ap [55] -0.000000
+Ap [56] -0.000000
+Ap [57] -0.000000
+Ap [58] -0.000000
+Ap [59] -0.000000
+Ap [60] -0.000000
+Ap [61] -0.000000
+Ap [62] 0.000028
+Ap [63] -0.000013
+Ap [64] -0.000014
+Ap [65] 0.000000
+Ap [66] -0.000000
+Ap [67] -0.000000
+Ap [68] -0.000000
+Ap [69] -0.000000
+Ap [70] -0.000000
+Ap [71] -0.000000
+Ap [72] -0.000000
+Ap [73] -0.000000
+Ap [74] -0.000000
+Ap [75] -0.000000
+Ap [76] -0.000000
+Ap [77] -0.000000
+Ap [78] 0.000028
+Ap [79] -0.000013
+Ap [80] -0.000014
+Ap [81] 0.000000
+Ap [82] -0.000000
+Ap [83] -0.000000
+Ap [84] -0.000000
+Ap [85] -0.000000
+Ap [86] -0.000000
+Ap [87] -0.000000
+Ap [88] -0.000000
+Ap [89] -0.000000
+Ap [90] -0.000000
+Ap [91] -0.000000
+Ap [92] -0.000000
+Ap [93] -0.000000
+Ap [94] 0.000028
+Ap [95] -0.000013
+Ap [96] -0.000014
+Ap [97] 0.000000
+Ap [98] -0.000000
+Ap [99] -0.000000
+normr, normr0 at 2 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 -0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 -0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 3: 32768, -0.000000, 0.000000
+Ap [0] -0.027086
+Ap [1] 0.168497
+Ap [2] -0.331326
+Ap [3] 0.259572
+Ap [4] 0.122507
+Ap [5] -0.432830
+Ap [6] 0.377332
+Ap [7] -0.152603
+Ap [8] 0.024620
+Ap [9] 0.000000
+Ap [10] 0.000000
+Ap [11] 0.000000
+Ap [12] 0.000000
+Ap [13] 0.000000
+Ap [14] 0.000001
+Ap [15] -0.000001
+Ap [16] 0.000001
+Ap [17] 0.000002
+Ap [18] 0.000001
+Ap [19] 0.000001
+Ap [20] 0.000001
+Ap [21] 0.000001
+Ap [22] 0.000001
+Ap [23] 0.000001
+Ap [24] 0.000001
+Ap [25] 0.000001
+Ap [26] 0.000001
+Ap [27] 0.000001
+Ap [28] 0.000001
+Ap [29] 0.000001
+Ap [30] 0.000002
+Ap [31] -0.000000
+Ap [32] 0.000000
+Ap [33] 0.000001
+Ap [34] 0.000001
+Ap [35] 0.000001
+Ap [36] 0.000001
+Ap [37] 0.000001
+Ap [38] 0.000001
+Ap [39] 0.000001
+Ap [40] 0.000001
+Ap [41] 0.000001
+Ap [42] 0.000001
+Ap [43] 0.000001
+Ap [44] 0.000001
+Ap [45] 0.000001
+Ap [46] 0.000002
+Ap [47] -0.000000
+Ap [48] 0.000000
+Ap [49] 0.000001
+Ap [50] 0.000001
+Ap [51] 0.000001
+Ap [52] 0.000001
+Ap [53] 0.000001
+Ap [54] 0.000001
+Ap [55] 0.000001
+Ap [56] 0.000001
+Ap [57] 0.000001
+Ap [58] 0.000001
+Ap [59] 0.000001
+Ap [60] 0.000001
+Ap [61] 0.000001
+Ap [62] 0.000002
+Ap [63] -0.000000
+Ap [64] 0.000000
+Ap [65] 0.000001
+Ap [66] 0.000001
+Ap [67] 0.000001
+Ap [68] 0.000001
+Ap [69] 0.000001
+Ap [70] 0.000001
+Ap [71] 0.000001
+Ap [72] 0.000001
+Ap [73] 0.000001
+Ap [74] 0.000001
+Ap [75] 0.000001
+Ap [76] 0.000001
+Ap [77] 0.000001
+Ap [78] 0.000002
+Ap [79] -0.000000
+Ap [80] 0.000000
+Ap [81] 0.000001
+Ap [82] 0.000001
+Ap [83] 0.000001
+Ap [84] 0.000001
+Ap [85] 0.000001
+Ap [86] 0.000001
+Ap [87] 0.000001
+Ap [88] 0.000001
+Ap [89] 0.000001
+Ap [90] 0.000001
+Ap [91] 0.000001
+Ap [92] 0.000001
+Ap [93] 0.000001
+Ap [94] 0.000002
+Ap [95] -0.000000
+Ap [96] 0.000000
+Ap [97] 0.000001
+Ap [98] 0.000001
+Ap [99] 0.000001
+normr, normr0 at 3 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 4: 32768, -0.000000, 0.000000
+Ap [0] -0.017420
+Ap [1] 0.073065
+Ap [2] -0.066052
+Ap [3] -0.042329
+Ap [4] 0.086782
+Ap [5] 0.031621
+Ap [6] -0.126293
+Ap [7] 0.084182
+Ap [8] -0.018593
+Ap [9] 0.000001
+Ap [10] 0.000001
+Ap [11] 0.000001
+Ap [12] 0.000001
+Ap [13] 0.000001
+Ap [14] 0.000001
+Ap [15] 0.000000
+Ap [16] 0.000001
+Ap [17] 0.000001
+Ap [18] 0.000001
+Ap [19] 0.000001
+Ap [20] 0.000001
+Ap [21] 0.000001
+Ap [22] 0.000001
+Ap [23] 0.000001
+Ap [24] 0.000001
+Ap [25] 0.000001
+Ap [26] 0.000001
+Ap [27] 0.000001
+Ap [28] 0.000001
+Ap [29] 0.000001
+Ap [30] 0.000001
+Ap [31] 0.000000
+Ap [32] 0.000001
+Ap [33] 0.000001
+Ap [34] 0.000001
+Ap [35] 0.000001
+Ap [36] 0.000001
+Ap [37] 0.000001
+Ap [38] 0.000001
+Ap [39] 0.000001
+Ap [40] 0.000001
+Ap [41] 0.000001
+Ap [42] 0.000001
+Ap [43] 0.000001
+Ap [44] 0.000001
+Ap [45] 0.000001
+Ap [46] 0.000001
+Ap [47] 0.000000
+Ap [48] 0.000001
+Ap [49] 0.000001
+Ap [50] 0.000001
+Ap [51] 0.000001
+Ap [52] 0.000001
+Ap [53] 0.000001
+Ap [54] 0.000001
+Ap [55] 0.000001
+Ap [56] 0.000001
+Ap [57] 0.000001
+Ap [58] 0.000001
+Ap [59] 0.000001
+Ap [60] 0.000001
+Ap [61] 0.000001
+Ap [62] 0.000001
+Ap [63] 0.000000
+Ap [64] 0.000001
+Ap [65] 0.000001
+Ap [66] 0.000001
+Ap [67] 0.000001
+Ap [68] 0.000001
+Ap [69] 0.000001
+Ap [70] 0.000001
+Ap [71] 0.000001
+Ap [72] 0.000001
+Ap [73] 0.000001
+Ap [74] 0.000001
+Ap [75] 0.000001
+Ap [76] 0.000001
+Ap [77] 0.000001
+Ap [78] 0.000001
+Ap [79] 0.000000
+Ap [80] 0.000001
+Ap [81] 0.000001
+Ap [82] 0.000001
+Ap [83] 0.000001
+Ap [84] 0.000001
+Ap [85] 0.000001
+Ap [86] 0.000001
+Ap [87] 0.000001
+Ap [88] 0.000001
+Ap [89] 0.000001
+Ap [90] 0.000001
+Ap [91] 0.000001
+Ap [92] 0.000001
+Ap [93] 0.000001
+Ap [94] 0.000001
+Ap [95] 0.000000
+Ap [96] 0.000001
+Ap [97] 0.000001
+Ap [98] 0.000001
+Ap [99] 0.000001
+normr, normr0 at 4 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 5: 32768, -0.000000, 0.000000
+Ap [0] -0.010526
+Ap [1] 0.025797
+Ap [2] 0.003290
+Ap [3] -0.026281
+Ap [4] -0.013579
+Ap [5] 0.025938
+Ap [6] 0.025455
+Ap [7] -0.040872
+Ap [8] 0.013318
+Ap [9] 0.000001
+Ap [10] 0.000001
+Ap [11] 0.000001
+Ap [12] 0.000001
+Ap [13] 0.000001
+Ap [14] 0.000000
+Ap [15] 0.000000
+Ap [16] 0.000001
+Ap [17] 0.000001
+Ap [18] 0.000001
+Ap [19] 0.000001
+Ap [20] 0.000001
+Ap [21] 0.000001
+Ap [22] 0.000001
+Ap [23] 0.000001
+Ap [24] 0.000001
+Ap [25] 0.000001
+Ap [26] 0.000001
+Ap [27] 0.000001
+Ap [28] 0.000001
+Ap [29] 0.000001
+Ap [30] 0.000001
+Ap [31] 0.000000
+Ap [32] 0.000001
+Ap [33] 0.000001
+Ap [34] 0.000001
+Ap [35] 0.000001
+Ap [36] 0.000001
+Ap [37] 0.000001
+Ap [38] 0.000001
+Ap [39] 0.000001
+Ap [40] 0.000001
+Ap [41] 0.000001
+Ap [42] 0.000001
+Ap [43] 0.000001
+Ap [44] 0.000001
+Ap [45] 0.000001
+Ap [46] 0.000000
+Ap [47] 0.000000
+Ap [48] 0.000001
+Ap [49] 0.000001
+Ap [50] 0.000001
+Ap [51] 0.000001
+Ap [52] 0.000001
+Ap [53] 0.000001
+Ap [54] 0.000001
+Ap [55] 0.000001
+Ap [56] 0.000001
+Ap [57] 0.000001
+Ap [58] 0.000001
+Ap [59] 0.000001
+Ap [60] 0.000001
+Ap [61] 0.000001
+Ap [62] 0.000000
+Ap [63] 0.000000
+Ap [64] 0.000001
+Ap [65] 0.000001
+Ap [66] 0.000001
+Ap [67] 0.000001
+Ap [68] 0.000001
+Ap [69] 0.000001
+Ap [70] 0.000001
+Ap [71] 0.000001
+Ap [72] 0.000001
+Ap [73] 0.000001
+Ap [74] 0.000001
+Ap [75] 0.000001
+Ap [76] 0.000001
+Ap [77] 0.000001
+Ap [78] 0.000000
+Ap [79] 0.000000
+Ap [80] 0.000001
+Ap [81] 0.000001
+Ap [82] 0.000001
+Ap [83] 0.000001
+Ap [84] 0.000001
+Ap [85] 0.000001
+Ap [86] 0.000001
+Ap [87] 0.000001
+Ap [88] 0.000001
+Ap [89] 0.000001
+Ap [90] 0.000001
+Ap [91] 0.000001
+Ap [92] 0.000001
+Ap [93] 0.000001
+Ap [94] 0.000000
+Ap [95] 0.000000
+Ap [96] 0.000001
+Ap [97] 0.000001
+Ap [98] 0.000001
+Ap [99] 0.000001
+normr, normr0 at 5 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 6: 32768, -0.000000, 0.000000
+Ap [0] -0.005939
+Ap [1] 0.006160
+Ap [2] 0.008475
+Ap [3] 0.000442
+Ap [4] -0.009131
+Ap [5] -0.009446
+Ap [6] 0.003149
+Ap [7] 0.016037
+Ap [8] -0.008804
+Ap [9] 0.000001
+Ap [10] 0.000001
+Ap [11] 0.000001
+Ap [12] 0.000001
+Ap [13] 0.000001
+Ap [14] 0.000000
+Ap [15] 0.000000
+Ap [16] 0.000001
+Ap [17] 0.000001
+Ap [18] 0.000001
+Ap [19] 0.000001
+Ap [20] 0.000001
+Ap [21] 0.000001
+Ap [22] 0.000001
+Ap [23] 0.000001
+Ap [24] 0.000001
+Ap [25] 0.000001
+Ap [26] 0.000001
+Ap [27] 0.000001
+Ap [28] 0.000001
+Ap [29] 0.000001
+Ap [30] 0.000001
+Ap [31] 0.000000
+Ap [32] 0.000001
+Ap [33] 0.000001
+Ap [34] 0.000000
+Ap [35] 0.000000
+Ap [36] 0.000000
+Ap [37] 0.000000
+Ap [38] 0.000000
+Ap [39] 0.000000
+Ap [40] 0.000000
+Ap [41] 0.000000
+Ap [42] 0.000000
+Ap [43] 0.000000
+Ap [44] 0.000000
+Ap [45] 0.000000
+Ap [46] 0.000000
+Ap [47] 0.000000
+Ap [48] 0.000001
+Ap [49] 0.000001
+Ap [50] 0.000000
+Ap [51] 0.000000
+Ap [52] 0.000000
+Ap [53] 0.000000
+Ap [54] 0.000000
+Ap [55] 0.000000
+Ap [56] 0.000000
+Ap [57] 0.000000
+Ap [58] 0.000000
+Ap [59] 0.000000
+Ap [60] 0.000000
+Ap [61] 0.000000
+Ap [62] 0.000000
+Ap [63] 0.000000
+Ap [64] 0.000001
+Ap [65] 0.000001
+Ap [66] 0.000000
+Ap [67] 0.000000
+Ap [68] 0.000000
+Ap [69] 0.000000
+Ap [70] 0.000000
+Ap [71] 0.000000
+Ap [72] 0.000000
+Ap [73] 0.000000
+Ap [74] 0.000000
+Ap [75] 0.000000
+Ap [76] 0.000000
+Ap [77] 0.000000
+Ap [78] 0.000000
+Ap [79] 0.000000
+Ap [80] 0.000001
+Ap [81] 0.000001
+Ap [82] 0.000000
+Ap [83] 0.000000
+Ap [84] 0.000000
+Ap [85] 0.000000
+Ap [86] 0.000000
+Ap [87] 0.000000
+Ap [88] 0.000000
+Ap [89] 0.000000
+Ap [90] 0.000000
+Ap [91] 0.000000
+Ap [92] 0.000000
+Ap [93] 0.000000
+Ap [94] 0.000000
+Ap [95] 0.000000
+Ap [96] 0.000001
+Ap [97] 0.000001
+Ap [98] 0.000000
+Ap [99] 0.000000
+normr, normr0 at 6 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 7: 32768, -0.000000, 0.000000
+Ap [0] -0.003134
+Ap [1] -0.000024
+Ap [2] 0.002724
+Ap [3] 0.003701
+Ap [4] 0.002073
+Ap [5] -0.001493
+Ap [6] -0.004829
+Ap [7] -0.004269
+Ap [8] 0.005349
+Ap [9] 0.000000
+Ap [10] 0.000001
+Ap [11] 0.000001
+Ap [12] 0.000001
+Ap [13] 0.000001
+Ap [14] 0.000000
+Ap [15] 0.000000
+Ap [16] 0.000001
+Ap [17] 0.000001
+Ap [18] 0.000001
+Ap [19] 0.000001
+Ap [20] 0.000001
+Ap [21] 0.000001
+Ap [22] 0.000001
+Ap [23] 0.000001
+Ap [24] 0.000001
+Ap [25] 0.000001
+Ap [26] 0.000001
+Ap [27] 0.000001
+Ap [28] 0.000001
+Ap [29] 0.000001
+Ap [30] 0.000000
+Ap [31] 0.000000
+Ap [32] 0.000001
+Ap [33] 0.000001
+Ap [34] 0.000000
+Ap [35] 0.000000
+Ap [36] 0.000000
+Ap [37] 0.000000
+Ap [38] 0.000000
+Ap [39] 0.000000
+Ap [40] 0.000000
+Ap [41] 0.000000
+Ap [42] 0.000000
+Ap [43] 0.000000
+Ap [44] 0.000000
+Ap [45] 0.000000
+Ap [46] 0.000000
+Ap [47] 0.000000
+Ap [48] 0.000001
+Ap [49] 0.000001
+Ap [50] 0.000000
+Ap [51] 0.000000
+Ap [52] 0.000000
+Ap [53] 0.000000
+Ap [54] 0.000000
+Ap [55] 0.000000
+Ap [56] 0.000000
+Ap [57] 0.000000
+Ap [58] 0.000000
+Ap [59] 0.000000
+Ap [60] 0.000000
+Ap [61] 0.000000
+Ap [62] 0.000000
+Ap [63] 0.000000
+Ap [64] 0.000001
+Ap [65] 0.000001
+Ap [66] 0.000000
+Ap [67] 0.000000
+Ap [68] 0.000000
+Ap [69] 0.000000
+Ap [70] 0.000000
+Ap [71] 0.000000
+Ap [72] 0.000000
+Ap [73] 0.000000
+Ap [74] 0.000000
+Ap [75] 0.000000
+Ap [76] 0.000000
+Ap [77] 0.000000
+Ap [78] 0.000000
+Ap [79] 0.000000
+Ap [80] 0.000001
+Ap [81] 0.000001
+Ap [82] 0.000000
+Ap [83] 0.000000
+Ap [84] 0.000000
+Ap [85] 0.000000
+Ap [86] 0.000000
+Ap [87] 0.000000
+Ap [88] 0.000000
+Ap [89] 0.000000
+Ap [90] 0.000000
+Ap [91] 0.000000
+Ap [92] 0.000000
+Ap [93] 0.000000
+Ap [94] 0.000000
+Ap [95] 0.000000
+Ap [96] 0.000001
+Ap [97] 0.000001
+Ap [98] 0.000000
+Ap [99] 0.000000
+normr, normr0 at 7 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 8: 32768, -0.000000, 0.000000
+Ap [0] -0.001489
+Ap [1] -0.001055
+Ap [2] -0.000386
+Ap [3] 0.000586
+Ap [4] 0.001486
+Ap [5] 0.001944
+Ap [6] 0.001586
+Ap [7] 0.000041
+Ap [8] -0.003059
+Ap [9] 0.000000
+Ap [10] 0.000000
+Ap [11] 0.000000
+Ap [12] 0.000000
+Ap [13] 0.000000
+Ap [14] 0.000000
+Ap [15] 0.000000
+Ap [16] 0.000000
+Ap [17] 0.000001
+Ap [18] 0.000000
+Ap [19] 0.000000
+Ap [20] 0.000000
+Ap [21] 0.000000
+Ap [22] 0.000000
+Ap [23] 0.000000
+Ap [24] 0.000000
+Ap [25] 0.000000
+Ap [26] 0.000001
+Ap [27] 0.000001
+Ap [28] 0.000001
+Ap [29] 0.000001
+Ap [30] 0.000000
+Ap [31] 0.000000
+Ap [32] 0.000000
+Ap [33] 0.000001
+Ap [34] 0.000000
+Ap [35] 0.000000
+Ap [36] 0.000000
+Ap [37] 0.000000
+Ap [38] 0.000000
+Ap [39] 0.000000
+Ap [40] 0.000000
+Ap [41] 0.000000
+Ap [42] 0.000000
+Ap [43] 0.000000
+Ap [44] 0.000000
+Ap [45] 0.000000
+Ap [46] 0.000000
+Ap [47] 0.000000
+Ap [48] 0.000000
+Ap [49] 0.000001
+Ap [50] 0.000000
+Ap [51] 0.000000
+Ap [52] 0.000000
+Ap [53] 0.000000
+Ap [54] 0.000000
+Ap [55] 0.000000
+Ap [56] 0.000000
+Ap [57] 0.000000
+Ap [58] 0.000000
+Ap [59] 0.000000
+Ap [60] 0.000000
+Ap [61] 0.000000
+Ap [62] 0.000000
+Ap [63] 0.000000
+Ap [64] 0.000000
+Ap [65] 0.000001
+Ap [66] 0.000000
+Ap [67] 0.000000
+Ap [68] 0.000000
+Ap [69] 0.000000
+Ap [70] 0.000000
+Ap [71] 0.000000
+Ap [72] 0.000000
+Ap [73] 0.000000
+Ap [74] 0.000000
+Ap [75] 0.000000
+Ap [76] 0.000000
+Ap [77] 0.000000
+Ap [78] 0.000000
+Ap [79] 0.000000
+Ap [80] 0.000000
+Ap [81] 0.000001
+Ap [82] 0.000000
+Ap [83] 0.000000
+Ap [84] 0.000000
+Ap [85] 0.000000
+Ap [86] 0.000000
+Ap [87] 0.000000
+Ap [88] 0.000000
+Ap [89] 0.000000
+Ap [90] 0.000000
+Ap [91] 0.000000
+Ap [92] 0.000000
+Ap [93] 0.000000
+Ap [94] 0.000000
+Ap [95] 0.000000
+Ap [96] 0.000000
+Ap [97] 0.000001
+Ap [98] 0.000000
+Ap [99] 0.000000
+normr, normr0 at 8 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 9: 32768, -0.000000, 0.000000
+Ap [0] -0.000528
+Ap [1] -0.000609
+Ap [2] -0.000708
+Ap [3] -0.000669
+Ap [4] -0.000494
+Ap [5] -0.000181
+Ap [6] 0.000269
+Ap [7] 0.000856
+Ap [8] 0.001577
+Ap [9] 0.000000
+Ap [10] 0.000000
+Ap [11] 0.000000
+Ap [12] 0.000000
+Ap [13] 0.000000
+Ap [14] 0.000000
+Ap [15] 0.000000
+Ap [16] 0.000000
+Ap [17] 0.000000
+Ap [18] 0.000000
+Ap [19] 0.000000
+Ap [20] 0.000000
+Ap [21] 0.000000
+Ap [22] 0.000000
+Ap [23] 0.000000
+Ap [24] 0.000000
+Ap [25] 0.000000
+Ap [26] 0.000000
+Ap [27] 0.000000
+Ap [28] 0.000000
+Ap [29] 0.000000
+Ap [30] 0.000000
+Ap [31] 0.000000
+Ap [32] 0.000000
+Ap [33] 0.000000
+Ap [34] 0.000000
+Ap [35] 0.000000
+Ap [36] 0.000000
+Ap [37] 0.000000
+Ap [38] 0.000000
+Ap [39] 0.000000
+Ap [40] 0.000000
+Ap [41] 0.000000
+Ap [42] 0.000000
+Ap [43] 0.000000
+Ap [44] 0.000000
+Ap [45] 0.000000
+Ap [46] 0.000000
+Ap [47] 0.000000
+Ap [48] 0.000000
+Ap [49] 0.000000
+Ap [50] 0.000000
+Ap [51] 0.000000
+Ap [52] 0.000000
+Ap [53] 0.000000
+Ap [54] 0.000000
+Ap [55] 0.000000
+Ap [56] 0.000000
+Ap [57] 0.000000
+Ap [58] 0.000000
+Ap [59] 0.000000
+Ap [60] 0.000000
+Ap [61] 0.000000
+Ap [62] 0.000000
+Ap [63] 0.000000
+Ap [64] 0.000000
+Ap [65] 0.000000
+Ap [66] 0.000000
+Ap [67] 0.000000
+Ap [68] 0.000000
+Ap [69] 0.000000
+Ap [70] 0.000000
+Ap [71] 0.000000
+Ap [72] 0.000000
+Ap [73] 0.000000
+Ap [74] 0.000000
+Ap [75] 0.000000
+Ap [76] 0.000000
+Ap [77] 0.000000
+Ap [78] 0.000000
+Ap [79] 0.000000
+Ap [80] 0.000000
+Ap [81] 0.000000
+Ap [82] 0.000000
+Ap [83] 0.000000
+Ap [84] 0.000000
+Ap [85] 0.000000
+Ap [86] 0.000000
+Ap [87] 0.000000
+Ap [88] 0.000000
+Ap [89] 0.000000
+Ap [90] 0.000000
+Ap [91] 0.000000
+Ap [92] 0.000000
+Ap [93] 0.000000
+Ap [94] 0.000000
+Ap [95] 0.000000
+Ap [96] 0.000000
+Ap [97] 0.000000
+Ap [98] 0.000000
+Ap [99] 0.000000
+normr, normr0 at 9 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 10: 32768, -0.000000, 0.000000
+Ap [0] -0.000086
+Ap [1] -0.000122
+Ap [2] -0.000184
+Ap [3] -0.000245
+Ap [4] -0.000306
+Ap [5] -0.000368
+Ap [6] -0.000429
+Ap [7] -0.000491
+Ap [8] -0.000551
+Ap [9] 0.000000
+Ap [10] 0.000000
+Ap [11] 0.000000
+Ap [12] 0.000000
+Ap [13] 0.000000
+Ap [14] 0.000000
+Ap [15] 0.000000
+Ap [16] 0.000000
+Ap [17] 0.000000
+Ap [18] 0.000000
+Ap [19] 0.000000
+Ap [20] 0.000000
+Ap [21] 0.000000
+Ap [22] 0.000000
+Ap [23] 0.000000
+Ap [24] 0.000000
+Ap [25] 0.000000
+Ap [26] 0.000000
+Ap [27] 0.000000
+Ap [28] 0.000000
+Ap [29] 0.000000
+Ap [30] 0.000000
+Ap [31] 0.000000
+Ap [32] 0.000000
+Ap [33] 0.000000
+Ap [34] 0.000000
+Ap [35] 0.000000
+Ap [36] 0.000000
+Ap [37] 0.000000
+Ap [38] 0.000000
+Ap [39] 0.000000
+Ap [40] 0.000000
+Ap [41] 0.000000
+Ap [42] 0.000000
+Ap [43] 0.000000
+Ap [44] 0.000000
+Ap [45] 0.000000
+Ap [46] 0.000000
+Ap [47] 0.000000
+Ap [48] 0.000000
+Ap [49] 0.000000
+Ap [50] 0.000000
+Ap [51] 0.000000
+Ap [52] 0.000000
+Ap [53] 0.000000
+Ap [54] 0.000000
+Ap [55] 0.000000
+Ap [56] 0.000000
+Ap [57] 0.000000
+Ap [58] 0.000000
+Ap [59] 0.000000
+Ap [60] 0.000000
+Ap [61] 0.000000
+Ap [62] 0.000000
+Ap [63] 0.000000
+Ap [64] 0.000000
+Ap [65] 0.000000
+Ap [66] 0.000000
+Ap [67] 0.000000
+Ap [68] 0.000000
+Ap [69] 0.000000
+Ap [70] 0.000000
+Ap [71] 0.000000
+Ap [72] 0.000000
+Ap [73] 0.000000
+Ap [74] 0.000000
+Ap [75] 0.000000
+Ap [76] 0.000000
+Ap [77] 0.000000
+Ap [78] 0.000000
+Ap [79] 0.000000
+Ap [80] 0.000000
+Ap [81] 0.000000
+Ap [82] 0.000000
+Ap [83] 0.000000
+Ap [84] 0.000000
+Ap [85] 0.000000
+Ap [86] 0.000000
+Ap [87] 0.000000
+Ap [88] 0.000000
+Ap [89] 0.000000
+Ap [90] 0.000000
+Ap [91] 0.000000
+Ap [92] 0.000000
+Ap [93] 0.000000
+Ap [94] 0.000000
+Ap [95] 0.000000
+Ap [96] 0.000000
+Ap [97] 0.000000
+Ap [98] 0.000000
+Ap [99] 0.000000
+normr, normr0 at 10 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+beginning ell, r, z
+ell r z [0] 52000000.000000 0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 -0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 -0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 -0.000000
+ell r z [8] 260000000.000000 0.000000 -0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after MG, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 11: 32768, -0.000000, 0.000000
+Ap [0] 0.000000
+Ap [1] 0.000000
+Ap [2] 0.000000
+Ap [3] 0.000000
+Ap [4] 0.000000
+Ap [5] 0.000000
+Ap [6] 0.000000
+Ap [7] 0.000000
+Ap [8] 0.000000
+Ap [9] 0.000000
+Ap [10] 0.000000
+Ap [11] 0.000000
+Ap [12] 0.000000
+Ap [13] 0.000000
+Ap [14] 0.000000
+Ap [15] 0.000000
+Ap [16] 0.000000
+Ap [17] 0.000000
+Ap [18] 0.000000
+Ap [19] 0.000000
+Ap [20] 0.000000
+Ap [21] 0.000000
+Ap [22] 0.000000
+Ap [23] 0.000000
+Ap [24] 0.000000
+Ap [25] 0.000000
+Ap [26] 0.000000
+Ap [27] 0.000000
+Ap [28] 0.000000
+Ap [29] 0.000000
+Ap [30] 0.000000
+Ap [31] 0.000000
+Ap [32] 0.000000
+Ap [33] 0.000000
+Ap [34] 0.000000
+Ap [35] 0.000000
+Ap [36] 0.000000
+Ap [37] 0.000000
+Ap [38] 0.000000
+Ap [39] 0.000000
+Ap [40] 0.000000
+Ap [41] 0.000000
+Ap [42] 0.000000
+Ap [43] 0.000000
+Ap [44] 0.000000
+Ap [45] 0.000000
+Ap [46] 0.000000
+Ap [47] 0.000000
+Ap [48] 0.000000
+Ap [49] 0.000000
+Ap [50] 0.000000
+Ap [51] 0.000000
+Ap [52] 0.000000
+Ap [53] 0.000000
+Ap [54] 0.000000
+Ap [55] 0.000000
+Ap [56] 0.000000
+Ap [57] 0.000000
+Ap [58] 0.000000
+Ap [59] 0.000000
+Ap [60] 0.000000
+Ap [61] 0.000000
+Ap [62] 0.000000
+Ap [63] 0.000000
+Ap [64] 0.000000
+Ap [65] 0.000000
+Ap [66] 0.000000
+Ap [67] 0.000000
+Ap [68] 0.000000
+Ap [69] 0.000000
+Ap [70] 0.000000
+Ap [71] 0.000000
+Ap [72] 0.000000
+Ap [73] 0.000000
+Ap [74] 0.000000
+Ap [75] 0.000000
+Ap [76] 0.000000
+Ap [77] 0.000000
+Ap [78] 0.000000
+Ap [79] 0.000000
+Ap [80] 0.000000
+Ap [81] 0.000000
+Ap [82] 0.000000
+Ap [83] 0.000000
+Ap [84] 0.000000
+Ap [85] 0.000000
+Ap [86] 0.000000
+Ap [87] 0.000000
+Ap [88] 0.000000
+Ap [89] 0.000000
+Ap [90] 0.000000
+Ap [91] 0.000000
+Ap [92] 0.000000
+Ap [93] 0.000000
+Ap [94] 0.000000
+Ap [95] 0.000000
+Ap [96] 0.000000
+Ap [97] 0.000000
+Ap [98] 0.000000
+Ap [99] 0.000000
+normr, normr0 at 11 iter: 0.000000, 0.000008 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 -0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 0.000000
+ell r z [2] 104000000.000000 -0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+inside TestCG: 0 iter
+====entering CG====
+before SPMV pVal, ApVal [0] 0.000000 0.000000 
+before SPMV pVal, ApVal [1] 0.000000 0.000000 
+before SPMV pVal, ApVal [2] 0.000000 0.000000 
+before SPMV pVal, ApVal [3] 0.000000 0.000000 
+before SPMV pVal, ApVal [4] 0.000000 0.000000 
+before SPMV pVal, ApVal [5] 0.000000 0.000000 
+before SPMV pVal, ApVal [6] 0.000000 0.000000 
+before SPMV pVal, ApVal [7] 0.000000 0.000000 
+before SPMV pVal, ApVal [8] 0.000000 0.000000 
+before SPMV pVal, ApVal [9] 0.000000 0.000000 
+before SPMV pVal, ApVal [10] 0.000000 0.000000 
+before SPMV pVal, ApVal [11] 0.000000 0.000000 
+before SPMV pVal, ApVal [12] 0.000000 0.000000 
+before SPMV pVal, ApVal [13] 0.000000 0.000000 
+before SPMV pVal, ApVal [14] 0.000000 0.000000 
+before SPMV pVal, ApVal [15] 0.346154 0.000000 
+before SPMV pVal, ApVal [16] 0.000000 0.000000 
+before SPMV pVal, ApVal [17] 0.000000 0.000000 
+before SPMV pVal, ApVal [18] 0.000000 0.000000 
+before SPMV pVal, ApVal [19] 0.000000 0.000000 
+before SPMV pVal, ApVal [20] 0.000000 0.000000 
+before SPMV pVal, ApVal [21] 0.000000 0.000000 
+before SPMV pVal, ApVal [22] 0.000000 0.000000 
+before SPMV pVal, ApVal [23] 0.000000 0.000000 
+before SPMV pVal, ApVal [24] 0.000000 0.000000 
+before SPMV pVal, ApVal [25] 0.000000 0.000000 
+before SPMV pVal, ApVal [26] 0.000000 0.000000 
+before SPMV pVal, ApVal [27] 0.000000 0.000000 
+before SPMV pVal, ApVal [28] 0.000000 0.000000 
+before SPMV pVal, ApVal [29] 0.000000 0.000000 
+before SPMV pVal, ApVal [30] 0.000000 0.000000 
+before SPMV pVal, ApVal [31] 0.346154 0.000000 
+before SPMV pVal, ApVal [32] 0.000000 0.000000 
+before SPMV pVal, ApVal [33] 0.000000 0.000000 
+before SPMV pVal, ApVal [34] 0.000000 0.000000 
+before SPMV pVal, ApVal [35] 0.000000 0.000000 
+before SPMV pVal, ApVal [36] 0.000000 0.000000 
+before SPMV pVal, ApVal [37] 0.000000 0.000000 
+before SPMV pVal, ApVal [38] 0.000000 0.000000 
+before SPMV pVal, ApVal [39] 0.000000 0.000000 
+before SPMV pVal, ApVal [40] 0.000000 0.000000 
+before SPMV pVal, ApVal [41] 0.000000 0.000000 
+before SPMV pVal, ApVal [42] 0.000000 0.000000 
+before SPMV pVal, ApVal [43] 0.000000 0.000000 
+before SPMV pVal, ApVal [44] 0.000000 0.000000 
+before SPMV pVal, ApVal [45] 0.000000 0.000000 
+before SPMV pVal, ApVal [46] 0.000000 0.000000 
+before SPMV pVal, ApVal [47] 0.346154 0.000000 
+before SPMV pVal, ApVal [48] 0.000000 0.000000 
+before SPMV pVal, ApVal [49] 0.000000 0.000000 
+before SPMV pVal, ApVal [50] 0.000000 0.000000 
+before SPMV pVal, ApVal [51] 0.000000 0.000000 
+before SPMV pVal, ApVal [52] 0.000000 0.000000 
+before SPMV pVal, ApVal [53] 0.000000 0.000000 
+before SPMV pVal, ApVal [54] 0.000000 0.000000 
+before SPMV pVal, ApVal [55] 0.000000 0.000000 
+before SPMV pVal, ApVal [56] 0.000000 0.000000 
+before SPMV pVal, ApVal [57] 0.000000 0.000000 
+before SPMV pVal, ApVal [58] 0.000000 0.000000 
+before SPMV pVal, ApVal [59] 0.000000 0.000000 
+before SPMV pVal, ApVal [60] 0.000000 0.000000 
+before SPMV pVal, ApVal [61] 0.000000 0.000000 
+before SPMV pVal, ApVal [62] 0.000000 0.000000 
+before SPMV pVal, ApVal [63] 0.346154 0.000000 
+before SPMV pVal, ApVal [64] 0.000000 0.000000 
+before SPMV pVal, ApVal [65] 0.000000 0.000000 
+before SPMV pVal, ApVal [66] 0.000000 0.000000 
+before SPMV pVal, ApVal [67] 0.000000 0.000000 
+before SPMV pVal, ApVal [68] 0.000000 0.000000 
+before SPMV pVal, ApVal [69] 0.000000 0.000000 
+before SPMV pVal, ApVal [70] 0.000000 0.000000 
+before SPMV pVal, ApVal [71] 0.000000 0.000000 
+before SPMV pVal, ApVal [72] 0.000000 0.000000 
+before SPMV pVal, ApVal [73] 0.000000 0.000000 
+before SPMV pVal, ApVal [74] 0.000000 0.000000 
+before SPMV pVal, ApVal [75] 0.000000 0.000000 
+before SPMV pVal, ApVal [76] 0.000000 0.000000 
+before SPMV pVal, ApVal [77] 0.000000 0.000000 
+before SPMV pVal, ApVal [78] 0.000000 0.000000 
+before SPMV pVal, ApVal [79] 0.346154 0.000000 
+before SPMV pVal, ApVal [80] 0.000000 0.000000 
+before SPMV pVal, ApVal [81] 0.000000 0.000000 
+before SPMV pVal, ApVal [82] 0.000000 0.000000 
+before SPMV pVal, ApVal [83] 0.000000 0.000000 
+before SPMV pVal, ApVal [84] 0.000000 0.000000 
+before SPMV pVal, ApVal [85] 0.000000 0.000000 
+before SPMV pVal, ApVal [86] 0.000000 0.000000 
+before SPMV pVal, ApVal [87] 0.000000 0.000000 
+before SPMV pVal, ApVal [88] 0.000000 0.000000 
+before SPMV pVal, ApVal [89] 0.000000 0.000000 
+before SPMV pVal, ApVal [90] 0.000000 0.000000 
+before SPMV pVal, ApVal [91] 0.000000 0.000000 
+before SPMV pVal, ApVal [92] 0.000000 0.000000 
+before SPMV pVal, ApVal [93] 0.000000 0.000000 
+before SPMV pVal, ApVal [94] 0.000000 0.000000 
+before SPMV pVal, ApVal [95] 0.346154 0.000000 
+before SPMV pVal, ApVal [96] 0.000000 0.000000 
+before SPMV pVal, ApVal [97] 0.000000 0.000000 
+before SPMV pVal, ApVal [98] 0.000000 0.000000 
+before SPMV pVal, ApVal [99] 0.000000 0.000000 
+finished SPMV
+before Waxpby bVal, rVal [0] 0.000000 -0.000000 
+before Waxpby bVal, rVal [1] 0.000000 -0.000000 
+before Waxpby bVal, rVal [2] 0.000000 -0.000000 
+before Waxpby bVal, rVal [3] 0.000000 -0.000000 
+before Waxpby bVal, rVal [4] 0.000000 0.000000 
+before Waxpby bVal, rVal [5] 0.000000 0.000000 
+before Waxpby bVal, rVal [6] 0.000000 -0.000000 
+before Waxpby bVal, rVal [7] 0.000000 0.000000 
+before Waxpby bVal, rVal [8] 0.000000 0.000000 
+before Waxpby bVal, rVal [9] 0.000000 0.000000 
+before Waxpby bVal, rVal [10] 0.000000 0.000000 
+before Waxpby bVal, rVal [11] 0.000000 0.000000 
+before Waxpby bVal, rVal [12] 0.000000 0.000000 
+before Waxpby bVal, rVal [13] 0.000000 0.000000 
+before Waxpby bVal, rVal [14] 0.000000 -0.000000 
+before Waxpby bVal, rVal [15] 9000000.000000 0.000000 
+before Waxpby bVal, rVal [16] 0.000000 -0.000000 
+before Waxpby bVal, rVal [17] 0.000000 -0.000000 
+before Waxpby bVal, rVal [18] 0.000000 -0.000000 
+before Waxpby bVal, rVal [19] 0.000000 -0.000000 
+before Waxpby bVal, rVal [20] 0.000000 -0.000000 
+before Waxpby bVal, rVal [21] 0.000000 -0.000000 
+before Waxpby bVal, rVal [22] 0.000000 -0.000000 
+before Waxpby bVal, rVal [23] 0.000000 -0.000000 
+before Waxpby bVal, rVal [24] 0.000000 -0.000000 
+before Waxpby bVal, rVal [25] 0.000000 -0.000000 
+before Waxpby bVal, rVal [26] 0.000000 -0.000000 
+before Waxpby bVal, rVal [27] 0.000000 -0.000000 
+before Waxpby bVal, rVal [28] 0.000000 -0.000000 
+before Waxpby bVal, rVal [29] 0.000000 0.000000 
+before Waxpby bVal, rVal [30] 0.000000 -0.000000 
+before Waxpby bVal, rVal [31] 9000000.000000 0.000000 
+before Waxpby bVal, rVal [32] 0.000000 0.000000 
+before Waxpby bVal, rVal [33] 0.000000 -0.000000 
+before Waxpby bVal, rVal [34] 0.000000 -0.000000 
+before Waxpby bVal, rVal [35] 0.000000 -0.000000 
+before Waxpby bVal, rVal [36] 0.000000 -0.000000 
+before Waxpby bVal, rVal [37] 0.000000 -0.000000 
+before Waxpby bVal, rVal [38] 0.000000 -0.000000 
+before Waxpby bVal, rVal [39] 0.000000 -0.000000 
+before Waxpby bVal, rVal [40] 0.000000 -0.000000 
+before Waxpby bVal, rVal [41] 0.000000 -0.000000 
+before Waxpby bVal, rVal [42] 0.000000 -0.000000 
+before Waxpby bVal, rVal [43] 0.000000 -0.000000 
+before Waxpby bVal, rVal [44] 0.000000 -0.000000 
+before Waxpby bVal, rVal [45] 0.000000 0.000000 
+before Waxpby bVal, rVal [46] 0.000000 -0.000000 
+before Waxpby bVal, rVal [47] 9000000.000000 0.000000 
+before Waxpby bVal, rVal [48] 0.000000 0.000000 
+before Waxpby bVal, rVal [49] 0.000000 -0.000000 
+before Waxpby bVal, rVal [50] 0.000000 -0.000000 
+before Waxpby bVal, rVal [51] 0.000000 -0.000000 
+before Waxpby bVal, rVal [52] 0.000000 -0.000000 
+before Waxpby bVal, rVal [53] 0.000000 -0.000000 
+before Waxpby bVal, rVal [54] 0.000000 -0.000000 
+before Waxpby bVal, rVal [55] 0.000000 -0.000000 
+before Waxpby bVal, rVal [56] 0.000000 -0.000000 
+before Waxpby bVal, rVal [57] 0.000000 -0.000000 
+before Waxpby bVal, rVal [58] 0.000000 -0.000000 
+before Waxpby bVal, rVal [59] 0.000000 -0.000000 
+before Waxpby bVal, rVal [60] 0.000000 -0.000000 
+before Waxpby bVal, rVal [61] 0.000000 0.000000 
+before Waxpby bVal, rVal [62] 0.000000 -0.000000 
+before Waxpby bVal, rVal [63] 9000000.000000 0.000000 
+before Waxpby bVal, rVal [64] 0.000000 0.000000 
+before Waxpby bVal, rVal [65] 0.000000 -0.000000 
+before Waxpby bVal, rVal [66] 0.000000 -0.000000 
+before Waxpby bVal, rVal [67] 0.000000 -0.000000 
+before Waxpby bVal, rVal [68] 0.000000 -0.000000 
+before Waxpby bVal, rVal [69] 0.000000 -0.000000 
+before Waxpby bVal, rVal [70] 0.000000 -0.000000 
+before Waxpby bVal, rVal [71] 0.000000 -0.000000 
+before Waxpby bVal, rVal [72] 0.000000 -0.000000 
+before Waxpby bVal, rVal [73] 0.000000 -0.000000 
+before Waxpby bVal, rVal [74] 0.000000 -0.000000 
+before Waxpby bVal, rVal [75] 0.000000 -0.000000 
+before Waxpby bVal, rVal [76] 0.000000 -0.000000 
+before Waxpby bVal, rVal [77] 0.000000 0.000000 
+before Waxpby bVal, rVal [78] 0.000000 -0.000000 
+before Waxpby bVal, rVal [79] 9000000.000000 0.000000 
+before Waxpby bVal, rVal [80] 0.000000 0.000000 
+before Waxpby bVal, rVal [81] 0.000000 -0.000000 
+before Waxpby bVal, rVal [82] 0.000000 -0.000000 
+before Waxpby bVal, rVal [83] 0.000000 -0.000000 
+before Waxpby bVal, rVal [84] 0.000000 -0.000000 
+before Waxpby bVal, rVal [85] 0.000000 -0.000000 
+before Waxpby bVal, rVal [86] 0.000000 -0.000000 
+before Waxpby bVal, rVal [87] 0.000000 -0.000000 
+before Waxpby bVal, rVal [88] 0.000000 -0.000000 
+before Waxpby bVal, rVal [89] 0.000000 -0.000000 
+before Waxpby bVal, rVal [90] 0.000000 -0.000000 
+before Waxpby bVal, rVal [91] 0.000000 -0.000000 
+before Waxpby bVal, rVal [92] 0.000000 -0.000000 
+before Waxpby bVal, rVal [93] 0.000000 0.000000 
+before Waxpby bVal, rVal [94] 0.000000 -0.000000 
+before Waxpby bVal, rVal [95] 9000000.000000 0.000000 
+before Waxpby bVal, rVal [96] 0.000000 0.000000 
+before Waxpby bVal, rVal [97] 0.000000 -0.000000 
+before Waxpby bVal, rVal [98] 0.000000 -0.000000 
+before Waxpby bVal, rVal [99] 0.000000 -0.000000 
+after copy bVal, rVal [0] 0.000000 -0.000000 
+after copy bVal, rVal [1] 0.000000 -0.000000 
+after copy bVal, rVal [2] 0.000000 0.000000 
+after copy bVal, rVal [3] 0.000000 0.000000 
+after copy bVal, rVal [4] 0.000000 -0.000000 
+after copy bVal, rVal [5] 0.000000 0.000000 
+after copy bVal, rVal [6] 0.000000 -0.000000 
+after copy bVal, rVal [7] 0.000000 0.000000 
+after copy bVal, rVal [8] 0.000000 0.000000 
+after copy bVal, rVal [9] 0.000000 0.000000 
+after copy bVal, rVal [10] 0.000000 -0.000000 
+after copy bVal, rVal [11] 0.000000 -0.000000 
+after copy bVal, rVal [12] 0.000000 -0.000000 
+after copy bVal, rVal [13] 0.000000 -0.000000 
+after copy bVal, rVal [14] 0.000000 0.000000 
+after copy bVal, rVal [15] 9000000.000000 0.000000 
+after copy bVal, rVal [16] 0.000000 -0.000000 
+after copy bVal, rVal [17] 0.000000 0.000000 
+after copy bVal, rVal [18] 0.000000 0.000000 
+after copy bVal, rVal [19] 0.000000 -0.000000 
+after copy bVal, rVal [20] 0.000000 -0.000000 
+after copy bVal, rVal [21] 0.000000 -0.000000 
+after copy bVal, rVal [22] 0.000000 -0.000000 
+after copy bVal, rVal [23] 0.000000 0.000000 
+after copy bVal, rVal [24] 0.000000 0.000000 
+after copy bVal, rVal [25] 0.000000 0.000000 
+after copy bVal, rVal [26] 0.000000 0.000000 
+after copy bVal, rVal [27] 0.000000 0.000000 
+after copy bVal, rVal [28] 0.000000 0.000000 
+after copy bVal, rVal [29] 0.000000 0.000000 
+after copy bVal, rVal [30] 0.000000 -0.000000 
+after copy bVal, rVal [31] 9000000.000000 0.000000 
+after copy bVal, rVal [32] 0.000000 -0.000000 
+after copy bVal, rVal [33] 0.000000 -0.000000 
+after copy bVal, rVal [34] 0.000000 0.000000 
+after copy bVal, rVal [35] 0.000000 0.000000 
+after copy bVal, rVal [36] 0.000000 0.000000 
+after copy bVal, rVal [37] 0.000000 0.000000 
+after copy bVal, rVal [38] 0.000000 0.000000 
+after copy bVal, rVal [39] 0.000000 0.000000 
+after copy bVal, rVal [40] 0.000000 0.000000 
+after copy bVal, rVal [41] 0.000000 0.000000 
+after copy bVal, rVal [42] 0.000000 0.000000 
+after copy bVal, rVal [43] 0.000000 0.000000 
+after copy bVal, rVal [44] 0.000000 0.000000 
+after copy bVal, rVal [45] 0.000000 0.000000 
+after copy bVal, rVal [46] 0.000000 -0.000000 
+after copy bVal, rVal [47] 9000000.000000 0.000000 
+after copy bVal, rVal [48] 0.000000 -0.000000 
+after copy bVal, rVal [49] 0.000000 -0.000000 
+after copy bVal, rVal [50] 0.000000 0.000000 
+after copy bVal, rVal [51] 0.000000 0.000000 
+after copy bVal, rVal [52] 0.000000 0.000000 
+after copy bVal, rVal [53] 0.000000 0.000000 
+after copy bVal, rVal [54] 0.000000 0.000000 
+after copy bVal, rVal [55] 0.000000 0.000000 
+after copy bVal, rVal [56] 0.000000 0.000000 
+after copy bVal, rVal [57] 0.000000 0.000000 
+after copy bVal, rVal [58] 0.000000 0.000000 
+after copy bVal, rVal [59] 0.000000 0.000000 
+after copy bVal, rVal [60] 0.000000 0.000000 
+after copy bVal, rVal [61] 0.000000 0.000000 
+after copy bVal, rVal [62] 0.000000 -0.000000 
+after copy bVal, rVal [63] 9000000.000000 0.000000 
+after copy bVal, rVal [64] 0.000000 -0.000000 
+after copy bVal, rVal [65] 0.000000 -0.000000 
+after copy bVal, rVal [66] 0.000000 0.000000 
+after copy bVal, rVal [67] 0.000000 0.000000 
+after copy bVal, rVal [68] 0.000000 0.000000 
+after copy bVal, rVal [69] 0.000000 0.000000 
+after copy bVal, rVal [70] 0.000000 0.000000 
+after copy bVal, rVal [71] 0.000000 0.000000 
+after copy bVal, rVal [72] 0.000000 0.000000 
+after copy bVal, rVal [73] 0.000000 0.000000 
+after copy bVal, rVal [74] 0.000000 0.000000 
+after copy bVal, rVal [75] 0.000000 0.000000 
+after copy bVal, rVal [76] 0.000000 0.000000 
+after copy bVal, rVal [77] 0.000000 0.000000 
+after copy bVal, rVal [78] 0.000000 -0.000000 
+after copy bVal, rVal [79] 9000000.000000 0.000000 
+after copy bVal, rVal [80] 0.000000 -0.000000 
+after copy bVal, rVal [81] 0.000000 -0.000000 
+after copy bVal, rVal [82] 0.000000 0.000000 
+after copy bVal, rVal [83] 0.000000 0.000000 
+after copy bVal, rVal [84] 0.000000 0.000000 
+after copy bVal, rVal [85] 0.000000 0.000000 
+after copy bVal, rVal [86] 0.000000 0.000000 
+after copy bVal, rVal [87] 0.000000 0.000000 
+after copy bVal, rVal [88] 0.000000 0.000000 
+after copy bVal, rVal [89] 0.000000 0.000000 
+after copy bVal, rVal [90] 0.000000 0.000000 
+after copy bVal, rVal [91] 0.000000 0.000000 
+after copy bVal, rVal [92] 0.000000 0.000000 
+after copy bVal, rVal [93] 0.000000 0.000000 
+after copy bVal, rVal [94] 0.000000 -0.000000 
+after copy bVal, rVal [95] 9000000.000000 0.000000 
+after copy bVal, rVal [96] 0.000000 -0.000000 
+after copy bVal, rVal [97] 0.000000 -0.000000 
+after copy bVal, rVal [98] 0.000000 0.000000 
+after copy bVal, rVal [99] 0.000000 0.000000 
+current normr : 0.000000
+=== entering CG iterations
+beginning ell, r, z
+ell r z [0] 52000000.000000 -0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 0.000000
+ell r z [4] 156000000.000000 -0.000000 0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+after MG, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 -0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 0.000000 0.000000
+ell r z [3] 130000000.000000 0.000000 -0.000000
+ell r z [4] 156000000.000000 -0.000000 -0.000000
+ell r z [5] 182000000.000000 0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 0.000000 0.000000
+ell r z [8] 260000000.000000 0.000000 0.000000
+ell r z [9] 26000000.000000 0.000000 0.000000
+fusedWaxpby parms at 1: 32768, -1.000000, 0.000000
+Ap [0] -0.000000
+Ap [1] -0.000000
+Ap [2] 0.000000
+Ap [3] 0.000000
+Ap [4] -0.000000
+Ap [5] 0.000000
+Ap [6] -0.000000
+Ap [7] 0.000000
+Ap [8] 0.000000
+Ap [9] 0.000000
+Ap [10] -0.000000
+Ap [11] -0.000000
+Ap [12] -0.000000
+Ap [13] -0.000000
+Ap [14] 0.000000
+Ap [15] 0.000000
+Ap [16] -0.000000
+Ap [17] 0.000000
+Ap [18] 0.000000
+Ap [19] -0.000000
+Ap [20] -0.000000
+Ap [21] -0.000000
+Ap [22] -0.000000
+Ap [23] 0.000000
+Ap [24] 0.000000
+Ap [25] 0.000000
+Ap [26] 0.000000
+Ap [27] 0.000000
+Ap [28] 0.000000
+Ap [29] 0.000000
+Ap [30] -0.000000
+Ap [31] 0.000000
+Ap [32] -0.000000
+Ap [33] -0.000000
+Ap [34] 0.000000
+Ap [35] 0.000000
+Ap [36] 0.000000
+Ap [37] 0.000000
+Ap [38] 0.000000
+Ap [39] 0.000000
+Ap [40] 0.000000
+Ap [41] 0.000000
+Ap [42] 0.000000
+Ap [43] 0.000000
+Ap [44] 0.000000
+Ap [45] 0.000000
+Ap [46] -0.000000
+Ap [47] 0.000000
+Ap [48] -0.000000
+Ap [49] -0.000000
+Ap [50] 0.000000
+Ap [51] 0.000000
+Ap [52] 0.000000
+Ap [53] 0.000000
+Ap [54] 0.000000
+Ap [55] 0.000000
+Ap [56] 0.000000
+Ap [57] 0.000000
+Ap [58] 0.000000
+Ap [59] 0.000000
+Ap [60] 0.000000
+Ap [61] 0.000000
+Ap [62] -0.000000
+Ap [63] 0.000000
+Ap [64] -0.000000
+Ap [65] -0.000000
+Ap [66] 0.000000
+Ap [67] 0.000000
+Ap [68] 0.000000
+Ap [69] 0.000000
+Ap [70] 0.000000
+Ap [71] 0.000000
+Ap [72] 0.000000
+Ap [73] 0.000000
+Ap [74] 0.000000
+Ap [75] 0.000000
+Ap [76] 0.000000
+Ap [77] 0.000000
+Ap [78] -0.000000
+Ap [79] 0.000000
+Ap [80] -0.000000
+Ap [81] -0.000000
+Ap [82] 0.000000
+Ap [83] 0.000000
+Ap [84] 0.000000
+Ap [85] 0.000000
+Ap [86] 0.000000
+Ap [87] 0.000000
+Ap [88] 0.000000
+Ap [89] 0.000000
+Ap [90] 0.000000
+Ap [91] 0.000000
+Ap [92] 0.000000
+Ap [93] 0.000000
+Ap [94] -0.000000
+Ap [95] 0.000000
+Ap [96] -0.000000
+Ap [97] -0.000000
+Ap [98] 0.000000
+Ap [99] 0.000000
+normr, normr0 at 1 iter: 0.000000, 0.000000 
+after fusedwaxpby, copy
+ell r z [0] 52000000.000000 0.000000 -0.000000
+ell r z [1] 78000000.000000 0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 0.000000
+ell r z [6] 208000000.000000 0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 -0.000000 0.000000
+inside TestCG: 1 iter
+====entering CG====
+before SPMV pVal, ApVal [0] 0.000000 -0.000000 
+before SPMV pVal, ApVal [1] 0.000000 -0.000000 
+before SPMV pVal, ApVal [2] 0.000000 0.000000 
+before SPMV pVal, ApVal [3] 0.000000 0.000000 
+before SPMV pVal, ApVal [4] 0.000000 -0.000000 
+before SPMV pVal, ApVal [5] 0.000000 0.000000 
+before SPMV pVal, ApVal [6] 0.000000 -0.000000 
+before SPMV pVal, ApVal [7] 0.000000 0.000000 
+before SPMV pVal, ApVal [8] 0.000000 0.000000 
+before SPMV pVal, ApVal [9] 0.000000 0.000000 
+before SPMV pVal, ApVal [10] 0.000000 -0.000000 
+before SPMV pVal, ApVal [11] 0.000000 -0.000000 
+before SPMV pVal, ApVal [12] 0.000000 -0.000000 
+before SPMV pVal, ApVal [13] 0.000000 -0.000000 
+before SPMV pVal, ApVal [14] 0.000000 0.000000 
+before SPMV pVal, ApVal [15] 0.346154 0.000000 
+before SPMV pVal, ApVal [16] 0.000000 -0.000000 
+before SPMV pVal, ApVal [17] 0.000000 0.000000 
+before SPMV pVal, ApVal [18] 0.000000 0.000000 
+before SPMV pVal, ApVal [19] 0.000000 -0.000000 
+before SPMV pVal, ApVal [20] 0.000000 -0.000000 
+before SPMV pVal, ApVal [21] 0.000000 -0.000000 
+before SPMV pVal, ApVal [22] 0.000000 -0.000000 
+before SPMV pVal, ApVal [23] 0.000000 0.000000 
+before SPMV pVal, ApVal [24] 0.000000 0.000000 
+before SPMV pVal, ApVal [25] 0.000000 0.000000 
+before SPMV pVal, ApVal [26] 0.000000 0.000000 
+before SPMV pVal, ApVal [27] 0.000000 0.000000 
+before SPMV pVal, ApVal [28] 0.000000 0.000000 
+before SPMV pVal, ApVal [29] 0.000000 0.000000 
+before SPMV pVal, ApVal [30] 0.000000 -0.000000 
+before SPMV pVal, ApVal [31] 0.346154 0.000000 
+before SPMV pVal, ApVal [32] 0.000000 -0.000000 
+before SPMV pVal, ApVal [33] 0.000000 -0.000000 
+before SPMV pVal, ApVal [34] 0.000000 0.000000 
+before SPMV pVal, ApVal [35] 0.000000 0.000000 
+before SPMV pVal, ApVal [36] 0.000000 0.000000 
+before SPMV pVal, ApVal [37] 0.000000 0.000000 
+before SPMV pVal, ApVal [38] 0.000000 0.000000 
+before SPMV pVal, ApVal [39] 0.000000 0.000000 
+before SPMV pVal, ApVal [40] 0.000000 0.000000 
+before SPMV pVal, ApVal [41] 0.000000 0.000000 
+before SPMV pVal, ApVal [42] 0.000000 0.000000 
+before SPMV pVal, ApVal [43] 0.000000 0.000000 
+before SPMV pVal, ApVal [44] 0.000000 0.000000 
+before SPMV pVal, ApVal [45] 0.000000 0.000000 
+before SPMV pVal, ApVal [46] 0.000000 -0.000000 
+before SPMV pVal, ApVal [47] 0.346154 0.000000 
+before SPMV pVal, ApVal [48] 0.000000 -0.000000 
+before SPMV pVal, ApVal [49] 0.000000 -0.000000 
+before SPMV pVal, ApVal [50] 0.000000 0.000000 
+before SPMV pVal, ApVal [51] 0.000000 0.000000 
+before SPMV pVal, ApVal [52] 0.000000 0.000000 
+before SPMV pVal, ApVal [53] 0.000000 0.000000 
+before SPMV pVal, ApVal [54] 0.000000 0.000000 
+before SPMV pVal, ApVal [55] 0.000000 0.000000 
+before SPMV pVal, ApVal [56] 0.000000 0.000000 
+before SPMV pVal, ApVal [57] 0.000000 0.000000 
+before SPMV pVal, ApVal [58] 0.000000 0.000000 
+before SPMV pVal, ApVal [59] 0.000000 0.000000 
+before SPMV pVal, ApVal [60] 0.000000 0.000000 
+before SPMV pVal, ApVal [61] 0.000000 0.000000 
+before SPMV pVal, ApVal [62] 0.000000 -0.000000 
+before SPMV pVal, ApVal [63] 0.346154 0.000000 
+before SPMV pVal, ApVal [64] 0.000000 -0.000000 
+before SPMV pVal, ApVal [65] 0.000000 -0.000000 
+before SPMV pVal, ApVal [66] 0.000000 0.000000 
+before SPMV pVal, ApVal [67] 0.000000 0.000000 
+before SPMV pVal, ApVal [68] 0.000000 0.000000 
+before SPMV pVal, ApVal [69] 0.000000 0.000000 
+before SPMV pVal, ApVal [70] 0.000000 0.000000 
+before SPMV pVal, ApVal [71] 0.000000 0.000000 
+before SPMV pVal, ApVal [72] 0.000000 0.000000 
+before SPMV pVal, ApVal [73] 0.000000 0.000000 
+before SPMV pVal, ApVal [74] 0.000000 0.000000 
+before SPMV pVal, ApVal [75] 0.000000 0.000000 
+before SPMV pVal, ApVal [76] 0.000000 0.000000 
+before SPMV pVal, ApVal [77] 0.000000 0.000000 
+before SPMV pVal, ApVal [78] 0.000000 -0.000000 
+before SPMV pVal, ApVal [79] 0.346154 0.000000 
+before SPMV pVal, ApVal [80] 0.000000 -0.000000 
+before SPMV pVal, ApVal [81] 0.000000 -0.000000 
+before SPMV pVal, ApVal [82] 0.000000 0.000000 
+before SPMV pVal, ApVal [83] 0.000000 0.000000 
+before SPMV pVal, ApVal [84] 0.000000 0.000000 
+before SPMV pVal, ApVal [85] 0.000000 0.000000 
+before SPMV pVal, ApVal [86] 0.000000 0.000000 
+before SPMV pVal, ApVal [87] 0.000000 0.000000 
+before SPMV pVal, ApVal [88] 0.000000 0.000000 
+before SPMV pVal, ApVal [89] 0.000000 0.000000 
+before SPMV pVal, ApVal [90] 0.000000 0.000000 
+before SPMV pVal, ApVal [91] 0.000000 0.000000 
+before SPMV pVal, ApVal [92] 0.000000 0.000000 
+before SPMV pVal, ApVal [93] 0.000000 0.000000 
+before SPMV pVal, ApVal [94] 0.000000 -0.000000 
+before SPMV pVal, ApVal [95] 0.346154 0.000000 
+before SPMV pVal, ApVal [96] 0.000000 -0.000000 
+before SPMV pVal, ApVal [97] 0.000000 -0.000000 
+before SPMV pVal, ApVal [98] 0.000000 0.000000 
+before SPMV pVal, ApVal [99] 0.000000 0.000000 
+finished SPMV
+before Waxpby bVal, rVal [0] 0.000000 0.000000 
+before Waxpby bVal, rVal [1] 0.000000 0.000000 
+before Waxpby bVal, rVal [2] 0.000000 -0.000000 
+before Waxpby bVal, rVal [3] 0.000000 -0.000000 
+before Waxpby bVal, rVal [4] 0.000000 0.000000 
+before Waxpby bVal, rVal [5] 0.000000 -0.000000 
+before Waxpby bVal, rVal [6] 0.000000 0.000000 
+before Waxpby bVal, rVal [7] 0.000000 -0.000000 
+before Waxpby bVal, rVal [8] 0.000000 -0.000000 
+before Waxpby bVal, rVal [9] 0.000000 -0.000000 
+before Waxpby bVal, rVal [10] 0.000000 0.000000 
+before Waxpby bVal, rVal [11] 0.000000 0.000000 
+before Waxpby bVal, rVal [12] 0.000000 0.000000 
+before Waxpby bVal, rVal [13] 0.000000 0.000000 
+before Waxpby bVal, rVal [14] 0.000000 -0.000000 
+before Waxpby bVal, rVal [15] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [16] 0.000000 0.000000 
+before Waxpby bVal, rVal [17] 0.000000 -0.000000 
+before Waxpby bVal, rVal [18] 0.000000 -0.000000 
+before Waxpby bVal, rVal [19] 0.000000 -0.000000 
+before Waxpby bVal, rVal [20] 0.000000 0.000000 
+before Waxpby bVal, rVal [21] 0.000000 0.000000 
+before Waxpby bVal, rVal [22] 0.000000 0.000000 
+before Waxpby bVal, rVal [23] 0.000000 -0.000000 
+before Waxpby bVal, rVal [24] 0.000000 -0.000000 
+before Waxpby bVal, rVal [25] 0.000000 -0.000000 
+before Waxpby bVal, rVal [26] 0.000000 -0.000000 
+before Waxpby bVal, rVal [27] 0.000000 -0.000000 
+before Waxpby bVal, rVal [28] 0.000000 -0.000000 
+before Waxpby bVal, rVal [29] 0.000000 -0.000000 
+before Waxpby bVal, rVal [30] 0.000000 0.000000 
+before Waxpby bVal, rVal [31] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [32] 0.000000 0.000000 
+before Waxpby bVal, rVal [33] 0.000000 -0.000000 
+before Waxpby bVal, rVal [34] 0.000000 -0.000000 
+before Waxpby bVal, rVal [35] 0.000000 -0.000000 
+before Waxpby bVal, rVal [36] 0.000000 -0.000000 
+before Waxpby bVal, rVal [37] 0.000000 -0.000000 
+before Waxpby bVal, rVal [38] 0.000000 -0.000000 
+before Waxpby bVal, rVal [39] 0.000000 -0.000000 
+before Waxpby bVal, rVal [40] 0.000000 -0.000000 
+before Waxpby bVal, rVal [41] 0.000000 -0.000000 
+before Waxpby bVal, rVal [42] 0.000000 -0.000000 
+before Waxpby bVal, rVal [43] 0.000000 -0.000000 
+before Waxpby bVal, rVal [44] 0.000000 -0.000000 
+before Waxpby bVal, rVal [45] 0.000000 -0.000000 
+before Waxpby bVal, rVal [46] 0.000000 0.000000 
+before Waxpby bVal, rVal [47] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [48] 0.000000 -0.000000 
+before Waxpby bVal, rVal [49] 0.000000 0.000000 
+before Waxpby bVal, rVal [50] 0.000000 -0.000000 
+before Waxpby bVal, rVal [51] 0.000000 -0.000000 
+before Waxpby bVal, rVal [52] 0.000000 -0.000000 
+before Waxpby bVal, rVal [53] 0.000000 -0.000000 
+before Waxpby bVal, rVal [54] 0.000000 -0.000000 
+before Waxpby bVal, rVal [55] 0.000000 -0.000000 
+before Waxpby bVal, rVal [56] 0.000000 -0.000000 
+before Waxpby bVal, rVal [57] 0.000000 -0.000000 
+before Waxpby bVal, rVal [58] 0.000000 -0.000000 
+before Waxpby bVal, rVal [59] 0.000000 -0.000000 
+before Waxpby bVal, rVal [60] 0.000000 -0.000000 
+before Waxpby bVal, rVal [61] 0.000000 -0.000000 
+before Waxpby bVal, rVal [62] 0.000000 0.000000 
+before Waxpby bVal, rVal [63] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [64] 0.000000 -0.000000 
+before Waxpby bVal, rVal [65] 0.000000 0.000000 
+before Waxpby bVal, rVal [66] 0.000000 -0.000000 
+before Waxpby bVal, rVal [67] 0.000000 -0.000000 
+before Waxpby bVal, rVal [68] 0.000000 -0.000000 
+before Waxpby bVal, rVal [69] 0.000000 -0.000000 
+before Waxpby bVal, rVal [70] 0.000000 -0.000000 
+before Waxpby bVal, rVal [71] 0.000000 -0.000000 
+before Waxpby bVal, rVal [72] 0.000000 -0.000000 
+before Waxpby bVal, rVal [73] 0.000000 -0.000000 
+before Waxpby bVal, rVal [74] 0.000000 -0.000000 
+before Waxpby bVal, rVal [75] 0.000000 -0.000000 
+before Waxpby bVal, rVal [76] 0.000000 -0.000000 
+before Waxpby bVal, rVal [77] 0.000000 -0.000000 
+before Waxpby bVal, rVal [78] 0.000000 0.000000 
+before Waxpby bVal, rVal [79] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [80] 0.000000 -0.000000 
+before Waxpby bVal, rVal [81] 0.000000 0.000000 
+before Waxpby bVal, rVal [82] 0.000000 -0.000000 
+before Waxpby bVal, rVal [83] 0.000000 -0.000000 
+before Waxpby bVal, rVal [84] 0.000000 -0.000000 
+before Waxpby bVal, rVal [85] 0.000000 -0.000000 
+before Waxpby bVal, rVal [86] 0.000000 -0.000000 
+before Waxpby bVal, rVal [87] 0.000000 -0.000000 
+before Waxpby bVal, rVal [88] 0.000000 -0.000000 
+before Waxpby bVal, rVal [89] 0.000000 -0.000000 
+before Waxpby bVal, rVal [90] 0.000000 -0.000000 
+before Waxpby bVal, rVal [91] 0.000000 -0.000000 
+before Waxpby bVal, rVal [92] 0.000000 -0.000000 
+before Waxpby bVal, rVal [93] 0.000000 -0.000000 
+before Waxpby bVal, rVal [94] 0.000000 0.000000 
+before Waxpby bVal, rVal [95] 9000000.000000 -0.000000 
+before Waxpby bVal, rVal [96] 0.000000 -0.000000 
+before Waxpby bVal, rVal [97] 0.000000 0.000000 
+before Waxpby bVal, rVal [98] 0.000000 -0.000000 
+before Waxpby bVal, rVal [99] 0.000000 -0.000000 
+after copy bVal, rVal [0] 0.000000 0.000000 
+after copy bVal, rVal [1] 0.000000 -0.000000 
+after copy bVal, rVal [2] 0.000000 -0.000000 
+after copy bVal, rVal [3] 0.000000 -0.000000 
+after copy bVal, rVal [4] 0.000000 0.000000 
+after copy bVal, rVal [5] 0.000000 -0.000000 
+after copy bVal, rVal [6] 0.000000 -0.000000 
+after copy bVal, rVal [7] 0.000000 -0.000000 
+after copy bVal, rVal [8] 0.000000 -0.000000 
+after copy bVal, rVal [9] 0.000000 -0.000000 
+after copy bVal, rVal [10] 0.000000 -0.000000 
+after copy bVal, rVal [11] 0.000000 -0.000000 
+after copy bVal, rVal [12] 0.000000 -0.000000 
+after copy bVal, rVal [13] 0.000000 -0.000000 
+after copy bVal, rVal [14] 0.000000 0.000000 
+after copy bVal, rVal [15] 9000000.000000 0.000000 
+after copy bVal, rVal [16] 0.000000 0.000000 
+after copy bVal, rVal [17] 0.000000 0.000000 
+after copy bVal, rVal [18] 0.000000 -0.000000 
+after copy bVal, rVal [19] 0.000000 -0.000000 
+after copy bVal, rVal [20] 0.000000 0.000000 
+after copy bVal, rVal [21] 0.000000 0.000000 
+after copy bVal, rVal [22] 0.000000 0.000000 
+after copy bVal, rVal [23] 0.000000 -0.000000 
+after copy bVal, rVal [24] 0.000000 0.000000 
+after copy bVal, rVal [25] 0.000000 0.000000 
+after copy bVal, rVal [26] 0.000000 -0.000000 
+after copy bVal, rVal [27] 0.000000 -0.000000 
+after copy bVal, rVal [28] 0.000000 -0.000000 
+after copy bVal, rVal [29] 0.000000 -0.000000 
+after copy bVal, rVal [30] 0.000000 -0.000000 
+after copy bVal, rVal [31] 9000000.000000 0.000000 
+after copy bVal, rVal [32] 0.000000 -0.000000 
+after copy bVal, rVal [33] 0.000000 -0.000000 
+after copy bVal, rVal [34] 0.000000 0.000000 
+after copy bVal, rVal [35] 0.000000 0.000000 
+after copy bVal, rVal [36] 0.000000 0.000000 
+after copy bVal, rVal [37] 0.000000 0.000000 
+after copy bVal, rVal [38] 0.000000 0.000000 
+after copy bVal, rVal [39] 0.000000 0.000000 
+after copy bVal, rVal [40] 0.000000 0.000000 
+after copy bVal, rVal [41] 0.000000 0.000000 
+after copy bVal, rVal [42] 0.000000 0.000000 
+after copy bVal, rVal [43] 0.000000 0.000000 
+after copy bVal, rVal [44] 0.000000 0.000000 
+after copy bVal, rVal [45] 0.000000 0.000000 
+after copy bVal, rVal [46] 0.000000 -0.000000 
+after copy bVal, rVal [47] 9000000.000000 0.000000 
+after copy bVal, rVal [48] 0.000000 -0.000000 
+after copy bVal, rVal [49] 0.000000 -0.000000 
+after copy bVal, rVal [50] 0.000000 0.000000 
+after copy bVal, rVal [51] 0.000000 0.000000 
+after copy bVal, rVal [52] 0.000000 0.000000 
+after copy bVal, rVal [53] 0.000000 0.000000 
+after copy bVal, rVal [54] 0.000000 0.000000 
+after copy bVal, rVal [55] 0.000000 0.000000 
+after copy bVal, rVal [56] 0.000000 0.000000 
+after copy bVal, rVal [57] 0.000000 0.000000 
+after copy bVal, rVal [58] 0.000000 0.000000 
+after copy bVal, rVal [59] 0.000000 0.000000 
+after copy bVal, rVal [60] 0.000000 0.000000 
+after copy bVal, rVal [61] 0.000000 0.000000 
+after copy bVal, rVal [62] 0.000000 -0.000000 
+after copy bVal, rVal [63] 9000000.000000 0.000000 
+after copy bVal, rVal [64] 0.000000 -0.000000 
+after copy bVal, rVal [65] 0.000000 -0.000000 
+after copy bVal, rVal [66] 0.000000 0.000000 
+after copy bVal, rVal [67] 0.000000 0.000000 
+after copy bVal, rVal [68] 0.000000 0.000000 
+after copy bVal, rVal [69] 0.000000 0.000000 
+after copy bVal, rVal [70] 0.000000 0.000000 
+after copy bVal, rVal [71] 0.000000 0.000000 
+after copy bVal, rVal [72] 0.000000 0.000000 
+after copy bVal, rVal [73] 0.000000 0.000000 
+after copy bVal, rVal [74] 0.000000 0.000000 
+after copy bVal, rVal [75] 0.000000 0.000000 
+after copy bVal, rVal [76] 0.000000 0.000000 
+after copy bVal, rVal [77] 0.000000 0.000000 
+after copy bVal, rVal [78] 0.000000 -0.000000 
+after copy bVal, rVal [79] 9000000.000000 0.000000 
+after copy bVal, rVal [80] 0.000000 -0.000000 
+after copy bVal, rVal [81] 0.000000 -0.000000 
+after copy bVal, rVal [82] 0.000000 0.000000 
+after copy bVal, rVal [83] 0.000000 0.000000 
+after copy bVal, rVal [84] 0.000000 0.000000 
+after copy bVal, rVal [85] 0.000000 0.000000 
+after copy bVal, rVal [86] 0.000000 0.000000 
+after copy bVal, rVal [87] 0.000000 0.000000 
+after copy bVal, rVal [88] 0.000000 0.000000 
+after copy bVal, rVal [89] 0.000000 0.000000 
+after copy bVal, rVal [90] 0.000000 0.000000 
+after copy bVal, rVal [91] 0.000000 0.000000 
+after copy bVal, rVal [92] 0.000000 0.000000 
+after copy bVal, rVal [93] 0.000000 0.000000 
+after copy bVal, rVal [94] 0.000000 -0.000000 
+after copy bVal, rVal [95] 9000000.000000 0.000000 
+after copy bVal, rVal [96] 0.000000 -0.000000 
+after copy bVal, rVal [97] 0.000000 -0.000000 
+after copy bVal, rVal [98] 0.000000 0.000000 
+after copy bVal, rVal [99] 0.000000 0.000000 
+current normr : 0.000000
+=== entering CG iterations
+beginning ell, r, z
+ell r z [0] 52000000.000000 0.000000 -0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 -0.000000
+ell r z [5] 182000000.000000 -0.000000 0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 0.000000
+ell r z [8] 260000000.000000 -0.000000 0.000000
+ell r z [9] 26000000.000000 -0.000000 0.000000
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+===entering MG Inside ===
+after MG, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+dotprod, waxpby
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+finished SPMV
+after spmv-final, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+after dotProd-final, copy
+ell r z [0] 52000000.000000 0.000000 0.000000
+ell r z [1] 78000000.000000 -0.000000 -0.000000
+ell r z [2] 104000000.000000 -0.000000 -0.000000
+ell r z [3] 130000000.000000 -0.000000 -0.000000
+ell r z [4] 156000000.000000 0.000000 0.000000
+ell r z [5] 182000000.000000 -0.000000 -0.000000
+ell r z [6] 208000000.000000 -0.000000 -0.000000
+ell r z [7] 234000000.000000 -0.000000 -0.000000
+ell r z [8] 260000000.000000 -0.000000 -0.000000
+ell r z [9] 26000000.000000 -0.000000 -0.000000
+fusedWaxpby parms at 1: 32768, -1.000000, 0.000000
+Ap [0] 0.000000
+Ap [1] -0.000000
+Ap [2] -0.000000
+Ap [3] -0.000000
+Ap [4] 0.000000
+Ap [5] -0.000000
+Ap [6] -0.000000
+Ap [7] -0.000000
+Ap [8] -0.000000
+Ap [9] -0.000000
+Ap [10] -0.000000
+Ap [11] -0.000000
+Ap [12] -0.000000
+Ap [13] -0.000000
+Ap [14] 0.000000
+Ap [15] -0.000000
+Ap [16] 0.000000
+Ap [17] 0.000000
+Ap [18] -0.000000
+Ap [19] -0.000000
+Ap [20] 0.000000
+Ap [21] 0.000000
+Ap [22] 0.000000
+Ap [23] -0.000000
+Ap [24] 0.000000
+Ap [25] 0.000000
+Ap [26] -0.000000
+Ap [27] -0.000000
+Ap [28] -0.000000
+Ap [29] -0.000000
+Ap [30] -0.000000
+Ap [31] 0.000000
+Ap [32] -0.000000
+Ap [33] -0.000000
+Ap [34] 0.000000
+Ap [35] 0.000000
+Ap [36] 0.000000
+Ap [37] 0.000000
+Ap [38] 0.000000
+Ap [39] 0.000000
+Ap [40] 0.000000
+Ap [41] 0.000000
+Ap [42] 0.000000
+Ap [43] 0.000000
+Ap [44] 0.000000
+Ap [45] 0.000000
+Ap [46] -0.000000
+Ap [47] 0.000000
+Ap [48] -0.000000
+Ap [49] -0.000000
+Ap [50] 0.000000
+Ap [51] 0.000000
+Ap [52] 0.000000
+Ap [53] 0.000000
+Ap [54] 0.000000
+Ap [55] 0.000000
+Ap [56] 0.000000
+Ap [57] 0.000000
+Ap [58] 0.000000
+Ap [59] 0.000000
+Ap [60] 0.000000
+Ap [61] 0.000000
+Ap [62] -0.000000
+Ap [63] 0.000000
+Ap [64] -0.000000
+Ap [65] -0.000000
+Ap

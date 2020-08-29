@@ -466,7 +466,17 @@ void GenerateProblemInside(SparseMatrix &A, Vector *b, Vector *x,
   A.ell_width = numberOfNonzerosPerRow;
   A.numberOfNonzerosPerRow = numberOfNonzerosPerRow;
 
-  printf("generateProblem val : %d %d %d %d %d %d %d\n", totalNumberOfRows, totalNumberOfNonzeros, localNumberOfRows, localNumberOfRows, localNumberOfNonzeros, numberOfNonzerosPerRow, numberOfNonzerosPerRow);
+  // printf("generateProblem val : %d %d %d %d %d %d %d\n", totalNumberOfRows, totalNumberOfNonzeros, localNumberOfRows, localNumberOfRows, localNumberOfNonzeros, numberOfNonzerosPerRow, numberOfNonzerosPerRow);
+
+  // double * dVals =  new double[10];
+
+  // cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+  // for (int i = 0; i<10; i++){
+  //   printf("after generateProblem dVals[%d] : %f\n", i, dVals[i]);
+  // }
+  // free(dVals);
+  
 }
 
 void CopyProblemToHostInside(SparseMatrix &A, Vector *b, Vector *x,

@@ -184,6 +184,14 @@ int main(int argc, char *argv[]) {
 
   CopyHaloToHost(A);
 
+  // double * dVals =  new double[10];
+  // cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+  // for (int i = 0; i<10; i++){
+  //   printf("after copyHaloToHosts dVals[%d] : %f\n", i, dVals[i]);
+  // }
+
+
 //DONE : 08/26/2020 04:09
   //           for (int i = 0; i< A.localNumberOfRows * A.numberOfNonzerosPerRow; i++){
   //       printf("%d generateProblem Vals after copyToHost: %d %f %d\n", i, A.mtxIndL[0][i], A.matrixValues[0][i], A.mtxIndG[0][i]);
@@ -308,6 +316,14 @@ int main(int argc, char *argv[]) {
 
   // Call user-tunable set up function.
   double t7 = mytimer();
+
+//     cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+//   for (int i = 0; i<10; i++){
+//     printf("before opti dVals[%d] : %f\n", i, dVals[i]);
+//   }
+// free(dVals);
+
   OptimizeProblem(A, data, b, x, xexact);
   t7 = mytimer() - t7;
   times[7] = t7;

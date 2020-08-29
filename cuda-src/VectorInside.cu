@@ -1,5 +1,7 @@
 #include "VectorInside.cuh"
 #include <cuda_runtime.h>
+#include <thrust/fill.h>
+#include <thrust/device_ptr.h>
 
 void CudaInitializeVectorInside(Vector &v, local_int_t localLength) {
   v.localLength = localLength;
@@ -8,7 +10,12 @@ void CudaInitializeVectorInside(Vector &v, local_int_t localLength) {
 }
 
 void CudaZeroVectorInside(Vector &v) {
-  cudaMemset((void **)&v.d_values, 0.0, v.localLength * sizeof(double));
+  // local_int_t localLength = v.localLength;
+  // cudaFree(v.d_values);
+  // cudaMalloc((void **)&v.d_values, v.localLength * sizeof(double));
+  thrust::device_ptr<double> dev_ptr(v.d_values);
+  thrust::fill(dev_ptr, dev_ptr + v.localLength, 0);
+  // cudaMemset((void **)&v.d_values, 0, v.localLength * sizeof(double));
 }
 
 void CudaScaleVectorValueInside(Vector &v, local_int_t index, double value) {

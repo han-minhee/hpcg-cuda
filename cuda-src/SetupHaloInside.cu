@@ -192,7 +192,14 @@ void SetupHaloInside(SparseMatrix &A) {
 #ifdef HPCG_NO_MPI
   LAUNCH_COPY_INDICES(27, 16);
 
-  // TODO: from here, only for mpi
+//   printf("setupHalo Copy indices\n");
+//   double* ellVals = new double[10];
+// cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+
+// for (int i = 0; i<10; i++){
+//   printf("input ellval[%d] : %f\n", i, ellVals[i]);
+// }
+// TODO: from here, only for mpi
 #else
   if (A.geom->size == 1) {
     LAUNCH_COPY_INDICES(27, 16);
