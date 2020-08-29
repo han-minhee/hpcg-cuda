@@ -6,6 +6,7 @@
 #include <iostream>
 using std::endl;
 #include <cmath>
+#include <cstdio>
 #include <vector>
 
 #include "../src/hpcg.hpp"
@@ -19,7 +20,7 @@ using std::endl;
 
 int TestSymmetryInside(SparseMatrix &A, Vector &b, Vector &xexact,
                        TestSymmetryData &testsymmetry_data) {
-
+  printf("entered testsymmetry inside\n");
   local_int_t nrow = A.localNumberOfRows;
   local_int_t ncol = A.localNumberOfColumns;
 
@@ -32,11 +33,11 @@ int TestSymmetryInside(SparseMatrix &A, Vector &b, Vector &xexact,
   testsymmetry_data.count_fail = 0;
 
   // Test symmetry of matrix
-
+printf("initialized\n");
   // First load vectors with random values
   CudaFillRandomVector(x_ncol);
   CudaFillRandomVector(y_ncol);
-
+printf("filled random vectors\n");
   double xNorm2, yNorm2;
   double ANorm = 2 * 26.0;
 

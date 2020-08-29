@@ -2,6 +2,8 @@
 #include <cuda_runtime.h>
 #include <thrust/fill.h>
 #include <thrust/device_ptr.h>
+#include <vector>
+
 
 void CudaInitializeVectorInside(Vector &v, local_int_t localLength) {
   v.localLength = localLength;
@@ -28,13 +30,16 @@ void CudaScaleVectorValueInside(Vector &v, local_int_t index, double value) {
 
 // TODO: chage to Curand later
 void CudaFillRandomVectorInside(Vector &v) {
-  local_int_t localLength = v.localLength;
-  double *vv = v.values;
-  for (int i = 0; i < localLength; ++i)
-    vv[i] = rand() / (double)(RAND_MAX) + 1.0;
+  std::vector<double> rng(v.localLength);
+  for(int i = 0; i < v.localLength; ++i)
+  {
+    rng[i] = rand() / (double)(RAND_MAX) + 1.0;
+  }
 
-  cudaMemcpy(v.d_values, vv, localLength * sizeof(double),
-             cudaMemcpyHostToDevice);
+  cudaMemcpy(v.d_values,
+                      rng.data(),
+                      sizeof(double) * v.localLength,
+                      cudaMemcpyHostToDevice);
 }
 
 void CudaCopyVectorInside(const Vector &v, Vector &w) {

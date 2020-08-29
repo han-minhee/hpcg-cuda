@@ -348,9 +348,12 @@ int main(int argc, char *argv[]) {
   TestCGData testcg_data;
   testcg_data.count_pass = testcg_data.count_fail = 0;
   TestCG(A, data, b, x, testcg_data);
+  printf("passed TestCG\n");
 
   TestSymmetryData testsymmetry_data;
+  printf("symmetryData made\n");
   TestSymmetry(A, b, xexact, testsymmetry_data);
+  printf("passed test symmetry\n");
 
 #ifdef HPCG_DEBUG
   if (rank == 0)
@@ -382,6 +385,7 @@ int main(int argc, char *argv[]) {
   // Compute the residual reduction and residual count for the user ordering and
   // optimized kernels.
   for (int i = 0; i < numberOfCalls; ++i) {
+    printf("optimized CG %d\n", i);
     CudaZeroVector(x); // start x at all zeros
     double last_cummulative_time = opt_times[0];
     ierr = CG(A, data, b, x, optMaxIters, refTolerance, niters, normr, normr0,
@@ -481,7 +485,7 @@ int main(int argc, char *argv[]) {
 
   // Test Norm Results
   ierr = TestNorms(testnorms_data);
-
+printf("testNorms passed\n");
   ////////////////////
   // Report Results //
   ////////////////////
@@ -491,23 +495,23 @@ int main(int argc, char *argv[]) {
                 &times[0], testcg_data, testsymmetry_data, testnorms_data,
                 global_failure, quickPath);
 
+printf("reported results\n");
   // Clean up
-  DeleteMatrix(A); // This delete will recursively delete all coarse grid data
+  // DeleteMatrix(A); // This delete will recursively delete all coarse grid data
   DeleteCGData(data);
   CudaDeleteCGData(data);
 
   DeleteVector(x);
   DeleteVector(b);
   DeleteVector(xexact);
+
   CudaDeleteVector(x);
   CudaDeleteVector(b);
   CudaDeleteVector(xexact);
-
   DeleteVector(x_overlap);
   DeleteVector(b_computed);
 
   delete[] testnorms_data.values;
-
   HPCG_Finalize();
 
   // Finish up
