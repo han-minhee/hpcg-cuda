@@ -67,13 +67,6 @@ inline void InitializeSparseMatrixInside(SparseMatrix &A, Geometry *geom) {
 void ConvertToELLInside(SparseMatrix &A);
 void ExtractDiagonalInside(SparseMatrix &A);
 
-/*!
-  Copy values from matrix diagonal into user-provided vector.
-
-  @param[in] A the known system matrix.
-  @param[inout] diagonal  Vector of diagonal values (must be allocated before
-  call to this function).
- */
 void CudaCopyMatrixDiagonalInside(const SparseMatrix &A, Vector &diagonal);
 inline void CopyMatrixDiagonalInside(SparseMatrix &A, Vector &diagonal) {
   double **curDiagA = A.matrixDiagonal;

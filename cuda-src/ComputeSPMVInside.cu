@@ -6,10 +6,10 @@
 
 #define LAUNCH_SPMV_ELL(blocksize)                                             \
   kernel_spmv_ell<blocksize><<<dim3((A.localNumberOfRows - 1) / blocksize + 1),  \
-                             dim3(blocksize), 0, streamInterior>>>(           \
+                             dim3(blocksize), 0, stream_interior>>>(           \
       A.localNumberOfRows, A.nblocks, A.localNumberOfRows / A.nblocks,         \
       A.ell_width, A.ell_col_ind, A.ell_val, x.d_values, y.d_values)
-// 0, streamInterior,
+// 0, stream_interior,
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
@@ -113,7 +113,7 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
 
 #ifndef HPCG_NO_MPI
   if (A.geom->size > 1) {
-    (A, x);
+    PrepareSendBuffer(A, x);
   }
 #endif
 

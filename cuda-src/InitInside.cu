@@ -27,8 +27,8 @@ const char *NULLDEVICE = "/dev/null";
 #include "../src/ReadHpcgDat.hpp"
 #include "InitInside.cuh"
 
-cudaStream_t streamInterior;
-cudaStream_t streamHalo;
+cudaStream_t stream_interior;
+cudaStream_t stream_halo;
 void *workspace;
 
 std::ofstream
@@ -152,13 +152,14 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
 
   // Set device
   CUDA_CHECK_COMMAND(cudaSetDevice(params.device));
+  
 
   // Warm up
   kernelWarmUp<<<1, 1, 0, 0>>>();
 
   // Create streams
-  CUDA_CHECK_COMMAND(cudaStreamCreate(&streamInterior));
-  CUDA_CHECK_COMMAND(cudaStreamCreate(&streamHalo));
+  CUDA_CHECK_COMMAND(cudaStreamCreate(&stream_interior));
+  CUDA_CHECK_COMMAND(cudaStreamCreate(&stream_halo));
 
   // Allocate device workspace
   CUDA_CHECK_COMMAND(

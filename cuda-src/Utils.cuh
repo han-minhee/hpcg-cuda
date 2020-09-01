@@ -4,8 +4,8 @@
 #include <cuda_runtime.h>
 
 // Streams
-extern cudaStream_t streamInterior;
-extern cudaStream_t streamHalo;
+extern cudaStream_t stream_interior;
+extern cudaStream_t stream_halo;
 // Workspace
 extern void *workspace;
 // Memory allocator

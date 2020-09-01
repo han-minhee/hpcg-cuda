@@ -1,6 +1,6 @@
 # -*- Makefile -*-
 
-arch = CUDA_MPI_OMP
+arch = CUDA
 setup_file = setup/Make.$(arch)
 
 include $(setup_file)

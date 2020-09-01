@@ -102,7 +102,7 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
         testcg_data.niters_max_prec = niters; // Same for preconditioned run
       if (A.geom->rank == 0) {
         HPCG_fout << "Call [" << i << "] Number of Iterations [" << niters
-                  << "] Scaled Residual [" << normr / normr0 << "]" << endl;
+                  << "] Scaled Residual [" << normr / normr0 << "] in TestCG" << endl;
         if (niters > expected_niters)
           HPCG_fout << " Expected " << expected_niters
                     << " iterations.  Performed " << niters << "." << endl;

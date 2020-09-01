@@ -96,6 +96,15 @@ int main(int argc, char *argv[]) {
   int size = params.comm_size,
       rank = params.comm_rank; // Number of MPI processes, My process ID
 
+#ifndef HPCG_NO_MPI
+  MPI_Barrier(MPI_COMM_WORLD);
+#endif
+
+  cudaDeviceProp prop;
+  cudaGetDeviceProperties(&prop, params.device);
+  printf("Using CUDA device (%d): %s (%lu MB global memory)\n", params.device,
+         prop.name, (prop.totalGlobalMem >> 20));
+
 #ifdef HPCG_DETAILED_DEBUG
   if (size < 100 && rank == 0)
     HPCG_fout << "Process " << rank << " of " << size << " is alive with "
@@ -110,11 +119,6 @@ int main(int argc, char *argv[]) {
   MPI_Barrier(MPI_COMM_WORLD);
 #endif
 #endif
-
-  cudaDeviceProp prop;
-  cudaGetDeviceProperties(&prop, params.device);
-  printf("Using CUDA device (%d): %s (%lu MB global memory)\n", params.device,
-         prop.name, (prop.totalGlobalMem >> 20));
 
   local_int_t nx, ny, nz;
   nx = (local_int_t)params.nx;
@@ -185,19 +189,22 @@ int main(int argc, char *argv[]) {
   CopyHaloToHost(A);
 
   // double * dVals =  new double[10];
-  // cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+  // cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10,
+  // cudaMemcpyDeviceToHost);
 
   // for (int i = 0; i<10; i++){
   //   printf("after copyHaloToHosts dVals[%d] : %f\n", i, dVals[i]);
   // }
 
-
-//DONE : 08/26/2020 04:09
-  //           for (int i = 0; i< A.localNumberOfRows * A.numberOfNonzerosPerRow; i++){
-  //       printf("%d generateProblem Vals after copyToHost: %d %f %d\n", i, A.mtxIndL[0][i], A.matrixValues[0][i], A.mtxIndG[0][i]);
+  // DONE : 08/26/2020 04:09
+  //           for (int i = 0; i< A.localNumberOfRows *
+  //           A.numberOfNonzerosPerRow; i++){
+  //       printf("%d generateProblem Vals after copyToHost: %d %f %d\n", i,
+  //       A.mtxIndL[0][i], A.matrixValues[0][i], A.mtxIndG[0][i]);
   //     }
   //     for (int i = 0; i< A.localNumberOfRows; i++){
-  //       printf("%d secondGenerate Vals after copyToHost: %d\n", i, A.localToGlobalMap.data()[i]);
+  //       printf("%d secondGenerate Vals after copyToHost: %d\n", i,
+  //       A.localToGlobalMap.data()[i]);
   //     }
   //           for (int i = 0; i< A.localNumberOfRows; i++){
   //   printf("%d b vals after copyToHost: %f\n", i, b.values[i]);
@@ -317,12 +324,13 @@ int main(int argc, char *argv[]) {
   // Call user-tunable set up function.
   double t7 = mytimer();
 
-//     cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10, cudaMemcpyDeviceToHost);
+  //     cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10,
+  //     cudaMemcpyDeviceToHost);
 
-//   for (int i = 0; i<10; i++){
-//     printf("before opti dVals[%d] : %f\n", i, dVals[i]);
-//   }
-// free(dVals);
+  //   for (int i = 0; i<10; i++){
+  //     printf("before opti dVals[%d] : %f\n", i, dVals[i]);
+  //   }
+  // free(dVals);
 
   OptimizeProblem(A, data, b, x, xexact);
   t7 = mytimer() - t7;
@@ -351,7 +359,6 @@ int main(int argc, char *argv[]) {
   printf("passed TestCG\n");
 
   TestSymmetryData testsymmetry_data;
-  printf("symmetryData made\n");
   TestSymmetry(A, b, xexact, testsymmetry_data);
   printf("passed test symmetry\n");
 
@@ -485,7 +492,7 @@ int main(int argc, char *argv[]) {
 
   // Test Norm Results
   ierr = TestNorms(testnorms_data);
-printf("testNorms passed\n");
+  printf("testNorms passed\n");
   ////////////////////
   // Report Results //
   ////////////////////
@@ -495,9 +502,10 @@ printf("testNorms passed\n");
                 &times[0], testcg_data, testsymmetry_data, testnorms_data,
                 global_failure, quickPath);
 
-printf("reported results\n");
+  printf("reported results\n");
   // Clean up
-  // DeleteMatrix(A); // This delete will recursively delete all coarse grid data
+  // DeleteMatrix(A); // This delete will recursively delete all coarse grid
+  // data
   DeleteCGData(data);
   CudaDeleteCGData(data);
 

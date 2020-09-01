@@ -8,7 +8,7 @@
 
 int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
 
-  printf("===entering MG Inside ===\n");
+  // printf("===entering MG Inside ===\n");
   assert(x.localLength == A.localNumberOfColumns);
 
   if (A.mgData != 0) {

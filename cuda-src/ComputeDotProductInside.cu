@@ -162,8 +162,7 @@ int ComputeDotProductInside(local_int_t n, const Vector &x, const Vector &y,
   double t0 = mytimer();
   double global_result = 0.0;
 
-  MPI_Allreduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM,
-                MPI_COMM_WORLD);
+  MPI_Allreduce(&local_result, &global_result, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
 
   result = global_result;
   time_allreduce += mytimer() - t0;
