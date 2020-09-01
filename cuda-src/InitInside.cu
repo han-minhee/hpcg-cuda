@@ -125,14 +125,18 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
 #ifndef HPCG_NO_MPI
   MPI_Comm_rank(MPI_COMM_WORLD, &params.comm_rank);
   MPI_Comm_size(MPI_COMM_WORLD, &params.comm_size);
+  printf("MPI enabled\n");
 #else
+  printf("MPI disabled\n");
   params.comm_rank = 0;
   params.comm_size = 1;
 #endif
 
+  printf("mpi comm rank, %d %d size \n", params.comm_rank, params.comm_size);
   // Simple device management
   int ndevs = 0;
   CUDA_CHECK_COMMAND(cudaGetDeviceCount(&ndevs));
+  printf("devices: %d \n", ndevs);
 
   // Single GPU device can be selected via cli
   // Multi GPU devices are selected automatically

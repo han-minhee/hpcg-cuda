@@ -1,6 +1,8 @@
 #include "SparseMatrixInside.cuh"
 #include "Utils.cuh"
 #include <cub/cub.cuh>
+#include <cuda_runtime.h>
+#include <numa.h>
 
 #define LAUNCH_TO_ELL_COL(blockSizeX, blockSizeY)                              \
   kernel_to_ell_col<blockSizeX, blockSizeY>                                    \
@@ -98,8 +100,7 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
 #ifndef HPCG_NO_MPI
   __shared__ bool sdata[BLOCKSIZEY];
   sdata[threadIdx.y] = false;
-  cudaDeviceSynchronize();
-  __synchtreads();
+  __syncthreads();
 #endif
 
   if (row >= m) {

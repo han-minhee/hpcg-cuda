@@ -17,7 +17,9 @@ void CudaZeroVectorInside(Vector &v) {
   // cudaMalloc((void **)&v.d_values, v.localLength * sizeof(double));
   thrust::device_ptr<double> dev_ptr(v.d_values);
   thrust::fill(dev_ptr, dev_ptr + v.localLength, 0);
-  // cudaMemset((void **)&v.d_values, 0, v.localLength * sizeof(double));
+  // cudaMemset(v.d_values, 0, v.localLength * sizeof(double));
+    // cudaMemset((void **)&v.d_values, 0, v.localLength * sizeof(double));
+      // cudaMemset((void **)&v.d_values, 0.0f, v.localLength * sizeof(double));
 }
 
 void CudaScaleVectorValueInside(Vector &v, local_int_t index, double value) {

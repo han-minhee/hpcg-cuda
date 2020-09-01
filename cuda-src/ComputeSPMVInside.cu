@@ -113,7 +113,7 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
 
 #ifndef HPCG_NO_MPI
   if (A.geom->size > 1) {
-    PrepareSendBuffer(A, x);
+    (A, x);
   }
 #endif
 

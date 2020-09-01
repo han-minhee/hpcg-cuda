@@ -49,6 +49,15 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
   }
 }
 
+ struct AddOp {
+     template <typename T>
+     //  CUB_RUNTIME_FUNCTION __forceinline__
+     __device__ __forceinline__
+     T operator()(const T &a, const T &b) const {
+       return a + b;
+     }
+   };
+
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
     void kernelSetupHalo(local_int_t m, local_int_t max_boundary,
@@ -187,24 +196,38 @@ __launch_bounds__(BLOCKSIZE) __global__
 }
 
 void SetupHaloInside(SparseMatrix &A) {
-  unsigned int blocksize = 16;
+    // Determine blocksize for 2D kernel launch
+    unsigned int blocksize = 512 / A.numberOfNonzerosPerRow;
+
+    // Compute next power of two
+    blocksize |= blocksize >> 1;
+    blocksize |= blocksize >> 2;
+    blocksize |= blocksize >> 4;
+    blocksize |= blocksize >> 8;
+    blocksize |= blocksize >> 16;
+    ++blocksize;
+
+    // Shift right until we obtain a valid blocksize
+    while(blocksize * A.numberOfNonzerosPerRow > 512)
+    {
+        blocksize >>= 1;
+    }
 
 #ifdef HPCG_NO_MPI
-  LAUNCH_COPY_INDICES(27, 16);
-
-//   printf("setupHalo Copy indices\n");
-//   double* ellVals = new double[10];
-// cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-
-// for (int i = 0; i<10; i++){
-//   printf("input ellval[%d] : %f\n", i, ellVals[i]);
-// }
-// TODO: from here, only for mpi
+    if     (blocksize == 32) LAUNCH_COPY_INDICES(27, 32);
+    else if(blocksize == 16) LAUNCH_COPY_INDICES(27, 16);
+    else if(blocksize ==  8) LAUNCH_COPY_INDICES(27,  8);
+    else                     LAUNCH_COPY_INDICES(27,  4);
 #else
-  if (A.geom->size == 1) {
-    LAUNCH_COPY_INDICES(27, 16);
-    return;
-  }
+    if(A.geom->size == 1)
+    {
+        if     (blocksize == 32) LAUNCH_COPY_INDICES(27, 32);
+        else if(blocksize == 16) LAUNCH_COPY_INDICES(27, 16);
+        else if(blocksize ==  8) LAUNCH_COPY_INDICES(27,  8);
+        else                     LAUNCH_COPY_INDICES(27,  4);
+
+        return;
+    }
 
   // Local dimensions in x, y and z direction
   local_int_t nx = A.geom->nx;
@@ -468,6 +491,8 @@ void SetupHaloInside(SparseMatrix &A) {
 
     // Obtain rocprim buffer size
     // TODO: implement run-length encoding for cuda
+    cub::DeviceRunLengthEncode::Encode(rocprim_buffer, rocprim_size, d_recvList[i], d_unique_out, d_offsets +1, d_num_runs, entriesToRecv);
+    
     // CUDA_CHECK_COMMAND(rocprim::run_length_encode(
     //     rocprim_buffer, rocprim_size, d_recvList[i], entriesToRecv,
     //     d_unique_out, d_offsets + 1, d_num_runs));
@@ -478,6 +503,9 @@ void SetupHaloInside(SparseMatrix &A) {
     // CUDA_CHECK_COMMAND(rocprim::run_length_encode(
     //     rocprim_buffer, rocprim_size, d_recvList[i], entriesToRecv,
     //     d_unique_out, d_offsets + 1, d_num_runs));
+
+    cub::DeviceRunLengthEncode::Encode(rocprim_buffer, rocprim_size, d_recvList[i], d_unique_out, d_offsets +1, d_num_runs, entriesToRecv);
+    
     CUDA_CHECK_COMMAND(cudaFree(rocprim_buffer));
     rocprim_buffer = NULL;
 
@@ -494,6 +522,8 @@ void SetupHaloInside(SparseMatrix &A) {
     CUDA_CHECK_COMMAND(cudaMemset(d_offsets, 0, sizeof(global_int_t)));
 
     // Obtain rocprim buffer size
+    AddOp add_op;
+    CUDA_CHECK_COMMAND(cub::DeviceScan::InclusiveScan(rocprim_buffer, rocprim_size, d_offsets +1, d_offsets+1, add_op, currentRankHaloEntries));
     // CUDA_CHECK_COMMAND(rocprim::inclusive_scan(
     //     rocprim_buffer, rocprim_size, d_offsets + 1, d_offsets + 1,
     //     currentRankHaloEntries, rocprim::plus<global_int_t>()));
@@ -502,17 +532,15 @@ void SetupHaloInside(SparseMatrix &A) {
     // Perform inclusive sum to obtain the offsets to the first halo entry of
     // each row
 
+    CUDA_CHECK_COMMAND(cub::DeviceScan::InclusiveScan(rocprim_buffer, rocprim_size, d_offsets +1, d_offsets+1, add_op, currentRankHaloEntries));
+
     // CUDA_CHECK_COMMAND(rocprim::inclusive_scan(
     //   rocprim_buffer, rocprim_size, d_offsets + 1, d_offsets + 1,
     //   currentRankHaloEntries, rocprim::plus<global_int_t>()));
     // 1/4
     // inclusive_scan(InputIterator first, InputIterator last, OutputIterator
     // result) -> OutputIterator
-    thrust::inclusive_scan(d_offsets + 1, d_offsets + currentRankHaloEntries,
-                           d_offsets + 1);
 
-    // thrust::inclusive_scan(d_offsets + 1, d_offsets + 1, rocprim_buffer,
-    //                        currentRankHaloEntries);
     CUDA_CHECK_COMMAND(cudaFree(rocprim_buffer));
     rocprim_buffer = NULL;
     // // hipError_t inclusive_scan(void * temporary_storage,

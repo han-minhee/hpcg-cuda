@@ -247,7 +247,22 @@ void JPLColoring(SparseMatrix &A) {
   A.offsets[0] = 0;
 
   // Determine blocksize
-  unsigned int blocksize = 16;
+    // Determine blocksize
+    unsigned int blocksize = 512 / A.numberOfNonzerosPerRow;
+
+    // Compute next power of two
+    blocksize |= blocksize >> 1;
+    blocksize |= blocksize >> 2;
+    blocksize |= blocksize >> 4;
+    blocksize |= blocksize >> 8;
+    blocksize |= blocksize >> 16;
+    ++blocksize;
+
+    // Shift right until we obtain a valid blocksize
+    while(blocksize * A.numberOfNonzerosPerRow > 512)
+    {
+        blocksize >>= 1;
+    }
 
   // DONE: hash identical
   // local_int_t* hash_temp = new local_int_t[A.localNumberOfRows];
@@ -267,9 +282,10 @@ void JPLColoring(SparseMatrix &A) {
     // printf("color1: %d\n", color1);
     // printf("color2: %d\n", color2);
 
-    
-
-    LAUNCH_JPL(27, 16);
+    if     (blocksize == 32) LAUNCH_JPL(27, 32);
+    else if(blocksize == 16) LAUNCH_JPL(27, 16);
+    else if(blocksize ==  8) LAUNCH_JPL(27,  8);
+    else                     LAUNCH_JPL(27,  4);
 
     // printf("entering coloring 1\n");
     // int* temp_perm = new int[100];

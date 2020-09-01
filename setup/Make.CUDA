@@ -53,7 +53,7 @@ HPCG_LIBS     =
 #    *) Build with OpenMP enabled.
 #    *) Not generate debugging output.
 #
-HPCG_OPTS     = -DHPCG_NO_MPI -DHPCG_NO_OPENMP
+HPCG_OPTS     = -DHPCG_NO_MPI
 #
 # ----------------------------------------------------------------------
 #
@@ -63,10 +63,10 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 # - Compilers / linkers - Optimization flags ---------------------------
 # ----------------------------------------------------------------------
 #
-NVCC_LIBS    = -lcuda -lcudart -lcublas -lcusparse
+NVCC_LIBS    = -lcuda -lcudart
 
 CXX          = nvcc
-COMPILER_OPTS = -fomit-frame-pointer -O3 -funroll-loops -W -Wall
+COMPILER_OPTS = -fomit-frame-pointer -O3 -funroll-loops -W -Wall -fopenmp
 CXXFLAGS     =  --compiler-options= "$(COMPILER_OPTS)"  $(HPCG_DEFS)
 
 #

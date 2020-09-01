@@ -111,6 +111,15 @@ extern void *workspace;
     }                                                                          \
   }
 
+#define EXIT_IF_HPCG_ERROR(err) \
+{                               \
+    if(err != 0)                \
+    {                           \
+        cudaDeviceReset();       \
+        exit(1);                \
+    }                           \
+}
+
 #define CudaVectorCopyHostToDevice(vector)                                     \
   cudaMemcpy(vector.d_values, vector.values, sizeof(vector.values),            \
              cudaMemcpyHostToDevice);
