@@ -264,7 +264,7 @@ void JPLColoring(SparseMatrix &A) {
         blocksize >>= 1;
     }
 
-  // DONE: hash identical
+  // // DONE: hash identical
   // local_int_t* hash_temp = new local_int_t[A.localNumberOfRows];
   // cudaMemcpy(hash_temp, A.d_rowHash, sizeof(local_int_t) * A.localNumberOfRows, cudaMemcpyDeviceToHost);
 
@@ -295,7 +295,7 @@ void JPLColoring(SparseMatrix &A) {
     // }
     // free(temp_perm);
 
-    //NOW COloring works : 08/27/2020 01:11
+    // NOW COloring works : 08/27/2020 01:11
     // not? 08/27/2020 01:43
 
     // int totalSum = 0;
@@ -370,56 +370,25 @@ void JPLColoring(SparseMatrix &A) {
   int endbit = 32 - __builtin_clz(A.nblocks);
   // printf("nblocks : %d\n", A.nblocks);
 
-  // SortPairs (void *d_temp_storage, size_t &temp_storage_bytes, const KeyT
-  // *d_keys_in, KeyT *d_keys_out, const ValueT *d_values_in, ValueT
-  // *d_values_out, int num_items, int begin_bit=0, int end_bit=sizeof(KeyT)*8,
-  // cudaStream_t stream=0, bool debug_synchronous=false)
-  // TODO: radix_sort_pairs
+  cub::DoubleBuffer<local_int_t> keys(A.perm, tmp_color);
+  cub::DoubleBuffer<local_int_t> vals(perm, tmp_perm);
 
-  CUDA_CHECK_COMMAND(cub::DeviceRadixSort::SortPairs(
-      buf, size, A.perm, tmp_color, perm, tmp_perm, m, startbit, endbit));
+  CUDA_CHECK_COMMAND(cub::DeviceRadixSort::SortPairs(buf, size, keys, vals, m, startbit, endbit));
   CUDA_CHECK_COMMAND(cudaMalloc(&buf, size));
-  CUDA_CHECK_COMMAND(cub::DeviceRadixSort::SortPairs(
-    buf, size, A.perm, tmp_color, perm, tmp_perm, m, startbit, endbit));
+  CUDA_CHECK_COMMAND(cub::DeviceRadixSort::SortPairs(buf, size, keys, vals, m, startbit, endbit));
   CUDA_CHECK_COMMAND(cudaFree(buf));
 
-//   CUDA_CHECK_COMMAND(cub::DeviceRadixSort::SortPairs(
-//     buf, size, tmp_color, A.perm, tmp_perm, perm, m, startbit, endbit));
-// CUDA_CHECK_COMMAND(cudaMalloc(&buf, size));
-// CUDA_CHECK_COMMAND(cub::DeviceRadixSort::SortPairs(
-//   buf, size, tmp_color, A.perm, tmp_perm, perm, m, startbit, endbit));
-//   CUDA_CHECK_COMMAND(cudaFree(buf));
-
-  // local_int_t * keys_temp = new local_int_t[10];
-  // local_int_t * vals_temp = new local_int_t[10];
-  // cudaMemcpy(keys_temp, A.perm
-  // , sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(vals_temp, perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
-  // for (int i = 0; i< 10; i++){
-  //   printf("keys[%d] : %d\n", i, keys_temp[i]);
-  //   printf("vals[%d] : %d\n", i, vals_temp[i]);
-// }
-
-  // cudaMemcpy(keys_temp, tmp_color
-  // , sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(vals_temp, tmp_perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
-
-  // for (int i = 0; i< 10; i++){
-  //     printf("keys_temp[%d] : %d\n", i, keys_temp[i]);
-  //     printf("vals_temp[%d] : %d\n", i, vals_temp[i]);
-  // }
-
-
-
-
   kernel_create_perm<1024>
-      <<<dim3((m - 1) / 1024 + 1), dim3(1024)>>>(m, tmp_perm, A.perm);
+      <<<dim3((m - 1) / 1024 + 1), dim3(1024)>>>(m, vals.Current(), A.perm);
 
-    //   cudaMemcpy(keys_temp, A.perm, sizeof(local_int_t) * 10, cudaMemcpyDeviceToHost);
+    //   double* keys_temp = new double[50];
+    //   cudaMemcpy(keys_temp, A.perm, sizeof(local_int_t) * 50, cudaMemcpyDeviceToHost);
 
-    //   for (int i = 0; i< 10; i++){
-    //     printf("final perm[%d] : %d\n", i, keys_temp[i]);
+    //   for (int i = 0; i< 50; i++){
+    //     printf("final perm in coloring[%d] : %d\n", i, keys_temp[i]);
     // }
+
+    // delete [] keys_temp;
   
     //DONE: 08/27/2020 02:24
 

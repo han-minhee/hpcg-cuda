@@ -119,8 +119,12 @@ void CopyCoarseProblemToHostInside(SparseMatrix &A) {
 
   // Allocate additional host vectors
   InitializeVector(*A.mgData->rc, A.Ac->localNumberOfRows);
+  CudaInitializeVector(*A.mgData->rc, A.Ac->localNumberOfRows);
   InitializeVector(*A.mgData->xc, A.Ac->localNumberOfColumns);
+  CudaInitializeVector(*A.mgData->xc, A.Ac->localNumberOfColumns);
   InitializeVector(*A.mgData->Axf, A.localNumberOfColumns);
+  CudaInitializeVector(*A.mgData->Axf, A.localNumberOfColumns);
+
 
   // Copy f2c operator to host
   // FIXME: Invalid arg here

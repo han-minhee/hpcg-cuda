@@ -187,5 +187,6 @@ int ComputeFusedWAXPBYDot(local_int_t n, double alpha, const Vector &x,
   result = local_result;
 #endif
 
+
   return 0;
 }

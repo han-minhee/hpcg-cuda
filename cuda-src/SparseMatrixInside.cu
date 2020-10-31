@@ -184,6 +184,7 @@ void ConvertToELLInside(SparseMatrix &A) {
               std::max(sizeof(double), sizeof(global_int_t)) *
                   A.localNumberOfRows * A.numberOfNonzerosPerRow,
               sizeof(double) * A.ell_width * A.localNumberOfRows);
+  printf("cuda realloc finished\n");
 
   // Determine blocksize
   unsigned int blocksize = 1024 / A.ell_width;
@@ -201,6 +202,7 @@ void ConvertToELLInside(SparseMatrix &A) {
     blocksize >>= 1;
   }
 
+  printf("launching to ell val\n");
   if (blocksize == 32)
     LAUNCH_TO_ELL_VAL(27, 32);
   else if (blocksize == 16)
@@ -210,18 +212,45 @@ void ConvertToELLInside(SparseMatrix &A) {
   else
     LAUNCH_TO_ELL_VAL(27, 4);
 
+  printf("launching to ell val finished\n");
   // We can re-use mtxIndG array for the ELL column indices
   A.ell_col_ind = reinterpret_cast<local_int_t *>(A.d_matrixValues);
   A.d_matrixValues = NULL;
 
   // Resize the array
+  double *tempRealloc2;
+  // cudaRealloc(A.ell_col_ind, tempRealloc2,
+  //             sizeof(double) * A.localNumberOfRows * A.numberOfNonzerosPerRow,
+  //             sizeof(local_int_t) * A.ell_width * A.localNumberOfRows);
 
-  cudaRealloc(A.ell_col_ind, tempRealloc,
-              sizeof(double) * A.localNumberOfRows * A.numberOfNonzerosPerRow,
-              sizeof(local_int_t) * A.ell_width * A.localNumberOfRows);
+  size_t smallSize = sizeof(double) * A.localNumberOfRows * A.numberOfNonzerosPerRow;
+  size_t bigSize = sizeof(local_int_t) * A.ell_width * A.localNumberOfRows;
+
+  if(bigSize < smallSize){
+    size_t tempSizeChange;
+    tempSizeChange = bigSize;
+    bigSize = smallSize;
+    smallSize = tempSizeChange;
+  }
+
+  CUDA_CHECK_COMMAND(cudaMalloc((void **)&tempRealloc2, smallSize));
+
+  CUDA_CHECK_COMMAND(cudaMemcpy(tempRealloc2, A.ell_col_ind, smallSize, cudaMemcpyDeviceToDevice));
+  CUDA_CHECK_COMMAND(cudaFree(A.ell_col_ind));
+  CUDA_CHECK_COMMAND(cudaMalloc((void **)&A.ell_col_ind, bigSize));
+
+  
+  CUDA_CHECK_COMMAND(
+      cudaMemcpy(A.ell_col_ind, tempRealloc2, smallSize, cudaMemcpyDeviceToDevice));
+  CUDA_CHECK_COMMAND(cudaFree(tempRealloc2));
+  printf("cuda realloc 2 finished\n");
 
   // Convert mtxIndL into ELL column indices
-  local_int_t *d_halo_rows = reinterpret_cast<local_int_t *>(workspace);
+  //  local_int_t *d_halo_rows = reinterpret_cast<local_int_t *>(workspace);
+  printf("allocating d_halo_rows\n");
+  local_int_t *d_halo_rows;
+  CUDA_CHECK_COMMAND(
+      cudaMalloc((void **)&d_halo_rows, sizeof(local_int_t) * 1024));
 
 #ifndef HPCG_NO_MPI
   CUDA_CHECK_COMMAND(cudaMalloc((void **)&A.halo_row_ind,
@@ -266,6 +295,7 @@ void ConvertToELLInside(SparseMatrix &A) {
       A.halo_row_ind, // TODO inplace!
       A.halo_rows));
   CUDA_CHECK_COMMAND(cudaFree(rocprim_buffer));
+  CUDA_CHECK_COMMAND(cudaFree(d_halo_rows));
 
   kernel_to_halo<128><<<dim3((A.halo_rows - 1) / 128 + 1), dim3(128)>>>(
       A.halo_rows, A.localNumberOfRows, A.localNumberOfColumns, A.ell_width,

@@ -56,9 +56,7 @@ inline void DeleteMGData(MGData &data) {
   DeleteVector(*data.Axf);
   DeleteVector(*data.rc);
   DeleteVector(*data.xc);
-  delete data.Axf;
-  delete data.rc;
-  delete data.xc;
+
 
 #ifdef HPCG_REFERENCE
   CudaDeleteVector(*data.Axf);
@@ -66,6 +64,9 @@ inline void DeleteMGData(MGData &data) {
 
   CudaDeleteVector(*data.rc);
   CudaDeleteVector(*data.xc);
+  delete data.Axf;
+  delete data.rc;
+  delete data.xc;
 
   cudaFree(data.d_f2cOperator);
   return;

@@ -35,6 +35,11 @@ inline void CudaInitializeSparseCGData(SparseMatrix &A, CGData &data) {
   CudaInitializeVector(data.z, A.localNumberOfColumns);
   CudaInitializeVector(data.p, A.localNumberOfColumns);
   CudaInitializeVector(data.Ap, A.localNumberOfRows);
+  
+  CudaZeroVector(data.r);
+  CudaZeroVector(data.z);
+  CudaZeroVector(data.p);
+  CudaZeroVector(data.Ap);
 }
 
 /*!

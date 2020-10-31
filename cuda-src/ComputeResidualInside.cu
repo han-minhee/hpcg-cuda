@@ -75,9 +75,8 @@ __device__ void reduce_max(local_int_t tid, double *data) {
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_residual_part1(local_int_t n, const double * v1,
-                               const double * v2,
-                               double * workspace) {
+    void kernel_residual_part1(local_int_t n, const double *v1,
+                               const double *v2, double *workspace) {
   local_int_t tid = threadIdx.x;
   local_int_t gid = blockIdx.x * BLOCKSIZE + tid;
   local_int_t inc = gridDim.x * BLOCKSIZE;
@@ -98,7 +97,7 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 template <unsigned int BLOCKSIZE>
 __launch_bounds__(BLOCKSIZE) __global__
-    void kernel_residual_part2(local_int_t n, double * workspace) {
+    void kernel_residual_part2(local_int_t n, double *workspace) {
   local_int_t tid = threadIdx.x;
 
   __shared__ double sdata[BLOCKSIZE];
@@ -119,7 +118,10 @@ __launch_bounds__(BLOCKSIZE) __global__
 
 int ComputeResidualInside(local_int_t n, const Vector &v1, const Vector &v2,
                           double &residual) {
-  double *tmp = reinterpret_cast<double *>(workspace);
+  // double *tmp = reinterpret_cast<double *>(workspace);
+
+  double *tmp;
+  cudaMalloc((void **) &tmp, sizeof(double) * 1024);
 
 #define RES_DIM 256
   kernel_residual_part1<RES_DIM>
@@ -139,6 +141,7 @@ int ComputeResidualInside(local_int_t n, const Vector &v1, const Vector &v2,
 #else
   residual = local_residual;
 #endif
-
+  
+  cudaFree(tmp);
   return 0;
 }

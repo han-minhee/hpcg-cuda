@@ -64,27 +64,22 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 # ----------------------------------------------------------------------
 #
 NVCC_LIBS    = -lcuda -lcudart -lmpi -lnuma
-NVCC_INC = -I/usr/local/cuda/include
+NVCC_INC = -I/usr/local/cuda/include/
 
-MPIC = mpic++
 
 # CXX          = mpic++
 COMPILER_OPTS = -fomit-frame-pointer -O3 -funroll-loops -W -Wall -fopenmp
 # CXXFLAGS = $(COMPILER_OPTS) $(HPCG_DEFS) $(MPinc) $(NVCC_LIBS) $(NVCC_INC)
 
 NVCC = nvcc
-NVCCFLAGS     = -arch=sm_60  -Xcompiler "$(COMPILER_OPTS)"  $(HPCG_DEFS) $(MPinc) $(NVCC_INC) $(CUB-INCLUDE)
+NVCCFLAGS     =  --compiler-options= "$(COMPILER_OPTS)"  $(HPCG_DEFS) $(MPinc)
 
 CXX = $(NVCC)
 CXXFLAGS = $(NVCCFLAGS)
 
 #
-#LINKER       = mpic++
-#LINKFLAGS    = $(COMPILER_OPTS) $(HPCG_DEFS) $(MPinc) $(NVCC_INC) $(NVCC_LIBS) $(CUB-INCLUDE)
-
-LINKER       = $(NVCC)
-LINKFLAGS    = $(NVCCFLAGS)
-
+LINKER       = mpic++
+LINKFLAGS    = $(COMPILER_OPTS) $(HPCG_DEFS) $(MPinc) $(NVCC_INC)
 
 #
 ARCHIVER     = ar
@@ -92,21 +87,3 @@ ARFLAGS      = r
 RANLIB       = echo
 #
 # ----------------------------------------------------------------------
-
-CUDA-COMPILER = nvcc
-CUDA-INNER-OPTS = -fomit-frame-pointer -O3 -funroll-loops -W -Wall -fopenmp
-CUDA-COMPILER-OPTS = -ccbin g++ -m64 -gencode -arch=sm_70 -Xcompiler "$(CUDA-INNER-OPTS)"
-
-CUB-INCLUDE = -I/home/minhee/cub-1.8.0/
-CUDA-INCLUDE = -/usr/local/cuda/include
-
-CUDA-LIBRARY-DIR = /usr/local/cuda/lib64
-CUDA-LIBRARY = -L$(CUDA-LIBRARY-DIR)
-
-MPI-LIBRARY = -lmpi -lnuma
-
-MPI-COMPIlER = mpic++
-MPI-COMPILER-OPTS = 
-
-MPI-LINKER = mpic++
-MPI-LINKER-OPS = $(CUDA-LIBRARY)

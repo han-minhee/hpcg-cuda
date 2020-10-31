@@ -12,21 +12,15 @@ extern void *workspace;
 
 #define debug_message false
 
-#define cudaRealloc(dst, temp, smallsize, size)                                       \
-  cudaMalloc((void **)&temp, smallsize);                                     \
-  cudaMemcpy(temp, dst, smallsize, cudaMemcpyDeviceToDevice);                    \
-  cudaFree(dst);                                                               \
-  cudaMalloc((void **)&dst, size);                                             \
-  cudaMemcpy(dst, temp, smallsize, cudaMemcpyDeviceToDevice);                   \
-  cudaFree(temp);
-
-#define cudaDeviceRealloc(dst, temp, size)                                       \
-  cudaMalloc((void **)&temp, sizeof(dst));                                     \
-  cudaMemcpy(temp, dst, sizeof(dst), cudaMemcpyDeviceToDevice);                    \
-  cudaFree(dst);                                                               \
-  cudaMalloc((void **)&dst, size);                                             \
-  cudaMemcpy(dst, temp, sizeof(temp), cudaMemcpyDeviceToDevice);                   \
-  cudaFree(temp);
+#define cudaRealloc(dst, temp, smallsize, size)                                \
+  CUDA_CHECK_COMMAND(cudaMalloc((void **)&temp, smallsize));                   \
+  CUDA_CHECK_COMMAND(                                                          \
+      cudaMemcpy(temp, dst, smallsize, cudaMemcpyDeviceToDevice));             \
+  CUDA_CHECK_COMMAND(cudaFree(dst));                                           \
+  CUDA_CHECK_COMMAND(cudaMalloc((void **)&dst, size));                         \
+  CUDA_CHECK_COMMAND(                                                          \
+      cudaMemcpy(dst, temp, smallsize, cudaMemcpyDeviceToDevice));             \
+  CUDA_CHECK_COMMAND(cudaFree(temp));
 
 #define printFileLine                                                          \
   if (debug_message)                                                           \
@@ -34,11 +28,10 @@ extern void *workspace;
 
 #define CUDA_CHECK_COMMAND(command)                                            \
   if (command != cudaSuccess) {                                                \
-    if (debug_message) {                                                       \
-      printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),                    \
-             cudaGetErrorString(cudaPeekAtLastError()));                       \
-      printf("at file, line %s %d \n", __FILE__, __LINE__);                    \
-    }                                                                          \
+    printf("CUDA Error %d : %s\n", cudaPeekAtLastError(),                      \
+           cudaGetErrorString(cudaPeekAtLastError()));                         \
+    printf("at file, line %s %d \n", __FILE__, __LINE__);                      \
+    exit(EXIT_FAILURE);                                                        \
   } else {                                                                     \
     if (debug_message)                                                         \
       printf("line passed %s %d \n", __FILE__, __LINE__);                      \
@@ -111,14 +104,13 @@ extern void *workspace;
     }                                                                          \
   }
 
-#define EXIT_IF_HPCG_ERROR(err) \
-{                               \
-    if(err != 0)                \
-    {                           \
-        cudaDeviceReset();       \
-        exit(1);                \
-    }                           \
-}
+#define EXIT_IF_HPCG_ERROR(err)                                                \
+  {                                                                            \
+    if (err != 0) {                                                            \
+      cudaDeviceReset();                                                       \
+      exit(1);                                                                 \
+    }                                                                          \
+  }
 
 #define CudaVectorCopyHostToDevice(vector)                                     \
   cudaMemcpy(vector.d_values, vector.values, sizeof(vector.values),            \
