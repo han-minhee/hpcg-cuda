@@ -132,9 +132,9 @@ void PermuteColumns(SparseMatrix &A) {
   // cudaMemcpy(mtxIndl, A.d_mtxIndL, sizeof(local_int_t) * 10,
   //            cudaMemcpyDeviceToHost);
 
-  // printf("before launch perm\n");
+  // // printf("before launch perm\n");
   // for (int i = 0; i < 10; i++) {
-  //   printf("perm, vals, mtxIndl [%d] : %f %f %d\n", i, perm[i], vals[i],
+  //   // printf("perm, vals, mtxIndl [%d] : %f %f %d\n", i, perm[i], vals[i],
   //          mtxIndl[i]);
   // }
 
@@ -153,9 +153,9 @@ void PermuteColumns(SparseMatrix &A) {
   // cudaMemcpy(mtxIndl, A.d_mtxIndL, sizeof(local_int_t) * 10,
   //            cudaMemcpyDeviceToHost);
 
-  // // printf("after launch perm\n");
+  // // // printf("after launch perm\n");
   // // for (int i = 0; i < 10; i++) {
-  // //   printf("perm, vals, mtxIndl [%d] : %f %f %d\n", i, perm[i], vals[i],
+  // //   // printf("perm, vals, mtxIndl [%d] : %f %f %d\n", i, perm[i], vals[i],
   // //          mtxIndl[i]);
   // // }
 

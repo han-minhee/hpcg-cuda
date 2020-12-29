@@ -8,18 +8,18 @@
 
 int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
 
-  printf("Entering MGInside\n");
+  // printf("Entering MGInside\n");
   double *rv = new double[50 /*length*/];
   double *xv = new double[50 /*length*/];
   
-  // printf("===entering MG Inside ===\n");
+  // // printf("===entering MG Inside ===\n");
   assert(x.localLength == A.localNumberOfColumns);
 
   cudaMemcpy(rv, r.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
   cudaMemcpy(xv, x.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
 
   for (int i = 0; i<50 /*length*/; i++){
-    printf("before begin: x[%d]: %x, r[%d]: %x\n", i, xv[i], i, rv[i]);
+    // printf("before begin: x[%d]: %x, r[%d]: %x\n", i, xv[i], i, rv[i]);
   }
 
   if (A.mgData != 0) {
@@ -29,7 +29,7 @@ int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
     cudaMemcpy(xv, x.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
   
     for (int i = 0; i<50 /*length*/; i++){
-      printf("after SYMGSZeroGuess: x[%d]: %x, r[%d]: %x\n", i, xv[i], i, rv[i]);
+      // printf("after SYMGSZeroGuess: x[%d]: %x, r[%d]: %x\n", i, xv[i], i, rv[i]);
     }
 
     int numberOfPresmootherSteps = A.mgData->numberOfPresmootherSteps;
@@ -40,7 +40,7 @@ int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
       cudaMemcpy(xv, x.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
     
       for (int j = 0; j<50 /*length*/; j++){
-        printf("after SYMGS: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
+        // printf("after SYMGS: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
       }
     }
 
@@ -53,14 +53,14 @@ int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
     cudaMemcpy(xv, x.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
   
     for (int j = 0; j<50 /*length*/; j++){
-      printf("after SPMV: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
+      // printf("after SPMV: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
     }
     CUDA_RETURN_IFF_ERROR(ComputeRestriction(A, r));
     // cudaMemcpy(rv, r.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
     // cudaMemcpy(xv, x.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
   
     // for (int j = 0; j<50 /*length*/; j++){
-    //   printf("after restriction: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
+    //   // printf("after restriction: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
     // }
 #endif
 
@@ -72,7 +72,7 @@ int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
     cudaMemcpy(xv, x.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
   
     for (int j = 0; j<50 /*length*/; j++){
-      printf("after prolongation: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
+      // printf("after prolongation: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
     }
 
     int numberOfPostsmootherSteps = A.mgData->numberOfPostsmootherSteps;
@@ -83,7 +83,7 @@ int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
       cudaMemcpy(xv, x.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
     
       for (int j = 0; j<50 /*length*/; j++){
-        printf("after symgs: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
+        // printf("after symgs: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
       }
     }
   } else {
@@ -92,7 +92,7 @@ int ComputeMGInside(const SparseMatrix &A, const Vector &r, Vector &x) {
     cudaMemcpy(xv, x.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
   
     for (int j = 0; j<50 /*length*/; j++){
-      printf("after SYMGSZeroGuess: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
+      // printf("after SYMGSZeroGuess: x[%d]: %x, r[%d]: %x\n", j, xv[j], j, rv[j]);
     }
   }
 

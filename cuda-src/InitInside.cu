@@ -125,18 +125,18 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
 #ifndef HPCG_NO_MPI
   MPI_Comm_rank(MPI_COMM_WORLD, &params.comm_rank);
   MPI_Comm_size(MPI_COMM_WORLD, &params.comm_size);
-  printf("MPI enabled\n");
+  // printf("MPI enabled\n");
 #else
-  printf("MPI disabled\n");
+  // printf("MPI disabled\n");
   params.comm_rank = 0;
   params.comm_size = 1;
 #endif
 
-  printf("mpi comm rank, %d %d size \n", params.comm_rank, params.comm_size);
+  // printf("mpi comm rank, %d %d size \n", params.comm_rank, params.comm_size);
   // Simple device management
   int ndevs = 0;
   CUDA_CHECK_COMMAND(cudaGetDeviceCount(&ndevs));
-  printf("devices: %d \n", ndevs);
+  // printf("devices: %d \n", ndevs);
 
   // Single GPU device can be selected via cli
   // Multi GPU devices are selected automatically
@@ -174,7 +174,7 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
 
   time(&rawtime);
   ptm = localtime(&rawtime);
-  sprintf(fname, "hpcg%04d%02d%02dT%02d%02d%02d.txt", 1900 + ptm->tm_year,
+  s// printf(fname, "hpcg%04d%02d%02dT%02d%02d%02d.txt", 1900 + ptm->tm_year,
           ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min,
           ptm->tm_sec);
 
@@ -182,7 +182,7 @@ int HPCG_InitInside(int *argc_p, char ***argv_p, HPCG_Params &params) {
     HPCG_fout.open(fname);
   } else {
 #if defined(HPCG_DEBUG) || defined(HPCG_DETAILED_DEBUG)
-    sprintf(fname, "hpcg%04d%02d%02dT%02d%02d%02d_%d.txt", 1900 + ptm->tm_year,
+    s// printf(fname, "hpcg%04d%02d%02dT%02d%02d%02d_%d.txt", 1900 + ptm->tm_year,
             ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min,
             ptm->tm_sec, params.comm_rank);
     HPCG_fout.open(fname);

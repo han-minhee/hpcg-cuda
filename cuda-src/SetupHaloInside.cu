@@ -516,7 +516,7 @@ void SetupHaloInside(SparseMatrix &A) {
     // int * d_offsets_zero = new int[1];
     // cudaMemcpy(d_offsets_zero, d_offsets, sizeof(global_int_t), cudaMemcpyDeviceToHost);
 
-    // printf(" is this zero? : %d\n", d_offsets_zero[0]);
+    // // printf(" is this zero? : %d\n", d_offsets_zero[0]);
 
     AddOp add_op;
 

@@ -184,7 +184,7 @@ void ConvertToELLInside(SparseMatrix &A) {
               std::max(sizeof(double), sizeof(global_int_t)) *
                   A.localNumberOfRows * A.numberOfNonzerosPerRow,
               sizeof(double) * A.ell_width * A.localNumberOfRows);
-  printf("cuda realloc finished\n");
+  // printf("cuda realloc finished\n");
 
   // Determine blocksize
   unsigned int blocksize = 1024 / A.ell_width;
@@ -202,7 +202,7 @@ void ConvertToELLInside(SparseMatrix &A) {
     blocksize >>= 1;
   }
 
-  printf("launching to ell val\n");
+  // printf("launching to ell val\n");
   if (blocksize == 32)
     LAUNCH_TO_ELL_VAL(27, 32);
   else if (blocksize == 16)
@@ -212,7 +212,7 @@ void ConvertToELLInside(SparseMatrix &A) {
   else
     LAUNCH_TO_ELL_VAL(27, 4);
 
-  printf("launching to ell val finished\n");
+  // printf("launching to ell val finished\n");
   // We can re-use mtxIndG array for the ELL column indices
   A.ell_col_ind = reinterpret_cast<local_int_t *>(A.d_matrixValues);
   A.d_matrixValues = NULL;
@@ -243,11 +243,11 @@ void ConvertToELLInside(SparseMatrix &A) {
   CUDA_CHECK_COMMAND(
       cudaMemcpy(A.ell_col_ind, tempRealloc2, smallSize, cudaMemcpyDeviceToDevice));
   CUDA_CHECK_COMMAND(cudaFree(tempRealloc2));
-  printf("cuda realloc 2 finished\n");
+  // printf("cuda realloc 2 finished\n");
 
   // Convert mtxIndL into ELL column indices
   //  local_int_t *d_halo_rows = reinterpret_cast<local_int_t *>(workspace);
-  printf("allocating d_halo_rows\n");
+  // printf("allocating d_halo_rows\n");
   local_int_t *d_halo_rows;
   CUDA_CHECK_COMMAND(
       cudaMalloc((void **)&d_halo_rows, sizeof(local_int_t) * 1024));

@@ -121,7 +121,7 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   // cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
 
   // for (int i = 0; i<10; i++){
-  //   printf("input ellval[%d] : %f\n", i, ellVals[i]);
+  //   // printf("input ellval[%d] : %f\n", i, ellVals[i]);
   // }
 
   // free(ellVals);
@@ -134,9 +134,9 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   // cudaMemcpy(xVals, x.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
   // cudaMemcpy(yVals, y.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
 
-  // printf("before MV\n");
+  // // printf("before MV\n");
   // for (int i = 0 ; i<10 ; i++){
-  //   printf("A, x, y [%d] : %f %f %f\n",i, AVals[i], xVals[i], yVals[i]);
+  //   // printf("A, x, y [%d] : %f %f %f\n",i, AVals[i], xVals[i], yVals[i]);
   // }
 
   if (&y != A.mgData->Axf) {
@@ -177,7 +177,7 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   // cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
 
   // for (int i = 0; i<10; i++){
-  //   printf("input ellval[%d] : %f\n", i, ellVals[i]);
+  //   // printf("input ellval[%d] : %f\n", i, ellVals[i]);
   // }
 
   // free(ellVals);
@@ -196,21 +196,21 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   // cudaMemcpy(xVals, x.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
   // cudaMemcpy(yVals, y.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
 
-  // printf("after MV\n");
+  // // printf("after MV\n");
   // for (int i = 0 ; i<10 ; i++){
-  //   printf("A, x, y [%d] : %f %f %f\n",i, AVals[i], xVals[i], yVals[i]);
+  //   // printf("A, x, y [%d] : %f %f %f\n",i, AVals[i], xVals[i], yVals[i]);
   // }
 
   // bool caught = false;
   // for (int i = 0; i<32*32*32; i++){
   //   if(y.values[i] != 0){
-  //     printf("Ap %d val: %f \n", i, y.values[i]);
+  //     // printf("Ap %d val: %f \n", i, y.values[i]);
   //     caught = true;
   //     break;
   //   }
   // }
   // if(caught) return -1;
-  // printf("finished SPMV\n");
+  // // printf("finished SPMV\n");
 
 
 

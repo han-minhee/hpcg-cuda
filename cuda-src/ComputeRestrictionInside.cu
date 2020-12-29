@@ -57,7 +57,7 @@ __launch_bounds__(BLOCKSIZE) __global__ void kernel_fused_restrict_spmv(
 
 int ComputeRestriction(const SparseMatrix &A, const Vector &rf) {
 
-  printf("entering restriction\n");
+  // printf("entering restriction\n");
   
   double *rfv = new double[50 /*length*/];
   double *rcv = new double[50 /*length*/];
@@ -70,7 +70,7 @@ int ComputeRestriction(const SparseMatrix &A, const Vector &rf) {
              cudaMemcpyDeviceToHost);
 
   for (int j = 0; j < 50 /*length*/; j++) {
-    printf(
+    // printf(
         "inside before restriction: rfv[%d]: %f, rcv[%d]: %f, Axfv[%d] : %f\n",
         j, rfv[j], j, rcv[j], j, Axfv[j]);
   }
@@ -87,7 +87,7 @@ int ComputeRestriction(const SparseMatrix &A, const Vector &rf) {
              cudaMemcpyDeviceToHost);
 
   for (int j = 0; j < 50 /*length*/; j++) {
-    printf(
+    // printf(
         "inside after restriction: rfv[%d]: %f, rcv[%d]: %f, Axfv[%d] : %f\n",
         j, rfv[j], j, rcv[j], j, Axfv[j]);
   }
@@ -108,7 +108,7 @@ int ComputeFusedSpMVRestriction(const SparseMatrix &A, const Vector &rf,
   }
 #endif
 
-  printf("entering SpMVrestriction\n");
+  // printf("entering SpMVrestriction\n");
   double *rfv = new double[50 /*length*/];
   double *rcv = new double[50 /*length*/];
   double *Axfv = new double[50 /*length*/];
@@ -124,7 +124,7 @@ int ComputeFusedSpMVRestriction(const SparseMatrix &A, const Vector &rf,
   
 
   for (int j = 0; j < 50 /*length*/; j++) {
-    printf(
+    // printf(
         "inside before SpMVrestriction: rfv[%d]: %f, rcv[%d]: %f, Axfv[%d]: %f, ellVal[%d] : %f\n",
         j, rfv[j], j, rcv[j], j, Axfv[j], j, ellVals[j]);
   }
@@ -143,7 +143,7 @@ int ComputeFusedSpMVRestriction(const SparseMatrix &A, const Vector &rf,
                      cudaMemcpyDeviceToHost);
         
           for (int j = 0; j < 50 /*length*/; j++) {
-            printf(
+            // printf(
                 "inside after SpMVrestriction: rfv[%d]: %f, rcv[%d]: %f, Axfv[%d] : %f\n",
                 j, rfv[j], j, rcv[j], j, Axfv[j]);
           }
