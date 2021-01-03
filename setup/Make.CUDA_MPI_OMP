@@ -29,7 +29,7 @@ BINdir       = $(TOPdir)/bin
 # used. The variable MPdir is only used for defining MPinc and MPlib.
 #
 MPdir        =
-MPinc        = -I/home/minhee/env/openmpi/openmpi-3.1.6/ompi/include
+MPinc        = 
 MPlib        =
 #
 #
@@ -79,12 +79,11 @@ CXX = $(NVCC)
 CXXFLAGS = $(NVCCFLAGS)
 
 #
-#LINKER       = mpic++
-#LINKFLAGS    = $(COMPILER_OPTS) $(HPCG_DEFS) $(MPinc) $(NVCC_INC) $(NVCC_LIBS) $(CUB-INCLUDE)
+LINKER       = mpic++
+LINKFLAGS    = $(COMPILER_OPTS) $(HPCG_DEFS) $(MPinc) $(NVCC_INC) $(NVCC_LIBS) $(CUB-INCLUDE)
 
-LINKER       = $(NVCC)
-LINKFLAGS    = $(NVCCFLAGS)
-
+#LINKER       = $(NVCC)
+#LINKFLAGS    = $(NVCCFLAGS)
 
 #
 ARCHIVER     = ar
@@ -105,8 +104,8 @@ CUDA-LIBRARY = -L$(CUDA-LIBRARY-DIR)
 
 MPI-LIBRARY = -lmpi -lnuma
 
-MPI-COMPIlER = mpic++
+MPI-COMPIlER = /usr/local/bin/mpiCC
 MPI-COMPILER-OPTS = 
 
-MPI-LINKER = mpic++
+MPI-LINKER = /usr/local/bin/mpiCC
 MPI-LINKER-OPS = $(CUDA-LIBRARY)
