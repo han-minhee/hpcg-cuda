@@ -7,6 +7,7 @@
 #include "Utils.cuh"
 
 #include <cuda_runtime.h>
+#include "nccl.h"
 
 __device__ void kernelDeviceReduceSum(local_int_t tid, double *data) {
   unsigned int BLOCKSIZE = blockDim.x;

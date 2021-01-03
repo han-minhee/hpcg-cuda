@@ -63,6 +63,7 @@ using std::endl;
 #include "mytimer.hpp"
 
 #include "cuda_runtime.h"
+#include "nccl.h"
 
 /*!
   Main driver program: Construct synthetic problem, run V&V tests, compute
@@ -79,15 +80,7 @@ using std::endl;
 int main(int argc, char *argv[]) {
 
 #ifndef HPCG_NO_MPI
-  printf("MPI initing");
-  printf("argc: %d\n", argc);
-  printf("argv[0]: %s\n", argv[0]);
-  printf("argv[1]: %s\n", argv[1]);
-  printf("argv[2]: %s\n", argv[2]);
-  printf("argv[3]: %s\n", argv[3]);
-
   MPI_Init(&argc, &argv);
-  printf("MPI inited\n");
 #endif
 
   HPCG_Params params;
@@ -103,6 +96,8 @@ int main(int argc, char *argv[]) {
 
   int size = params.comm_size,
       rank = params.comm_rank; // Number of MPI processes, My process ID
+
+  // will pass the "rank" and "size" for NCCL communication
 
 #ifndef HPCG_NO_MPI
   MPI_Barrier(MPI_COMM_WORLD);
@@ -196,37 +191,7 @@ int main(int argc, char *argv[]) {
 
   CopyHaloToHost(A);
 
-  // double * dVals =  new double[10];
-  // cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10,
-  // cudaMemcpyDeviceToHost);
-
-  // for (int i = 0; i<10; i++){
-  //   printf("after copyHaloToHosts dVals[%d] : %f\n", i, dVals[i]);
-  // }
-
   // DONE : 08/26/2020 04:09
-  //           for (int i = 0; i< A.localNumberOfRows *
-  //           A.numberOfNonzerosPerRow; i++){
-  //       printf("%d generateProblem Vals after copyToHost: %d %f %d\n", i,
-  //       A.mtxIndL[0][i], A.matrixValues[0][i], A.mtxIndG[0][i]);
-  //     }
-  //     for (int i = 0; i< A.localNumberOfRows; i++){
-  //       printf("%d secondGenerate Vals after copyToHost: %d\n", i,
-  //       A.localToGlobalMap.data()[i]);
-  //     }
-  //           for (int i = 0; i< A.localNumberOfRows; i++){
-  //   printf("%d b vals after copyToHost: %f\n", i, b.values[i]);
-  // }
-  // for (int i = 0; i< A.localNumberOfRows; i++){
-  //   printf("%d x vals after copyToHost: %f\n", i, x.values[i]);
-  // }
-  // for (int i = 0; i< A.localNumberOfRows; i++){
-  //   printf("%d xexact vals after copyToHost: %f\n", i, xexact.values[i]);
-  // }
-
-  // for (int i = 0; i< A.localNumberOfRows; i++){
-  //   printf("%d %d nonzeros\n", i, A.nonzerosInRow[i]);
-  // }
 
   curLevelMatrix = &A;
   for (int level = 1; level < numberOfMgLevels; ++level) {
@@ -332,14 +297,6 @@ int main(int argc, char *argv[]) {
   // Call user-tunable set up function.
   double t7 = mytimer();
 
-  //     cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10,
-  //     cudaMemcpyDeviceToHost);
-
-  //   for (int i = 0; i<10; i++){
-  //     printf("before opti dVals[%d] : %f\n", i, dVals[i]);
-  //   }
-  // free(dVals);
-
   OptimizeProblem(A, data, b, x, xexact);
   t7 = mytimer() - t7;
   times[7] = t7;
@@ -357,6 +314,17 @@ int main(int argc, char *argv[]) {
     //////////////////////////////
     // Validation Testing Phase //
     //////////////////////////////
+
+// add for NCCL
+#ifndef HPCG_NO_MPI
+  ncclUniqueId id;
+  ncclComm_t comm;
+  if (rank == 0) {
+    ncclGetUniqueId(&id);
+  }
+  MPI_Bcast((void *)&id, sizeof(id), MPI_BYTE, 0, MPI_COMM_WORLD);
+
+#endif
 
 #ifdef HPCG_DEBUG
   t1 = mytimer();

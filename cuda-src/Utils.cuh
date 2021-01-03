@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cstdio>
 #include <cuda_runtime.h>
+#include "nccl.h"
 
 // Streams
 extern cudaStream_t stream_interior;
@@ -11,6 +12,15 @@ extern void *workspace;
 // Memory allocator
 
 #define debug_message false
+
+#define NCCLCHECK(cmd) do {                         \
+  ncclResult_t r = cmd;                             \
+  if (r!= ncclSuccess) {                            \
+    printf("Failed, NCCL error %s:%d '%s'\n",             \
+        __FILE__,__LINE__,ncclGetErrorString(r));   \
+    exit(EXIT_FAILURE);                             \
+  }                                                 \
+} while(0)
 
 #define cudaRealloc(dst, temp, smallsize, size)                                \
   CUDA_CHECK_COMMAND(cudaMalloc((void **)&temp, smallsize));                   \

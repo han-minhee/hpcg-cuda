@@ -63,7 +63,7 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 # - Compilers / linkers - Optimization flags ---------------------------
 # ----------------------------------------------------------------------
 #
-NVCC_LIBS    = -lcuda -lcudart -lmpi -lnuma
+NVCC_LIBS    = -lcuda -lcudart -lmpi -lnuma -lnccl
 NVCC_INC = -I/usr/local/cuda/include
 
 MPIC = mpic++
