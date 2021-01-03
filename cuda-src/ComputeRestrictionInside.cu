@@ -57,44 +57,11 @@ __launch_bounds__(BLOCKSIZE) __global__ void kernel_fused_restrict_spmv(
 
 int ComputeRestriction(const SparseMatrix &A, const Vector &rf) {
 
-  printf("entering restriction\n");
-  
-  double *rfv = new double[50 /*length*/];
-  double *rcv = new double[50 /*length*/];
-  double *Axfv = new double[50 /*length*/];
-
-  cudaMemcpy(rfv, rf.d_values, sizeof(double) * 50 /*length*/, cudaMemcpyDeviceToHost);
-  cudaMemcpy(rcv, A.mgData->rc->d_values, sizeof(double) * 50 /*length*/,
-             cudaMemcpyDeviceToHost);
-  cudaMemcpy(Axfv, A.mgData->Axf->d_values, sizeof(double) * 50 /*length*/,
-             cudaMemcpyDeviceToHost);
-
-  for (int j = 0; j < 50 /*length*/; j++) {
-    printf(
-        "inside before restriction: rfv[%d]: %f, rcv[%d]: %f, Axfv[%d] : %f\n",
-        j, rfv[j], j, rcv[j], j, Axfv[j]);
-  }
-
   kernel_restrict<128>
       <<<dim3((A.mgData->rc->localLength - 1) / 128 + 1), dim3(128)>>>(
           A.mgData->rc->localLength, A.mgData->d_f2cOperator, rf.d_values,
           A.mgData->Axf->d_values, A.mgData->rc->d_values, A.perm, A.Ac->perm);
 
-  cudaMemcpy(rfv, rf.d_values, sizeof(double) * 50, cudaMemcpyDeviceToHost);
-  cudaMemcpy(rcv, A.mgData->rc->d_values, sizeof(double) * 50,
-             cudaMemcpyDeviceToHost);
-  cudaMemcpy(Axfv, A.mgData->Axf->d_values, sizeof(double) * 50,
-             cudaMemcpyDeviceToHost);
-
-  for (int j = 0; j < 50 /*length*/; j++) {
-    printf(
-        "inside after restriction: rfv[%d]: %f, rcv[%d]: %f, Axfv[%d] : %f\n",
-        j, rfv[j], j, rcv[j], j, Axfv[j]);
-  }
-
-  delete [] rfv;
-  delete [] rcv;
-  delete [] Axfv;
   return 0;
 }
 
@@ -108,50 +75,11 @@ int ComputeFusedSpMVRestriction(const SparseMatrix &A, const Vector &rf,
   }
 #endif
 
-  printf("entering SpMVrestriction\n");
-  double *rfv = new double[50 /*length*/];
-  double *rcv = new double[50 /*length*/];
-  double *Axfv = new double[50 /*length*/];
-  double *ellVals = new double[50 /*length*/];
-  cudaMemcpy(rfv, rf.d_values, sizeof(double) * 50, cudaMemcpyDeviceToHost);
-  cudaMemcpy(rcv, A.mgData->rc->d_values, sizeof(double) * 50,
-             cudaMemcpyDeviceToHost);
-  cudaMemcpy(Axfv, A.mgData->Axf->d_values, sizeof(double) * 50,
-             cudaMemcpyDeviceToHost);
-             
-  cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 50,
-  cudaMemcpyDeviceToHost);
-  
-
-  for (int j = 0; j < 50 /*length*/; j++) {
-    printf(
-        "inside before SpMVrestriction: rfv[%d]: %f, rcv[%d]: %f, Axfv[%d]: %f, ellVal[%d] : %f\n",
-        j, rfv[j], j, rcv[j], j, Axfv[j], j, ellVals[j]);
-  }
-
   kernel_fused_restrict_spmv<1024>
       <<<dim3((A.mgData->rc->localLength - 1) / 1024 + 1), dim3(1024)>>>(
           A.mgData->rc->localLength, A.mgData->d_f2cOperator, rf.d_values,
           A.localNumberOfRows, A.localNumberOfColumns, A.ell_width,
           A.ell_col_ind, A.ell_val, xf.d_values, A.mgData->rc->d_values, A.perm,
           A.Ac->perm);
-
-          cudaMemcpy(rfv, rf.d_values, sizeof(double) * 50, cudaMemcpyDeviceToHost);
-          cudaMemcpy(rcv, A.mgData->rc->d_values, sizeof(double) * 50,
-                     cudaMemcpyDeviceToHost);
-          cudaMemcpy(Axfv, A.mgData->Axf->d_values, sizeof(double) * 50,
-                     cudaMemcpyDeviceToHost);
-        
-          for (int j = 0; j < 50 /*length*/; j++) {
-            printf(
-                "inside after SpMVrestriction: rfv[%d]: %f, rcv[%d]: %f, Axfv[%d] : %f\n",
-                j, rfv[j], j, rcv[j], j, Axfv[j]);
-          }
-        
-
-  delete [] rfv;
-  delete [] rcv;
-  delete [] Axfv;
-
   return 0;
 }

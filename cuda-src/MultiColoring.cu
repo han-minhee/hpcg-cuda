@@ -264,66 +264,29 @@ void JPLColoring(SparseMatrix &A) {
         blocksize >>= 1;
     }
 
-  // // DONE: hash identical
-  // local_int_t* hash_temp = new local_int_t[A.localNumberOfRows];
-  // cudaMemcpy(hash_temp, A.d_rowHash, sizeof(local_int_t) * A.localNumberOfRows, cudaMemcpyDeviceToHost);
-
-  // for(int i =0; i<A.localNumberOfRows; i++){
-  //     printf("%d th hash: %d\n", i, hash_temp[i]);
-  // }
-
   // Run Jones-Plassmann Luby algorithm until all vertices have been colored
   while (colored != m) {
     // The first 8 colors are selected by RNG, afterwards we just count upwards
     int color1 = (A.nblocks < 8) ? rand() % 8 : A.nblocks;
     int color2 = (A.nblocks < 8) ? rand() % 8 : A.nblocks + 1;
     
-    
-    // printf("color1: %d\n", color1);
-    // printf("color2: %d\n", color2);
+
 
     if     (blocksize == 32) LAUNCH_JPL(27, 32);
     else if(blocksize == 16) LAUNCH_JPL(27, 16);
     else if(blocksize ==  8) LAUNCH_JPL(27,  8);
     else                     LAUNCH_JPL(27,  4);
 
-    // printf("entering coloring 1\n");
-    // int* temp_perm = new int[100];
-    // cudaMemcpy(temp_perm, A.perm, sizeof(local_int_t) * 100, cudaMemcpyDeviceToHost);
-    // for (int i= 0; i<10;i++){
-    //   printf("%d perm : %d\n", i, temp_perm[i]);
-    // }
-    // free(temp_perm);
-
-    // NOW COloring works : 08/27/2020 01:11
-    // not? 08/27/2020 01:43
-
-    // int totalSum = 0;
-
-    // for (int i = 0; i<m; i++){
-    //   if(temp_perm[i] == color1){
-    //     ++totalSum;
-    //   }
-      
-    // }
-
     // Count colored vertices
     kernelCountColorsPart1<256>
         <<<dim3(256), dim3(256)>>>(m, color1, A.perm, tmp);
 
-    // printf("entering coloring 2\n");
      kernelCountColorsPart2<256><<<dim3(1), dim3(256)>>>(256, tmp);
 
-    //      int* temp_result = new int[1];
-    // cudaMemcpy(temp_result, tmp, sizeof(local_int_t), cudaMemcpyDeviceToHost);
-    // printf("coloring part2 : %d\n", temp_result[0]);
-    //   free(temp_result);
 
     // Copy colored max vertices for current iteration to host
     CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(
         &A.sizes[A.nblocks], tmp, sizeof(local_int_t), cudaMemcpyDeviceToHost));
-
-        // printf("colored: %d, sizes: %d\n", colored, A.sizes[A.nblocks]);
 
     kernelCountColorsPart1<256>
         <<<dim3(256), dim3(256)>>>(m, color2, A.perm, tmp);
@@ -360,15 +323,11 @@ void JPLColoring(SparseMatrix &A) {
 
   kernel_identity<1024><<<dim3((m - 1) / 1024 + 1), dim3(1024)>>>(m, perm);
 
-  // rocprim::double_buffer<local_int_t> keys(A.perm, tmp_color);
-  // rocprim::double_buffer<local_int_t> vals(perm, tmp_perm);
-
   size_t size = 0;
   void *buf = NULL;
 
   int startbit = 0;
   int endbit = 32 - __builtin_clz(A.nblocks);
-  // printf("nblocks : %d\n", A.nblocks);
 
   cub::DoubleBuffer<local_int_t> keys(A.perm, tmp_color);
   cub::DoubleBuffer<local_int_t> vals(perm, tmp_perm);
@@ -381,22 +340,11 @@ void JPLColoring(SparseMatrix &A) {
   kernel_create_perm<1024>
       <<<dim3((m - 1) / 1024 + 1), dim3(1024)>>>(m, vals.Current(), A.perm);
 
-    //   double* keys_temp = new double[50];
-    //   cudaMemcpy(keys_temp, A.perm, sizeof(local_int_t) * 50, cudaMemcpyDeviceToHost);
-
-    //   for (int i = 0; i< 50; i++){
-    //     printf("final perm in coloring[%d] : %d\n", i, keys_temp[i]);
-    // }
-
-    // delete [] keys_temp;
-  
     //DONE: 08/27/2020 02:24
 
   CUDA_CHECK_COMMAND(cudaFree(tmp_color));
   CUDA_CHECK_COMMAND(cudaFree(tmp_perm));
   CUDA_CHECK_COMMAND(cudaFree(perm));
-  // free(keys_temp);
-  // free(vals_temp);
 #ifndef HPCG_REFERENCE
   --A.ublocks;
 #endif

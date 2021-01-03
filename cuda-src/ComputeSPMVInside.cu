@@ -117,28 +117,6 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   }
 #endif
 
-  // double* ellVals = new double[10];
-  // cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-
-  // for (int i = 0; i<10; i++){
-  //   printf("input ellval[%d] : %f\n", i, ellVals[i]);
-  // }
-
-  // free(ellVals);
-
-  // double * AVals = new double[10];
-  // double * xVals = new double[10];
-  // double * yVals = new double[10];
-
-  // cudaMemcpy(AVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(xVals, x.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(yVals, y.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-
-  // printf("before MV\n");
-  // for (int i = 0 ; i<10 ; i++){
-  //   printf("A, x, y [%d] : %f %f %f\n",i, AVals[i], xVals[i], yVals[i]);
-  // }
-
   if (&y != A.mgData->Axf) {
     // Number of rows per block
     local_int_t rows_per_block = A.localNumberOfRows / A.nblocks;
@@ -173,15 +151,6 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
   }
 #endif
 
-  // double* ellVals = new double[10];
-  // cudaMemcpy(ellVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-
-  // for (int i = 0; i<10; i++){
-  //   printf("input ellval[%d] : %f\n", i, ellVals[i]);
-  // }
-
-  // free(ellVals);
-
   if (&y == A.mgData->Axf) {
     kernel_spmv_ell_coarse<1024>
         <<<dim3((A.mgData->rc->localLength - 1) / 1024 + 1), dim3(1024)>>>(
@@ -189,34 +158,6 @@ int ComputeSPMVInside(const SparseMatrix &A, Vector &x, Vector &y) {
             A.localNumberOfColumns, A.ell_width, A.ell_col_ind, A.ell_val,
             A.perm, A.mgData->d_f2cOperator, x.d_values, y.d_values);
   }
-
-  // cudaMemcpy(y.values, y.d_values, sizeof(double) * y.localLength, cudaMemcpyDeviceToHost);
-
-  // cudaMemcpy(AVals, A.ell_val, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(xVals, x.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(yVals, y.d_values, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-
-  // printf("after MV\n");
-  // for (int i = 0 ; i<10 ; i++){
-  //   printf("A, x, y [%d] : %f %f %f\n",i, AVals[i], xVals[i], yVals[i]);
-  // }
-
-  // bool caught = false;
-  // for (int i = 0; i<32*32*32; i++){
-  //   if(y.values[i] != 0){
-  //     printf("Ap %d val: %f \n", i, y.values[i]);
-  //     caught = true;
-  //     break;
-  //   }
-  // }
-  // if(caught) return -1;
-  // printf("finished SPMV\n");
-
-
-
-  // free(AVals);
-  // free(xVals);
-  // free(yVals);
 
   return 0;
 }

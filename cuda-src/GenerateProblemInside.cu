@@ -425,18 +425,14 @@ void GenerateProblemInside(SparseMatrix &A, Vector *b, Vector *x,
   // Compute number of local non-zero entries using two step reduction
   kernelComputeLocalNNZPart1<256>
       <<<dim3(256), dim3(256)>>>(localNumberOfRows, A.d_nonzerosInRow, tmp);
-  // printf("passed part 1\n");
 
   kernel_local_nnz_part2<256><<<dim3(1), dim3(256)>>>(256, tmp);
-
-  // printf("passed nnz part2\n");
 
   // Copy number of local non-zero entries to host
   local_int_t localNumberOfNonzeros;
   CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(&localNumberOfNonzeros, tmp,
                                        sizeof(local_int_t),
                                        cudaMemcpyDeviceToHost));
-  // printf("passed memcpy in Problem Generation \n");
 
   global_int_t totalNumberOfNonzeros = 0;
 
@@ -465,18 +461,6 @@ void GenerateProblemInside(SparseMatrix &A, Vector *b, Vector *x,
   A.localNumberOfNonzeros = localNumberOfNonzeros;
   A.ell_width = numberOfNonzerosPerRow;
   A.numberOfNonzerosPerRow = numberOfNonzerosPerRow;
-
-  // printf("generateProblem val : %d %d %d %d %d %d %d\n", totalNumberOfRows, totalNumberOfNonzeros, localNumberOfRows, localNumberOfRows, localNumberOfNonzeros, numberOfNonzerosPerRow, numberOfNonzerosPerRow);
-
-  // double * dVals =  new double[10];
-
-  // cudaMemcpy(dVals, A.d_matrixValues, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-
-  // for (int i = 0; i<10; i++){
-  //   printf("after generateProblem dVals[%d] : %f\n", i, dVals[i]);
-  // }
-  // free(dVals);
-  
 }
 
 void CopyProblemToHostInside(SparseMatrix &A, Vector *b, Vector *x,
@@ -517,15 +501,7 @@ void CopyProblemToHostInside(SparseMatrix &A, Vector *b, Vector *x,
       A.localToGlobalMap.data(), A.d_localToGlobalMap,
       sizeof(global_int_t) * A.localNumberOfRows, cudaMemcpyDeviceToHost));
 
-
-      //DONE : 08/26/2020 03:54 they are identical
-      // for (int i = 0; i< A.localNumberOfRows * A.numberOfNonzerosPerRow; i++){
-      //   printf("%d generateProblem Vals after copyToHost: %d %f %d\n", i, A.mtxIndL[0][i], A.matrixValues[0][i], A.mtxIndG[0][i]);
-      // }
-
-      // for (int i = 0; i< A.localNumberOfRows; i++){
-      //   printf("%d secondGenerate Vals after copyToHost: %d %d\n", i, A.localToGlobalMap.data()[i], mtxDiag[i]);
-      // }
+  // DONE : 08/26/2020 03:54 they are identical
 
   CUDA_RETURN_VOID_IF_ERROR(cudaFree(A.d_nonzerosInRow));
   CUDA_RETURN_VOID_IF_ERROR(cudaFree(A.d_matrixDiagonal));
@@ -554,15 +530,12 @@ void CopyProblemToHostInside(SparseMatrix &A, Vector *b, Vector *x,
                                          cudaMemcpyDeviceToHost));
   }
 
-
-
   if (x != NULL) {
     InitializeVector(*x, A.localNumberOfRows);
     CUDA_RETURN_VOID_IF_ERROR(cudaMemcpy(x->values, x->d_values,
                                          sizeof(double) * x->localLength,
                                          cudaMemcpyDeviceToHost));
   }
-
 
   if (xexact != NULL) {
     InitializeVector(*xexact, A.localNumberOfRows);
@@ -571,20 +544,5 @@ void CopyProblemToHostInside(SparseMatrix &A, Vector *b, Vector *x,
                                          cudaMemcpyDeviceToHost));
   }
 
-
-
-  // for (int i = 0; i< A.localNumberOfRows; i++){
-  //   printf("%d b vals after copyToHost: %f\n", i, b->values[i]);
-  // }
-  // for (int i = 0; i< A.localNumberOfRows; i++){
-  //   printf("%d x vals after copyToHost: %f\n", i, x->values[i]);
-  // }
-  // for (int i = 0; i< A.localNumberOfRows; i++){
-  //   printf("%d xexact vals after copyToHost: %f\n", i, xexact->values[i]);
-  // }
-
   // DONE: identical 08/26/2020 04:03
-
-
-
 }

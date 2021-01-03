@@ -49,14 +49,13 @@ __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
   }
 }
 
- struct AddOp {
-     template <typename T>
-     //  CUB_RUNTIME_FUNCTION __forceinline__
-     __device__ __forceinline__
-     T operator()(const T &a, const T &b) const {
-       return a + b;
-     }
-   };
+struct AddOp {
+  template <typename T>
+  //  CUB_RUNTIME_FUNCTION __forceinline__
+  __device__ __forceinline__ T operator()(const T &a, const T &b) const {
+    return a + b;
+  }
+};
 
 template <unsigned int BLOCKSIZEX, unsigned int BLOCKSIZEY>
 __launch_bounds__(BLOCKSIZEX *BLOCKSIZEY) __global__
@@ -196,38 +195,44 @@ __launch_bounds__(BLOCKSIZE) __global__
 }
 
 void SetupHaloInside(SparseMatrix &A) {
-    // Determine blocksize for 2D kernel launch
-    unsigned int blocksize = 512 / A.numberOfNonzerosPerRow;
+  // Determine blocksize for 2D kernel launch
+  unsigned int blocksize = 512 / A.numberOfNonzerosPerRow;
 
-    // Compute next power of two
-    blocksize |= blocksize >> 1;
-    blocksize |= blocksize >> 2;
-    blocksize |= blocksize >> 4;
-    blocksize |= blocksize >> 8;
-    blocksize |= blocksize >> 16;
-    ++blocksize;
+  // Compute next power of two
+  blocksize |= blocksize >> 1;
+  blocksize |= blocksize >> 2;
+  blocksize |= blocksize >> 4;
+  blocksize |= blocksize >> 8;
+  blocksize |= blocksize >> 16;
+  ++blocksize;
 
-    // Shift right until we obtain a valid blocksize
-    while(blocksize * A.numberOfNonzerosPerRow > 512)
-    {
-        blocksize >>= 1;
-    }
+  // Shift right until we obtain a valid blocksize
+  while (blocksize * A.numberOfNonzerosPerRow > 512) {
+    blocksize >>= 1;
+  }
 
 #ifdef HPCG_NO_MPI
-    if     (blocksize == 32) LAUNCH_COPY_INDICES(27, 32);
-    else if(blocksize == 16) LAUNCH_COPY_INDICES(27, 16);
-    else if(blocksize ==  8) LAUNCH_COPY_INDICES(27,  8);
-    else                     LAUNCH_COPY_INDICES(27,  4);
+  if (blocksize == 32)
+    LAUNCH_COPY_INDICES(27, 32);
+  else if (blocksize == 16)
+    LAUNCH_COPY_INDICES(27, 16);
+  else if (blocksize == 8)
+    LAUNCH_COPY_INDICES(27, 8);
+  else
+    LAUNCH_COPY_INDICES(27, 4);
 #else
-    if(A.geom->size == 1)
-    {
-        if     (blocksize == 32) LAUNCH_COPY_INDICES(27, 32);
-        else if(blocksize == 16) LAUNCH_COPY_INDICES(27, 16);
-        else if(blocksize ==  8) LAUNCH_COPY_INDICES(27,  8);
-        else                     LAUNCH_COPY_INDICES(27,  4);
+  if (A.geom->size == 1) {
+    if (blocksize == 32)
+      LAUNCH_COPY_INDICES(27, 32);
+    else if (blocksize == 16)
+      LAUNCH_COPY_INDICES(27, 16);
+    else if (blocksize == 8)
+      LAUNCH_COPY_INDICES(27, 8);
+    else
+      LAUNCH_COPY_INDICES(27, 4);
 
-        return;
-    }
+    return;
+  }
 
   // Local dimensions in x, y and z direction
   local_int_t nx = A.geom->nx;
@@ -471,7 +476,6 @@ void SetupHaloInside(SparseMatrix &A) {
         rocprim_buffer, rocprim_size, d_recvList[i], d_recvBuffer,
         d_haloList[i], d_haloBuffer, entriesToRecv));
 
-
     CUDA_CHECK_COMMAND(cudaFree(rocprim_buffer));
     rocprim_buffer = NULL;
 
@@ -493,12 +497,16 @@ void SetupHaloInside(SparseMatrix &A) {
 
     // Obtain rocprim buffer size
     // TODO: implement run-length encoding for cuda
-    cub::DeviceRunLengthEncode::Encode(rocprim_buffer, rocprim_size, d_recvList[i], d_unique_out, d_offsets +1, d_num_runs, entriesToRecv);
-    
+    cub::DeviceRunLengthEncode::Encode(
+        rocprim_buffer, rocprim_size, d_recvList[i], d_unique_out,
+        d_offsets + 1, d_num_runs, entriesToRecv);
+
     CUDA_CHECK_COMMAND(cudaMalloc(&rocprim_buffer, rocprim_size));
 
-    cub::DeviceRunLengthEncode::Encode(rocprim_buffer, rocprim_size, d_recvList[i], d_unique_out, d_offsets +1, d_num_runs, entriesToRecv);
-    
+    cub::DeviceRunLengthEncode::Encode(
+        rocprim_buffer, rocprim_size, d_recvList[i], d_unique_out,
+        d_offsets + 1, d_num_runs, entriesToRecv);
+
     CUDA_CHECK_COMMAND(cudaFree(rocprim_buffer));
     rocprim_buffer = NULL;
 
@@ -511,23 +519,21 @@ void SetupHaloInside(SparseMatrix &A) {
     // Store the number of halo entries we need to get from i-th neighbor
     A.receiveLength[neighborCount] = currentRankHaloEntries;
 
-    // d_offsets[0] = 0
     CUDA_CHECK_COMMAND(cudaMemset(d_offsets, 0, sizeof(global_int_t)));
-    // int * d_offsets_zero = new int[1];
-    // cudaMemcpy(d_offsets_zero, d_offsets, sizeof(global_int_t), cudaMemcpyDeviceToHost);
-
-    // printf(" is this zero? : %d\n", d_offsets_zero[0]);
 
     AddOp add_op;
 
-    CUDA_CHECK_COMMAND(cub::DeviceScan::InclusiveSum(rocprim_buffer, rocprim_size, d_offsets +1, d_offsets+1, currentRankHaloEntries));
+    CUDA_CHECK_COMMAND(cub::DeviceScan::InclusiveSum(
+        rocprim_buffer, rocprim_size, d_offsets + 1, d_offsets + 1,
+        currentRankHaloEntries));
 
     CUDA_CHECK_COMMAND(cudaMalloc(&rocprim_buffer, rocprim_size));
 
     // Perform inclusive sum to obtain the offsets to the first halo entry of
     // each row
-    CUDA_CHECK_COMMAND(cub::DeviceScan::InclusiveSum(rocprim_buffer, rocprim_size, d_offsets +1, d_offsets+1, currentRankHaloEntries));
-
+    CUDA_CHECK_COMMAND(cub::DeviceScan::InclusiveSum(
+        rocprim_buffer, rocprim_size, d_offsets + 1, d_offsets + 1,
+        currentRankHaloEntries));
 
     CUDA_CHECK_COMMAND(cudaFree(rocprim_buffer));
     rocprim_buffer = NULL;

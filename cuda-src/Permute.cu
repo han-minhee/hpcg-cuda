@@ -122,21 +122,6 @@ void PermuteColumns(SparseMatrix &A) {
     dim_y >>= 1;
   }
 
-  // double *perm = new double[10];
-  // double *vals = new double[10];
-  // local_int_t *mtxIndl = new local_int_t[10];
-
-  // cudaMemcpy(perm, A.perm, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(vals, A.d_matrixValues, sizeof(double) * 10,
-  //            cudaMemcpyDeviceToHost);
-  // cudaMemcpy(mtxIndl, A.d_mtxIndL, sizeof(local_int_t) * 10,
-  //            cudaMemcpyDeviceToHost);
-
-  // printf("before launch perm\n");
-  // for (int i = 0; i < 10; i++) {
-  //   printf("perm, vals, mtxIndl [%d] : %f %f %d\n", i, perm[i], vals[i],
-  //          mtxIndl[i]);
-  // }
 
   if (dim_y == 32)
     LAUNCH_PERM_COLS(32, 32);
@@ -146,22 +131,6 @@ void PermuteColumns(SparseMatrix &A) {
     LAUNCH_PERM_COLS(32, 8);
   else
     LAUNCH_PERM_COLS(32, 4);
-
-  // cudaMemcpy(perm, A.perm, sizeof(double) * 10, cudaMemcpyDeviceToHost);
-  // cudaMemcpy(vals, A.d_matrixValues, sizeof(double) * 10,
-  //            cudaMemcpyDeviceToHost);
-  // cudaMemcpy(mtxIndl, A.d_mtxIndL, sizeof(local_int_t) * 10,
-  //            cudaMemcpyDeviceToHost);
-
-  // // printf("after launch perm\n");
-  // // for (int i = 0; i < 10; i++) {
-  // //   printf("perm, vals, mtxIndl [%d] : %f %f %d\n", i, perm[i], vals[i],
-  // //          mtxIndl[i]);
-  // // }
-
-  // free(perm);
-  // free(vals);
-  // free(mtxIndl);
 }
 
 void PermuteRows(SparseMatrix &A) {

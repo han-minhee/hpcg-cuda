@@ -48,8 +48,6 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
   CudaCopyVector(origDiagA, exaggeratedDiagA);
   CudaCopyVector(b, origB);
 
-  printf("==== TestCGInside Copying finished ====\n");
-
   // Modify the matrix diagonal to greatly exaggerate diagonal values.
   // CG should converge in about 10 iterations for this problem, regardless of
   // problem size
@@ -57,8 +55,6 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
       <<<dim3((A.localNumberOfRows - 1) / 1024 + 1), dim3(1024)>>>(
           A.localNumberOfRows, A.d_localToGlobalMap, exaggeratedDiagA.d_values,
           b.d_values);
-
-  printf("==== TestCGInside Scaling finished ====\n");
 
   CudaReplaceMatrixDiagonal(A, exaggeratedDiagA);
 
@@ -83,9 +79,7 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
     if (k == 1)
       expected_niters = testcg_data.expected_niters_prec;
     for (int i = 0; i < numberOfCgCalls; ++i) {
-      printf("inside TestCG: %d iter\n", i);
       CudaZeroVector(x); // Zero out x
-      // cudaMemset((void **)&x.d_values, 0x00000000, x.localLength * sizeof(double));
       int ierr = CG(A, data, b, x, maxIters, tolerance, niters, normr, normr0,
                     &times[0], k == 1);
       if (ierr)
@@ -118,7 +112,6 @@ int TestCGInside(SparseMatrix &A, CGData &data, Vector &b, Vector &x,
   CudaDeleteVector(exaggeratedDiagA);
   CudaDeleteVector(origB);
   testcg_data.normr = normr;
-  printf("exiting TestCGInside\n");
 
   return 0;
 }
