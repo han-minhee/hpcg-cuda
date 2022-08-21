@@ -1,4 +1,5 @@
-Based on the original HPCG(https://hpcg.info/index.html) 
-and ROCm implementation of HPCG (https://github.com/ROCmSoftwarePlatform/rocHPCG)
+HPCG-CUDA
+======================
 
-Requires CUDA, MPI, openMP
+## Based on the original HPCG([https://hpcg.info/index.html]) and ROCm implementation of HPCG ([https://github.com/ROCmSoftwarePlatform/rocHPCG])
+## Requires CUDA, MPI, openMP
